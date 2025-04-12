@@ -3,46 +3,66 @@ import { RouterOutlet } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
-import { MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngModel)]
-import { DataService } from './data.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatLabel, MatInputModule, FormsModule],
+  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'dnd-tabletop-companion';
-  character = { currentHP: 0, kiPoints: 0}; // Default value
-  changeVal: number | null = null;
+  character = {
+    currentHP: 0,
+    maxHP: 100,
+    kiPoints: 2
+  };
 
-  constructor(private dataService: DataService) {}
+  changeVal: number | null = null; // Initialize as null
+  percentHP = 0;
+  isEditingMaxHP = false; // Flag to toggle edit mode
 
   ngOnInit(): void {
-    // Load character data on initialization
-    this.dataService.getCharacterData().subscribe(data => {
-      this.character.currentHP = data.currentHP; // Adjust based on your JSON structure
-      this.character.kiPoints = data.kiPoints;
-    });
+    const savedCharacter = localStorage.getItem('character');
+    if (savedCharacter) {
+      this.character = JSON.parse(savedCharacter);
+    }
+    this.updatePercentHP();
   }
 
   hurt(): void {
     this.character.currentHP = Math.max(0, this.character.currentHP - (this.changeVal ?? 0));
+    this.changeVal = null;
+    this.updatePercentHP();
     this.saveCharacterData();
   }
 
   heal(): void {
-    this.character.currentHP += this.changeVal ?? 0;
+    this.character.currentHP = Math.min(this.character.maxHP, this.character.currentHP + (this.changeVal ?? 0));
+    this.changeVal = null;
+    this.updatePercentHP();
     this.saveCharacterData();
   }
 
+  updatePercentHP(): void {
+    this.percentHP = Math.round((this.character.currentHP / this.character.maxHP) * 100);
+  }
+
   saveCharacterData(): void {
-    const updatedData = { currentHP: this.character.currentHP, kiPoints: this.character.kiPoints }; // Adjust based on your JSON structure
-    this.dataService.setCharacterData(updatedData).subscribe(response => {
-      console.log('Character data saved:', response);
-    });
+    localStorage.setItem('character', JSON.stringify(this.character));
+  }
+
+  editMaxHP(): void {
+    this.isEditingMaxHP = !this.isEditingMaxHP; // Toggle edit mode
+    if (!this.isEditingMaxHP) {
+      this.saveCharacterData(); // Save changes when exiting edit mode
+    }
+  }
+
+  onEnterMaxHP(): void {
+    this.isEditingMaxHP = false; // Exit edit mode
+    this.saveCharacterData(); // Save changes
   }
 }
