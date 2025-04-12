@@ -65,4 +65,8 @@ export class AppComponent implements OnInit {
     this.isEditingMaxHP = false; // Exit edit mode
     this.saveCharacterData(); // Save changes
   }
+
+  updateKi(): void {
+    this.saveCharacterData();
+  }
 }
