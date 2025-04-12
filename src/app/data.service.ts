@@ -1,20 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { saveToLocalStorage, getFromLocalStorage } from '../utils/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  private dataUrl = 'http://localhost:3000/characterData'; // Adjust based on your data.json structure
 
-  constructor(private http: HttpClient) {}
+  // Example: Save character data
+saveCharacter(character: any) {
+  saveToLocalStorage('character', character);
+}
 
-  getCharacterData(): Observable<any> {
-    return this.http.get(this.dataUrl);
+loadCharacter() {
+  const character = getFromLocalStorage('character');
+  if (character) {
+      console.log('Character loaded:', character);
+      return character;
+  } else {
+      console.log('No character data found.');
+      return null;
   }
-
-  setCharacterData(data: any): Observable<any> {
-    return this.http.put(this.dataUrl, data); // Use PUT for full updates
-  }
+}
 }
