@@ -1,14 +1,14 @@
 .black-bordered-table {
-  border-collapse: collapse; /* Ensures borders don't double up */
-  width: 100%; /* Optional: Makes the table take full width */
-  margin-bottom: 20px;
+  border-collapse: collapse; /* Ensures borders collapse into a single border */
+  width: 100%;
+  border: 1px solid black; /* Adds a border around the entire table */
 }
 
-.black-bordered-table th,
-.black-bordered-table td {
-  border: 1px solid black; /* Black borders for table cells */
-  padding: 8px; /* Optional: Adds padding inside cells */
-  text-align: left; /* Optional: Aligns text to the left */
+.black-bordered-table td,
+.black-bordered-table th {
+  border: 1px solid black !important; /* Use !important to override conflicting rules */
+  padding: 8px; /* Adds padding inside cells */
+  text-align: left; /* Aligns text to the left */
 }
 
 .black-bordered-table th {
@@ -21,13 +21,13 @@
 }
 
 /* Remove borders for the Max HP <td> */
-.black-bordered-table tr.maxHP * {
-  border: none; /* Removes the border for the Max HP cell */
+.black-bordered-table td.maxHP {
+  border: none !important; /* Ensure no border is applied to the Max HP cell */
 }
 
 /* Ensure child elements inside Max HP <td> also have no borders */
 .black-bordered-table td.maxHP * {
-  border: none; /* Removes borders for all child elements inside the Max HP cell */
+  border: none !important; /* Remove borders for all child elements inside the Max HP cell */
 }
 
 /* Ensure the Max HP input field stays the same size */
@@ -49,28 +49,14 @@
   font-size: 3rem;
 }
 
-/* Table styles */
-.black-bordered-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.black-bordered-table td {
-  border: 1px solid black;
-  padding: 8px;
-  text-align: left;
-}
-
 /* HP input field styles */
 .HPInput {
-  padding: 20px;
   padding-top: 0px;
-  width: 75%;
+  width: 120px;
 }
 
 .hp-input {
   font-size: 2rem;
-  width: 50%; /* Set the width to 50% of its current container */
 }
 
 /* Button container styles */
@@ -86,31 +72,20 @@
   padding-left: 15px;
 }
 
-/* Hurt button styles */
+/* Hurt button styles with a dark-to-light red gradient */
 .hurt-button {
-  background: red;
+  background: linear-gradient(to bottom, #8b0000, #ff6347); /* Dark red to light red */
   font-size: 2rem;
   border-radius: 10px;
+  color: white; /* Ensure the text is readable */
 }
 
-/* Heal button styles */
+/* Heal button styles with a dark-to-light green gradient */
 .heal-button {
-  background: green;
+  background: linear-gradient(to bottom, #006400, #32cd32); /* Dark green to light green */
   font-size: 2rem;
   border-radius: 10px;
-}
-
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
-
-.maxHP {
-  width: 100px;
-  border: none;
+  color: white; /* Ensure the text is readable */
 }
 
 /* Center the table with class "money" */
@@ -118,9 +93,10 @@ table.money {
   margin: 0 auto; /* Centers the table horizontally */
   text-align: center; /* Centers the text inside the table cells */
   table-layout: fixed; /* Ensures the column widths are respected */
-  width: 40%; /* Set the table width to 100% of its container */
+  width: 400px; /* Set the table width to 100% of its container */
   border-spacing: 0; /* Removes spacing between table cells */
   border-collapse: collapse; /* Ensures borders collapse and removes gaps */
+  height: 50px;
 }
 
 /* Remove padding and margins from table cells */
@@ -138,3 +114,27 @@ table.money mat-form-field {
   padding: 0; /* Remove extra padding */
 }
 
+table.layout {
+  margin: 0 auto; /* Centers the table horizontally */
+  text-align: center; /* Centers the text inside the table cells */
+  table-layout: fixed; /* Ensures the column widths are respected */
+  width: 400px; /* Set the table width to 100% of its container */
+  border-spacing: 0; /* Removes spacing between table cells */
+  border-collapse: collapse; /* Ensures borders collapse and removes gaps */
+}
+
+/* Remove padding and margins from table cells */
+table.layout td {
+  padding: 4px; /* Remove padding inside table cells */
+  margin: 0; /* Ensure no extra margins are applied */
+  border: none; /* Remove borders if they are causing gaps */
+}
+
+mat-form-field.ki-input {
+  width: 90px;
+}
+
+/* Apply Goudy Bookletter 1911 font to the entire page */
+body, input, button, select, textarea {
+  font-family: 'Goudy Bookletter 1911', serif;
+}

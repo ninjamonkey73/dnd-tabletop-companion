@@ -1,8 +1,11 @@
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link href="https://fonts.googleapis.com/css2?family=Goudy+Bookletter+1911&display=swap" rel="stylesheet">
 </head>
+<body>
+<table class="layout">
 <div mat-card class="card-container">
-  <div>
+<tr>
     <mat-form-field>
       <mat-label>Character Class</mat-label>
       <mat-select id="class" [(ngModel)]="character.class" (change)="updateClass()">
@@ -10,17 +13,16 @@
         <mat-option value="Fighter">Fighter</mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
-  <div>
+  </tr>
+  <tr>
     <mat-card-title class="card-title">Hit Points</mat-card-title>
-  </div>
   <mat-card-content>
     <table class="black-bordered-table">
       <tr>
         <td>Current HP</td>
         <td>
           <tr class="maxHP">
-          <td>Max HP</td>
+          <td class="maxHP">Max HP</td>
           <button class="edit" mat-fab extended (click)="editMaxHP()">
             <span class="material-symbols-outlined">edit</span>
           </button>
@@ -49,29 +51,33 @@
         <td>{{ percentHP }}%</td>
       </tr>
     </table>
-    <div>
+    <tr>
+      <br>
       <mat-form-field appearance="fill" class="HPInput">
         <input matInput placeholder="HP to +/-" type="number" [(ngModel)]="changeVal" class="hp-input" />
       </mat-form-field>
-    </div>
-
+    </tr>
+<tr>
 <mat-card-footer>
   <span class="button-container">
     <button mat-fab extended class="hurt-button" (click)="hurt()">
-      <span class="material-symbols-outlined">remove</span>
+      <mat-icon>remove</mat-icon>
       Hurt
     </button>
   </span>
   <span class="button-container">
     <button mat-fab extended class="heal-button" (click)="heal()">
-      <span class="material-symbols-outlined">add</span>
+      <mat-icon>add</mat-icon>
       Heal
     </button>
   </span>
 </mat-card-footer>
+</tr>
 </mat-card-content>
+</tr>
 </div>
 <br>
+<tr>
 <mat-card-content>
   <table class="money">
     <tr>
@@ -102,16 +108,18 @@
     </tr>
   </table>
 </mat-card-content>
+</tr>
 @if (character.class === "Monk") {
-<div mat-card class="card-container">
-  <div>
-    <mat-card-title class="card-title">Ki Points</mat-card-title>
-  </div>
-  <div>
+  <tr>
+<div mat-card>
+  <mat-card-title class="card-title" style="font-size: x-large;">Ki Points</mat-card-title>
+  <br>
     <mat-form-field appearance="fill" class="ki-input">
       <input matInput type="number" [(ngModel)]="character.kiPoints" class="ki-input" (change)="updateKi()"/>
     </mat-form-field>
-  </div>
 </div>
+</tr>
 }
+</table>
+</body>
 <router-outlet />
