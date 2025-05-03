@@ -113,3 +113,28 @@
   border: none;
 }
 
+/* Center the table with class "money" */
+table.money {
+  margin: 0 auto; /* Centers the table horizontally */
+  text-align: center; /* Centers the text inside the table cells */
+  table-layout: fixed; /* Ensures the column widths are respected */
+  width: 40%; /* Set the table width to 100% of its container */
+  border-spacing: 0; /* Removes spacing between table cells */
+  border-collapse: collapse; /* Ensures borders collapse and removes gaps */
+}
+
+/* Remove padding and margins from table cells */
+table.money td {
+  padding: 4px; /* Remove padding inside table cells */
+  margin: 0; /* Ensure no extra margins are applied */
+  border: none; /* Remove borders if they are causing gaps */
+}
+
+/* Ensure mat-form-field elements fit tightly */
+table.money mat-form-field {
+  width: 100%; /* Make the form fields take up the full width of the cell */
+  box-sizing: border-box; /* Ensure padding and borders are included in the width */
+  margin: 0; /* Remove extra margins */
+  padding: 0; /* Remove extra padding */
+}
+

@@ -6,10 +6,11 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngModel)]
 import { NgIf } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf],
+  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf, MatSelectModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -17,7 +18,12 @@ export class AppComponent implements OnInit {
   character = {
     currentHP: 0,
     maxHP: 100,
-    kiPoints: 2
+    kiPoints: 2,
+    class: '',
+    cp: 0,
+    sp: 0,
+    gp: 0,
+    pp: 0
   };
 
   changeVal: number | null = null; // Initialize as null
@@ -67,6 +73,14 @@ export class AppComponent implements OnInit {
   }
 
   updateKi(): void {
+    this.saveCharacterData();
+  }
+
+  updateClass(): void {
+    this.saveCharacterData();
+  }
+
+  updateMoney(): void {
     this.saveCharacterData();
   }
 }

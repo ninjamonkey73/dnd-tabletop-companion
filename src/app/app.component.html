@@ -3,6 +3,15 @@
 </head>
 <div mat-card class="card-container">
   <div>
+    <mat-form-field>
+      <mat-label>Character Class</mat-label>
+      <mat-select id="class" [(ngModel)]="character.class" (change)="updateClass()">
+        <mat-option value="Monk">Monk</mat-option>
+        <mat-option value="Fighter">Fighter</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
     <mat-card-title class="card-title">Hit Points</mat-card-title>
   </div>
   <mat-card-content>
@@ -62,6 +71,38 @@
 </mat-card-footer>
 </mat-card-content>
 </div>
+<br>
+<mat-card-content>
+  <table class="money">
+    <tr>
+      <td id="money">
+        <mat-form-field appearance="fill" class="cp-input">
+          <mat-label>Copper</mat-label>
+          <input matInput type="number" [(ngModel)]="character.cp" class="cp-input" (change)="updateMoney()"/>
+        </mat-form-field>
+      </td>
+      <td id="money">
+        <mat-form-field appearance="fill" class="sp-input">
+          <mat-label>Silver</mat-label>
+          <input matInput type="number" [(ngModel)]="character.sp" class="sp-input" (change)="updateMoney()"/>
+        </mat-form-field>
+      </td>
+      <td id="money">
+        <mat-form-field appearance="fill" class="gp-input">
+          <mat-label>Gold</mat-label>
+          <input matInput type="number" [(ngModel)]="character.gp" class="gp-input" (change)="updateMoney()"/>
+        </mat-form-field>
+      </td>
+      <td id="money">
+        <mat-form-field appearance="fill" class="pp-input">
+          <mat-label>Platinum</mat-label>
+          <input matInput type="number" [(ngModel)]="character.pp" class="pp-input" (change)="updateMoney()"/>
+        </mat-form-field>
+      </td>
+    </tr>
+  </table>
+</mat-card-content>
+@if (character.class === "Monk") {
 <div mat-card class="card-container">
   <div>
     <mat-card-title class="card-title">Ki Points</mat-card-title>
@@ -72,4 +113,5 @@
     </mat-form-field>
   </div>
 </div>
+}
 <router-outlet />
