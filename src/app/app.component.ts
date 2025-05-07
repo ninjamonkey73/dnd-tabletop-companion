@@ -184,7 +184,7 @@ export class AppComponent implements OnInit {
         name: this.newCharacterName.trim(),
         currentHP: 0,
         maxHP: 100,
-        kiPoints: 2,
+        kiPoints: this.character.level > 1 ? this.character.level : 0, // Set kiPoints only if level > 1
         class: '',
         cp: 0,
         sp: 0,
