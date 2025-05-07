@@ -5,17 +5,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngModel)]
-import { NgIf } from '@angular/common';
+import { NgIf, NgForOf } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf, MatSelectModule],
+  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf, MatSelectModule, NgForOf],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   character = {
+    name: '',
     currentHP: 0,
     maxHP: 100,
     kiPoints: 2,
@@ -23,19 +24,71 @@ export class AppComponent implements OnInit {
     cp: 0,
     sp: 0,
     gp: 0,
-    pp: 0
+    pp: 0,
+    level: 1
   };
+
+  classes = ["Artificer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rogue","Sorcerer","Warlock","Wizard"]
+
+  levels: number[] = Array.from({ length: 20 }, (_, i) => i + 1); // Generate levels 1 through 20
+
+  savedCharacterNames: string[] = []; // List of saved character names
+  selectedCharacter: string | null = null; // Tracks the selected character
+  isCreatingNewCharacter = false; // Flag to show the new character input field
+  newCharacterName = ''; // Holds the name of the new character being created
 
   changeVal: number | null = null; // Initialize as null
   percentHP = 0;
   isEditingMaxHP = false; // Flag to toggle edit mode
 
   ngOnInit(): void {
-    const savedCharacter = localStorage.getItem('character');
-    if (savedCharacter) {
-      this.character = JSON.parse(savedCharacter);
+    this.loadSavedCharacterNames();
+  }
+
+  loadSavedCharacterNames(): void {
+    // Load all saved character names from localStorage
+    this.savedCharacterNames = Object.keys(localStorage).filter((key) => {
+      const character = localStorage.getItem(key);
+      return character !== null && character.trim() !== ''; // Ensure valid entries
+    });
+  }
+
+  onCharacterSelection(name: string): void {
+    if (name === 'new') {
+      // If "New Character" is selected, show the input field for a new name
+      this.isCreatingNewCharacter = true;
+      this.newCharacterName = '';
+    } else {
+      // Load the selected character's data
+      this.isCreatingNewCharacter = false;
+      const savedCharacter = localStorage.getItem(name);
+      if (savedCharacter) {
+        this.character = JSON.parse(savedCharacter);
+      }
     }
-    this.updatePercentHP();
+  }
+
+  createNewCharacter(): void {
+    if (this.newCharacterName.trim()) {
+      // Create a new character with the entered name
+      this.character = {
+        name: this.newCharacterName.trim(),
+        currentHP: 0,
+        maxHP: 100,
+        kiPoints: 2,
+        class: '',
+        cp: 0,
+        sp: 0,
+        gp: 0,
+        pp: 0,
+        level: 1
+      };
+      this.saveCharacterData();
+      this.isCreatingNewCharacter = false;
+      this.newCharacterName = '';
+    } else {
+      console.error('Character name cannot be empty.');
+    }
   }
 
   hurt(): void {
@@ -57,7 +110,12 @@ export class AppComponent implements OnInit {
   }
 
   saveCharacterData(): void {
-    localStorage.setItem('character', JSON.stringify(this.character));
+    if (this.character.name) {
+      localStorage.setItem(this.character.name, JSON.stringify(this.character));
+      this.loadSavedCharacterNames(); // Refresh the list of saved names
+    } else {
+      console.error('Character name is required to save data.');
+    }
   }
 
   editMaxHP(): void {
@@ -72,15 +130,55 @@ export class AppComponent implements OnInit {
     this.saveCharacterData(); // Save changes
   }
 
-  updateKi(): void {
+  updateChar(): void {
     this.saveCharacterData();
   }
 
-  updateClass(): void {
-    this.saveCharacterData();
+  saveNewCharacter(): void {
+    if (this.newCharacterName.trim()) {
+      // Create a new character with the entered name
+      this.character = {
+        name: this.newCharacterName.trim(),
+        currentHP: 0,
+        maxHP: 100,
+        kiPoints: 2,
+        class: '',
+        cp: 0,
+        sp: 0,
+        gp: 0,
+        pp: 0,
+        level: 1
+      };
+
+      this.saveCharacterData(); // Save the new character to localStorage
+      this.loadSavedCharacterNames(); // Refresh the list of saved names
+      this.selectedCharacter = this.character.name; // Set the dropdown to the new character
+      this.isCreatingNewCharacter = false; // Hide the new character input field
+      this.newCharacterName = ''; // Clear the input field
+    } else {
+      console.error('Character name cannot be empty.');
+    }
   }
 
-  updateMoney(): void {
-    this.saveCharacterData();
+  deleteCharacter(name: string | null): void {
+    if (name && name !== 'new') {
+      if (confirm(`Are you sure you want to delete the character "${name}"?`)) {
+        localStorage.removeItem(name); // Remove the character from localStorage
+        this.loadSavedCharacterNames(); // Refresh the list of saved names
+        this.selectedCharacter = null; // Reset the selected character
+        this.character = {
+          name: '',
+          currentHP: 0,
+          maxHP: 100,
+          kiPoints: 2,
+          class: '',
+          cp: 0,
+          sp: 0,
+          gp: 0,
+          pp: 0,
+          level: 1
+        }; // Reset the character object
+      }
+    }
   }
 }

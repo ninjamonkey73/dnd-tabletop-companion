@@ -1,7 +1,8 @@
 .black-bordered-table {
   border-collapse: collapse; /* Ensures borders collapse into a single border */
-  width: 100%;
+  width: auto;
   border: 1px solid black; /* Adds a border around the entire table */
+  justify-self: center;
 }
 
 .black-bordered-table td,
@@ -137,4 +138,31 @@ mat-form-field.ki-input {
 /* Apply Goudy Bookletter 1911 font to the entire page */
 body, input, button, select, textarea {
   font-family: 'Goudy Bookletter 1911', serif;
+}
+
+/* Style the dropdown item container */
+.dropdown-item {
+  display: flex;
+  align-items: center; /* Vertically center the content */
+  width: 100%; /* Ensure the container spans the full width of the dropdown */
+}
+
+/* Style the delete button */
+.delete-icon {
+  justify-content: right;
+  border: none; /* Remove any border around the button */
+  background: none; /* Remove background color */
+  padding: 0; /* Remove padding for a cleaner look */
+  cursor: pointer; /* Show a pointer cursor on hover */
+}
+
+/* Align the class and level fields on the same line */
+.form-row {
+  display: flex;
+  gap: 16px; /* Add spacing between the fields */
+  align-items: center; /* Vertically align the fields */
+}
+
+mat-form-field {
+  flex: 1; /* Ensure both fields take up equal space */
 }

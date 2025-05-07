@@ -5,14 +5,62 @@
 <body>
 <table class="layout">
 <div mat-card class="card-container">
-<tr>
-    <mat-form-field>
-      <mat-label>Character Class</mat-label>
-      <mat-select id="class" [(ngModel)]="character.class" (change)="updateClass()">
-        <mat-option value="Monk">Monk</mat-option>
-        <mat-option value="Fighter">Fighter</mat-option>
+  <tr>
+    <mat-form-field appearance="fill">
+      <mat-label>Character Name</mat-label>
+      <mat-select [(ngModel)]="selectedCharacter" (selectionChange)="onCharacterSelection($event.value)">
+        <mat-option *ngFor="let name of savedCharacterNames" [value]="name">
+          {{ name }}
+        </mat-option>
+        <mat-option value="new">New Character</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <!-- Delete button next to the dropdown -->
+    <button
+      mat-icon-button
+      color="warn"
+      class="delete-icon"
+      [disabled]="!selectedCharacter || selectedCharacter === 'new'"
+      (click)="deleteCharacter(selectedCharacter)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </tr>
+  <tr>
+    <mat-form-field *ngIf="isCreatingNewCharacter" appearance="fill">
+      <mat-label>New Character Name</mat-label>
+      <input matInput [(ngModel)]="newCharacterName" placeholder="Enter new character name" />
+    </mat-form-field>
+  </tr>
+  <tr>
+    <button mat-raised-button color="primary" *ngIf="isCreatingNewCharacter" (click)="saveNewCharacter()">
+      Save Character
+    </button>
+  </tr>
+  <tr>
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Character Class</mat-label>
+        <mat-select id="class" [(ngModel)]="character.class" (change)="updateChar()">
+          <mat-option *ngFor="let class of classes" [value]="class">
+            {{ class }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="ki-input">
+        <mat-label>Character Level</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="character.level"
+          min="1"
+          max="20"
+          placeholder="Enter Level"
+          (change)="updateChar()"
+        />
+      </mat-form-field>
+    </div>
   </tr>
   <tr>
     <mat-card-title class="card-title">Hit Points</mat-card-title>
@@ -84,25 +132,25 @@
       <td id="money">
         <mat-form-field appearance="fill" class="cp-input">
           <mat-label>Copper</mat-label>
-          <input matInput type="number" [(ngModel)]="character.cp" class="cp-input" (change)="updateMoney()"/>
+          <input matInput type="number" [(ngModel)]="character.cp" class="cp-input" (change)="updateChar()"/>
         </mat-form-field>
       </td>
       <td id="money">
         <mat-form-field appearance="fill" class="sp-input">
           <mat-label>Silver</mat-label>
-          <input matInput type="number" [(ngModel)]="character.sp" class="sp-input" (change)="updateMoney()"/>
+          <input matInput type="number" [(ngModel)]="character.sp" class="sp-input" (change)="updateChar()"/>
         </mat-form-field>
       </td>
       <td id="money">
         <mat-form-field appearance="fill" class="gp-input">
           <mat-label>Gold</mat-label>
-          <input matInput type="number" [(ngModel)]="character.gp" class="gp-input" (change)="updateMoney()"/>
+          <input matInput type="number" [(ngModel)]="character.gp" class="gp-input" (change)="updateChar()"/>
         </mat-form-field>
       </td>
       <td id="money">
         <mat-form-field appearance="fill" class="pp-input">
           <mat-label>Platinum</mat-label>
-          <input matInput type="number" [(ngModel)]="character.pp" class="pp-input" (change)="updateMoney()"/>
+          <input matInput type="number" [(ngModel)]="character.pp" class="pp-input" (change)="updateChar()"/>
         </mat-form-field>
       </td>
     </tr>
@@ -115,7 +163,7 @@
   <mat-card-title class="card-title" style="font-size: x-large;">Ki Points</mat-card-title>
   <br>
     <mat-form-field appearance="fill" class="ki-input">
-      <input matInput type="number" [(ngModel)]="character.kiPoints" class="ki-input" (change)="updateKi()"/>
+      <input matInput type="number" [(ngModel)]="character.kiPoints" class="ki-input" (change)="updateChar()"/>
     </mat-form-field>
 </div>
 </tr>
