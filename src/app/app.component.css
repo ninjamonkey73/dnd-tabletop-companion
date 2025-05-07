@@ -1,6 +1,6 @@
 .black-bordered-table {
   border-collapse: collapse; /* Ensures borders collapse into a single border */
-  width: auto;
+  width: 450px;
   border: 1px solid black; /* Adds a border around the entire table */
   justify-self: center;
 }
@@ -10,6 +10,7 @@
   border: 1px solid black !important; /* Use !important to override conflicting rules */
   padding: 8px; /* Adds padding inside cells */
   text-align: left; /* Aligns text to the left */
+  font-size: 1.25rem;
 }
 
 .black-bordered-table th {
@@ -39,9 +40,11 @@
 
 /* Card container styles */
 .card-container {
-  max-width: fit-content;
-  margin: auto;
-  padding-top: 20px;
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center children horizontally */
+  justify-content: center; /* Center children vertically */
+  padding: 20px; /* Add padding around the card */
 }
 
 /* Card title styles */
@@ -58,6 +61,10 @@
 
 .hp-input {
   font-size: 2rem;
+}
+
+.tempHP-input {
+  width: 80px;
 }
 
 /* Button container styles */
@@ -89,15 +96,14 @@
   color: white; /* Ensure the text is readable */
 }
 
-/* Center the table with class "money" */
+/* Center the table with class "money" inside the card */
 table.money {
-  margin: 0 auto; /* Centers the table horizontally */
+  margin: auto; /* Centers the table horizontally and vertically within its container */
   text-align: center; /* Centers the text inside the table cells */
   table-layout: fixed; /* Ensures the column widths are respected */
-  width: 400px; /* Set the table width to 100% of its container */
+  width: 400px; /* Set the table width */
   border-spacing: 0; /* Removes spacing between table cells */
   border-collapse: collapse; /* Ensures borders collapse and removes gaps */
-  height: 50px;
 }
 
 /* Remove padding and margins from table cells */
@@ -165,4 +171,31 @@ body, input, button, select, textarea {
 
 mat-form-field {
   flex: 1; /* Ensure both fields take up equal space */
+}
+
+.tempHP-input {
+  font-size: 1.25rem;
+}
+
+.rest-button {
+  background: linear-gradient(to bottom, navy, lightblue);
+  font-size: 1.5rem;
+  border-radius: 10px;
+  color: white; /* Ensure the text is readable */
+}
+
+.charName {
+  width: 150px;
+}
+
+.edit {
+  border-radius: 10px;
+}
+
+.top {
+  width: 400px;
+}
+
+.longRest {
+ vertical-align: top;
 }

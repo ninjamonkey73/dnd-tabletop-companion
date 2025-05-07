@@ -7,10 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngModel)]
 import { NgIf, NgForOf } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf, MatSelectModule, NgForOf],
+  imports: [RouterOutlet, MatCardModule, MatIconModule, MatFormField, MatInputModule, FormsModule, NgIf, MatSelectModule, NgForOf, MatSlideToggle],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -25,8 +26,13 @@ export class AppComponent implements OnInit {
     sp: 0,
     gp: 0,
     pp: 0,
-    level: 1
+    level: 1,
+    tempHP: 0
   };
+
+  lastCharacterSelected:  string = '';
+
+  fullHeal = false;
 
   classes = ["Artificer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rogue","Sorcerer","Warlock","Wizard"]
 
@@ -43,13 +49,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSavedCharacterNames();
+    this.loadLastSelectedCharacter();
+
+    // Load the fullHeal toggle value from localStorage
+    const savedFullHeal = localStorage.getItem('fullHeal');
+    if (savedFullHeal !== null) {
+      this.fullHeal = JSON.parse(savedFullHeal);
+    }
   }
 
   loadSavedCharacterNames(): void {
-    // Load all saved character names from localStorage
+    // Load all saved character names from localStorage, excluding "lastSelectedCharacter" and "fullHeal"
     this.savedCharacterNames = Object.keys(localStorage).filter((key) => {
       const character = localStorage.getItem(key);
-      return character !== null && character.trim() !== ''; // Ensure valid entries
+      return key !== 'lastSelectedCharacter' && key !== 'fullHeal' && character !== null && character.trim() !== ''; // Exclude the keys
     });
   }
 
@@ -64,6 +77,19 @@ export class AppComponent implements OnInit {
       const savedCharacter = localStorage.getItem(name);
       if (savedCharacter) {
         this.character = JSON.parse(savedCharacter);
+        this.selectedCharacter = name; // Update the selected character
+        localStorage.setItem('lastSelectedCharacter', name); // Save the last selected character
+      }
+    }
+  }
+
+  loadLastSelectedCharacter(): void {
+    const lastCharacterName = localStorage.getItem('lastSelectedCharacter'); // Retrieve the last selected character name
+    if (lastCharacterName) {
+      const savedCharacter = localStorage.getItem(lastCharacterName); // Retrieve the character data
+      if (savedCharacter) {
+        this.character = JSON.parse(savedCharacter); // Load the character data
+        this.selectedCharacter = lastCharacterName; // Set the dropdown to the last selected character
       }
     }
   }
@@ -81,7 +107,8 @@ export class AppComponent implements OnInit {
         sp: 0,
         gp: 0,
         pp: 0,
-        level: 1
+        level: 1,
+        tempHP: 0
       };
       this.saveCharacterData();
       this.isCreatingNewCharacter = false;
@@ -92,10 +119,24 @@ export class AppComponent implements OnInit {
   }
 
   hurt(): void {
-    this.character.currentHP = Math.max(0, this.character.currentHP - (this.changeVal ?? 0));
-    this.changeVal = null;
-    this.updatePercentHP();
-    this.saveCharacterData();
+    if (this.changeVal !== null && this.changeVal > 0) {
+      let damage = this.changeVal;
+
+      // Subtract from tempHP first
+      if (this.character.tempHP > 0) {
+        const tempDamage = Math.min(damage, this.character.tempHP);
+        this.character.tempHP -= tempDamage;
+        damage -= tempDamage;
+      }
+
+      // Subtract the remaining damage from currentHP
+      this.character.currentHP = Math.max(0, this.character.currentHP - damage);
+
+      // Reset changeVal and update percentHP
+      this.changeVal = null;
+      this.updatePercentHP();
+      this.saveCharacterData();
+    }
   }
 
   heal(): void {
@@ -111,8 +152,9 @@ export class AppComponent implements OnInit {
 
   saveCharacterData(): void {
     if (this.character.name) {
-      localStorage.setItem(this.character.name, JSON.stringify(this.character));
+      localStorage.setItem(this.character.name, JSON.stringify(this.character)); // Save character data
       this.loadSavedCharacterNames(); // Refresh the list of saved names
+      localStorage.setItem('lastSelectedCharacter', this.character.name); // Save the last selected character
     } else {
       console.error('Character name is required to save data.');
     }
@@ -131,6 +173,7 @@ export class AppComponent implements OnInit {
   }
 
   updateChar(): void {
+    this.lastCharacterSelected = this.character.name;
     this.saveCharacterData();
   }
 
@@ -147,7 +190,8 @@ export class AppComponent implements OnInit {
         sp: 0,
         gp: 0,
         pp: 0,
-        level: 1
+        level: 1,
+        tempHP: 0
       };
 
       this.saveCharacterData(); // Save the new character to localStorage
@@ -176,9 +220,39 @@ export class AppComponent implements OnInit {
           sp: 0,
           gp: 0,
           pp: 0,
-          level: 1
+          level: 1,
+          tempHP: 0
         }; // Reset the character object
       }
     }
+  }
+
+  shortRest() {
+if(this.character.class === "Monk") {
+  if(this.character.level === 1) {
+    this.character.kiPoints = 0
+  } else {
+    this.character.kiPoints = this.character.level
+  }
+}
+  }
+
+  longRest() {
+    if (this.character.class === "Monk") {
+      if (this.character.level === 1) {
+        this.character.kiPoints = 0;
+      } else {
+        this.character.kiPoints = this.character.level;
+      }
+    }
+    if (this.fullHeal) {
+      this.character.currentHP = this.character.maxHP;
+    }
+
+    this.updateChar();
+  }
+
+  saveHealToggle(): void {
+    localStorage.setItem('fullHeal', JSON.stringify(this.fullHeal));
   }
 }
