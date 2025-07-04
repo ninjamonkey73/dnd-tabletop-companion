@@ -12,6 +12,19 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+To deploy:
+
+```bash
+git checkout gh-pages
+git merge main
+git push origin gh-pages
+```
+Commit and push, then
+
+```bash
+git checkout main
+```
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
