@@ -258,7 +258,7 @@
           <button
             *ngFor="let s of [0, 1, 2]"
             mat-icon-button
-            [ngClass]="{ 'active-success': deathSaveSuccess[s] }"
+            [class.active-class]="{ 'active-success': deathSaveSuccess[s] }"
             (click)="toggleDeathSave('success', s)"
           >
             <mat-icon>{{
@@ -270,7 +270,7 @@
           <button
             *ngFor="let f of [0, 1, 2]"
             mat-icon-button
-            [ngClass]="{ 'active-failure': deathSaveFailure[f] }"
+            [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
             (click)="toggleDeathSave('failure', f)"
           >
             <mat-icon>{{

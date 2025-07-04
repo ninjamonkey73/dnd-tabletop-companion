@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngModel)]
-import { NgIf, NgForOf, NgClass } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule for buttons
@@ -22,11 +21,8 @@ import { MatButtonModule } from '@angular/material/button'; // Import MatButtonM
     MatFormField,
     MatInputModule,
     FormsModule,
-    NgIf,
     MatSelectModule,
-    NgForOf,
     MatSlideToggle,
-    NgClass,
     MatButtonModule,
   ],
   templateUrl: './app.component.html',
