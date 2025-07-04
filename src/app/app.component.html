@@ -21,16 +21,16 @@
   />
 </head>
 <body>
-  <table class="layout">
+  <div class="layout">
     <div mat-card class="card-container">
-      <tr class="top">
-        <td class="button-container">
+      <div class="row top">
+        <div class="button-container">
           <button mat-fab extended class="rest-button" (click)="shortRest()">
             <mat-icon>snooze</mat-icon>
             SR
           </button>
-        </td>
-        <td>
+        </div>
+        <div class="char-select-container">
           <mat-form-field appearance="fill" class="charName">
             <mat-label>Character Name</mat-label>
             <mat-select
@@ -46,8 +46,6 @@
               <mat-option value="new">New Character</mat-option>
             </mat-select>
           </mat-form-field>
-
-          <!-- Delete button next to the dropdown -->
           <button
             mat-icon-button
             color="warn"
@@ -57,23 +55,21 @@
           >
             <mat-icon>delete</mat-icon>
           </button>
-        </td>
-        <td class="longRest">
-          <tr>
-            <mat-slide-toggle [(ngModel)]="fullHeal" (change)="saveHealToggle()">LR Heals</mat-slide-toggle>
-          </tr>
-          <tr>
-            <span class="button-container">
-              <button mat-fab extended class="rest-button" (click)="longRest()">
-                <mat-icon>bedtime</mat-icon>
-                LR
-              </button>
-            </span>
-          </tr>
-        </td>
-      </tr>
-      <tr>
-        <mat-form-field *ngIf="isCreatingNewCharacter" appearance="fill">
+        </div>
+        <div class="longRest">
+          <mat-slide-toggle [(ngModel)]="fullHeal" (change)="saveHealToggle()"
+            >LR Heals</mat-slide-toggle
+          >
+        </div>
+        <div class="button-container">
+          <button mat-fab extended class="rest-button" (click)="longRest()">
+            <mat-icon class="logRest">bedtime</mat-icon>
+            LR
+          </button>
+        </div>
+      </div>
+      <div class="row new-character-row" *ngIf="isCreatingNewCharacter">
+        <mat-form-field appearance="fill">
           <mat-label>New Character Name</mat-label>
           <input
             matInput
@@ -81,65 +77,55 @@
             placeholder="Enter new character name"
           />
         </mat-form-field>
-      </tr>
-      <tr>
-        <button
-          mat-raised-button
-          color="primary"
-          *ngIf="isCreatingNewCharacter"
-          (click)="saveNewCharacter()"
-        >
+        <button mat-raised-button color="primary" (click)="saveNewCharacter()">
           Save Character
         </button>
-      </tr>
-      <tr>
-        <div class="form-row">
-          <mat-form-field>
-            <mat-label>Character Class</mat-label>
-            <mat-select
-              id="class"
-              [(ngModel)]="character.class"
-              (selectionChange)="updateChar()"
-            >
-              <mat-option *ngFor="let class of classes" [value]="class">
-                {{ class }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="ki-input">
-            <mat-label>Character Level</mat-label>
-            <input
-              matInput
-              type="number"
-              [(ngModel)]="character.level"
-              min="1"
-              max="20"
-              placeholder="Enter Level"
-              (change)="updateChar()"
-            />
-          </mat-form-field>
-        </div>
-      </tr>
-      <tr>
+      </div>
+      <div class="row form-row">
+        <mat-form-field class="classLevel">
+          <mat-label>Character Class</mat-label>
+          <mat-select
+            id="class"
+            [(ngModel)]="character.class"
+            (selectionChange)="updateChar()"
+          >
+            <mat-option *ngFor="let class of classes" [value]="class">
+              {{ class }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="classLevel">
+          <mat-label>Character Level</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="character.level"
+            min="1"
+            max="20"
+            placeholder="Enter Level"
+            (change)="updateCharLevel()"
+            (blur)="updateCharLevel()"
+          />
+        </mat-form-field>
+      </div>
+      <div class="row hp-row">
         <mat-card-title class="card-title">Hit Points</mat-card-title>
         <mat-card-content>
-          <table class="black-bordered-table">
-            <tr>
-              <td>Current HP</td>
-              <td>
-                <tr class="maxHP">
-                  <td class="maxHP">Max HP</td>
-                  <button class="edit" mat-fab extended (click)="editMaxHP()">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                </tr>
-              </td>
-              <td>Temp HP</td>
-              <td>% of Max</td>
-            </tr>
-            <tr class="hpRow">
-              <td>{{ character.currentHP }}</td>
-              <td>
+          <div class="hp-table">
+            <div class="hp-header">
+              <div>Current HP</div>
+              <div class="maxHP-header">
+                <span>Max HP</span>
+                <button class="edit" mat-fab extended (click)="editMaxHP()">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+              <div>Temp HP</div>
+              <div>% of Max</div>
+            </div>
+            <div class="hpRow">
+              <div>{{ character.currentHP }}</div>
+              <div>
                 <!-- Conditionally render input or plain text -->
                 <ng-container *ngIf="isEditingMaxHP; else displayMaxHP">
                   <input
@@ -154,8 +140,8 @@
                 <ng-template #displayMaxHP>
                   {{ character.maxHP }}
                 </ng-template>
-              </td>
-              <td>
+              </div>
+              <div>
                 <input
                   matInput
                   type="number"
@@ -164,12 +150,11 @@
                   placeholder="Enter Temp HP"
                   (keydown.enter)="updateChar()"
                 />
-              </td>
-              <td>{{ percentHP }}%</td>
-            </tr>
-          </table>
-          <tr>
-            <br />
+              </div>
+              <div>{{ percentHP }}%</div>
+            </div>
+          </div>
+          <div class="hp-controls">
             <mat-form-field appearance="fill" class="HPInput">
               <input
                 matInput
@@ -179,8 +164,6 @@
                 class="hp-input"
               />
             </mat-form-field>
-          </tr>
-          <tr>
             <mat-card-footer>
               <span class="button-container">
                 <button mat-fab extended class="hurt-button" (click)="hurt()">
@@ -195,69 +178,58 @@
                 </button>
               </span>
             </mat-card-footer>
-          </tr>
+          </div>
         </mat-card-content>
-      </tr>
+      </div>
     </div>
-    <br />
-    <tr>
+    <div class="row money-row">
       <mat-card-content>
-        <table class="money">
-          <tr>
-            <td id="money">
-              <mat-form-field appearance="fill" class="cp-input">
-                <mat-label>Copper</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [(ngModel)]="character.cp"
-                  class="cp-input"
-                  (change)="updateChar()"
-                />
-              </mat-form-field>
-            </td>
-            <td id="money">
-              <mat-form-field appearance="fill" class="sp-input">
-                <mat-label>Silver</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [(ngModel)]="character.sp"
-                  class="sp-input"
-                  (change)="updateChar()"
-                />
-              </mat-form-field>
-            </td>
-            <td id="money">
-              <mat-form-field appearance="fill" class="gp-input">
-                <mat-label>Gold</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [(ngModel)]="character.gp"
-                  class="gp-input"
-                  (change)="updateChar()"
-                />
-              </mat-form-field>
-            </td>
-            <td id="money">
-              <mat-form-field appearance="fill" class="pp-input">
-                <mat-label>Platinum</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [(ngModel)]="character.pp"
-                  class="pp-input"
-                  (change)="updateChar()"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
-        </table>
+        <div class="money-flex">
+          <mat-form-field appearance="fill" class="cp-input">
+            <mat-label>Copper</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="character.cp"
+              class="cp-input"
+              (change)="updateChar()"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="sp-input">
+            <mat-label>Silver</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="character.sp"
+              class="sp-input"
+              (change)="updateChar()"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="gp-input">
+            <mat-label>Gold</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="character.gp"
+              class="gp-input"
+              (change)="updateChar()"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="pp-input">
+            <mat-label>Platinum</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="character.pp"
+              class="pp-input"
+              (change)="updateChar()"
+            />
+          </mat-form-field>
+        </div>
       </mat-card-content>
-    </tr>
+    </div>
     @if (character.class === "Monk") {
-    <tr>
+    <div class="row ki-row">
       <div mat-card>
         <mat-card-title class="card-title" style="font-size: x-large"
           >Ki Points</mat-card-title
@@ -273,8 +245,42 @@
           />
         </mat-form-field>
       </div>
-    </tr>
+    </div>
+    <!-- Death Save Row: Successes and Failures -->
+    <div class="death-save-row">
+      <div class="death-save-header">Death Saves</div>
+      <div class="death-save-labels">
+        <span>Successes</span>
+        <span>Failures</span>
+      </div>
+      <div class="death-save-buttons">
+        <div class="death-save-group">
+          <button
+            *ngFor="let s of [0, 1, 2]"
+            mat-icon-button
+            [ngClass]="{ 'active-success': deathSaveSuccess[s] }"
+            (click)="toggleDeathSave('success', s)"
+          >
+            <mat-icon>{{
+              deathSaveSuccess[s] ? "check_circle" : "radio_button_unchecked"
+            }}</mat-icon>
+          </button>
+        </div>
+        <div class="death-save-group">
+          <button
+            *ngFor="let f of [0, 1, 2]"
+            mat-icon-button
+            [ngClass]="{ 'active-failure': deathSaveFailure[f] }"
+            (click)="toggleDeathSave('failure', f)"
+          >
+            <mat-icon>{{
+              deathSaveFailure[f] ? "cancel" : "radio_button_unchecked"
+            }}</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
     }
-  </table>
+  </div>
 </body>
 <router-outlet />

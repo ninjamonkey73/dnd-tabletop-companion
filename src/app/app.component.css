@@ -1,41 +1,136 @@
-.black-bordered-table {
-  border-collapse: collapse; /* Ensures borders collapse into a single border */
+/* Death Save Icon Colors */
+button.mat-icon-button.active-success mat-icon {
+  color: #388e3c !important;
+  fill: #388e3c !important;
+}
+button.mat-icon-button.active-failure mat-icon {
+  color: #d32f2f !important;
+  fill: #d32f2f !important;
+}
+/* Death Save Tracker Button Styles */
+/* Match .hp-table styles for death save box */
+.death-save-row {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 8px;
+  background: #fff;
   width: 450px;
-  border: 1px solid black; /* Adds a border around the entire table */
-  justify-self: center;
+  margin: 0 auto 16px auto;
+  overflow: hidden;
+  box-shadow: none;
+  padding: 0;
 }
 
-.black-bordered-table td,
-.black-bordered-table th {
-  border: 1px solid black !important; /* Use !important to override conflicting rules */
-  padding: 8px; /* Adds padding inside cells */
-  text-align: left; /* Aligns text to the left */
-  font-size: 1.25rem;
+.death-save-header {
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-align: center;
 }
 
-.black-bordered-table th {
-  background-color: #f2f2f2; /* Optional: Adds a light background to headers */
+.death-save-labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 48px;
+  width: 240px;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.death-save-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+.death-save-group {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 }
 
-/* Remove border for the spacer element */
-.black-bordered-table .spacer {
-  border: none; /* Ensures the spacer element has no border */
+button.mat-icon-button {
+  border: 2px solid #bdbdbd;
+  border-radius: 50%;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+}
+button.mat-icon-button.active-success {
+  border-color: #1976d2 !important; /* Material primary */
+  box-shadow: 0 0 0 2px #1976d233;
+}
+button.mat-icon-button.active-failure {
+  border-color: #d32f2f !important; /* Material warn */
+  box-shadow: 0 0 0 2px #d32f2f33;
+}
+button.mat-icon-button:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+mat-form-field.classLevel {
+  max-width: 200px;
+  min-width: 120px;
+  flex: 0 0 160px;
+}
+/* HP Table Flex Layout */
+/* HP Table Flex Layout */
+.hp-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 450px;
+  margin: 0 auto 16px auto;
+  background: #fff;
+  overflow: hidden; /* Ensures child elements don't overlap the border */
+}
+.hp-header,
+.hpRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+.hp-header {
+  font-weight: bold;
+  background: #f2f2f2;
+  border-bottom: 1px solid #ccc;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.hpRow > div,
+.hp-header > div {
+  flex: 1 1 0;
+  text-align: center;
+  font-size: 16px;
 }
 
-/* Remove borders for the Max HP <td> */
-.black-bordered-table td.maxHP {
-  border: none !important; /* Ensure no border is applied to the Max HP cell */
+.hpRow > div {
+  font-size: 24px;
 }
 
-/* Ensure child elements inside Max HP <td> also have no borders */
-.black-bordered-table td.maxHP * {
-  border: none !important; /* Remove borders for all child elements inside the Max HP cell */
+.maxHP-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
 }
 
-/* Ensure the Max HP input field stays the same size */
-.black-bordered-table td .hp-input {
-  width: 100px; /* Set a fixed width for the input field */
-  box-sizing: border-box; /* Ensures padding and borders are included in the width */
+/* HP Controls */
+.hp-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
 }
 
 /* Card container styles */
@@ -49,27 +144,22 @@
 
 /* Card title styles */
 .card-title {
-  padding: 20px;
   font-size: 3rem;
 }
 
 /* HP input field styles */
 .HPInput {
   padding-top: 0px;
-  width: 120px;
+  width: 100px;
 }
 
 .hp-input {
-  font-size: 2rem;
+  font-size: 3rem;
+  width: 100px;
 }
 
 .tempHP-input {
   width: 80px;
-}
-
-/* Button container styles */
-.button-container {
-  padding-top: 15px;
 }
 
 .button-container:first-child {
@@ -82,7 +172,11 @@
 
 /* Hurt button styles with a dark-to-light red gradient */
 .hurt-button {
-  background: linear-gradient(to bottom, #8b0000, #ff6347); /* Dark red to light red */
+  background: linear-gradient(
+    to bottom,
+    #8b0000,
+    #ff6347
+  ); /* Dark red to light red */
   font-size: 2rem;
   border-radius: 10px;
   color: white; /* Ensure the text is readable */
@@ -90,51 +184,73 @@
 
 /* Heal button styles with a dark-to-light green gradient */
 .heal-button {
-  background: linear-gradient(to bottom, #006400, #32cd32); /* Dark green to light green */
+  background: linear-gradient(
+    to bottom,
+    #006400,
+    #32cd32
+  ); /* Dark green to light green */
   font-size: 2rem;
   border-radius: 10px;
   color: white; /* Ensure the text is readable */
 }
 
 /* Center the table with class "money" inside the card */
-table.money {
-  margin: auto; /* Centers the table horizontally and vertically within its container */
-  text-align: center; /* Centers the text inside the table cells */
-  table-layout: fixed; /* Ensures the column widths are respected */
-  width: 400px; /* Set the table width */
-  border-spacing: 0; /* Removes spacing between table cells */
-  border-collapse: collapse; /* Ensures borders collapse and removes gaps */
+
+/* Money Row Flex Layout */
+.money-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+}
+.money-flex mat-form-field {
+  flex: 1 1 0;
+  min-width: 80px;
+  margin: 0;
 }
 
-/* Remove padding and margins from table cells */
-table.money td {
-  padding: 4px; /* Remove padding inside table cells */
-  margin: 0; /* Ensure no extra margins are applied */
-  border: none; /* Remove borders if they are causing gaps */
+/* Layout Flex */
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+  justify-content: center;
 }
 
-/* Ensure mat-form-field elements fit tightly */
-table.money mat-form-field {
-  width: 100%; /* Make the form fields take up the full width of the cell */
-  box-sizing: border-box; /* Ensure padding and borders are included in the width */
-  margin: 0; /* Remove extra margins */
-  padding: 0; /* Remove extra padding */
+.row.hp-row {
+  flex-direction: column;
+  align-items: stretch; /* or center, as needed */
 }
-
-table.layout {
-  margin: 0 auto; /* Centers the table horizontally */
-  text-align: center; /* Centers the text inside the table cells */
-  table-layout: fixed; /* Ensures the column widths are respected */
-  width: 400px; /* Set the table width to 100% of its container */
-  border-spacing: 0; /* Removes spacing between table cells */
-  border-collapse: collapse; /* Ensures borders collapse and removes gaps */
+.top {
+  gap: 16px;
 }
-
-/* Remove padding and margins from table cells */
-table.layout td {
-  padding: 4px; /* Remove padding inside table cells */
-  margin: 0; /* Ensure no extra margins are applied */
-  border: none; /* Remove borders if they are causing gaps */
+.char-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.longRest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.new-character-row {
+  gap: 12px;
+  justify-content: flex-start;
 }
 
 mat-form-field.ki-input {
@@ -142,8 +258,12 @@ mat-form-field.ki-input {
 }
 
 /* Apply Goudy Bookletter 1911 font to the entire page */
-body, input, button, select, textarea {
-  font-family: 'Goudy Bookletter 1911', serif;
+body,
+input,
+button,
+select,
+textarea {
+  font-family: "Goudy Bookletter 1911", serif;
 }
 
 /* Style the dropdown item container */
@@ -182,10 +302,16 @@ mat-form-field {
   font-size: 1.5rem;
   border-radius: 10px;
   color: white; /* Ensure the text is readable */
+  min-width: 90px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .charName {
-  width: 150px;
+  width: 180px;
 }
 
 .edit {
@@ -196,6 +322,23 @@ mat-form-field {
   width: 400px;
 }
 
-.longRest {
- vertical-align: top;
+button mat-icon,
+button .mat-icon {
+  vertical-align: -3px; /* Adjust vertical alignment as needed */
+  font-size: 24px; /* or your preferred size */
+  line-height: 1;
+}
+
+/* Show number input spinners on all platforms */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: auto !important;
+  appearance: auto !important;
+  opacity: 1 !important;
+  display: inline-block !important;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield !important; /* For Firefox, show spinners */
+  appearance: auto !important; /* Standard property for compatibility */
 }
