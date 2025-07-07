@@ -18,7 +18,7 @@ To deploy:
 ng build --configuration production --base-href /dnd-tabletop-companion/
 git checkout gh-pages
 npx rimraf ./browser
-npx cpy-cli "dist/dnd-tabletop-companion/**" .
+npx cpy-cli "dist/dnd-tabletop-companion/browser/**" .
 git add .
 git commit -m "Deploy"
 git push origin gh-pages
