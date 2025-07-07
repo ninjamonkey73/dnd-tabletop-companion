@@ -1,12 +1,3 @@
-/* Death Save Icon Colors */
-button.mat-icon-button.active-success mat-icon {
-  color: #388e3c !important;
-  fill: #388e3c !important;
-}
-button.mat-icon-button.active-failure mat-icon {
-  color: #d32f2f !important;
-  fill: #d32f2f !important;
-}
 /* Death Save Tracker Button Styles */
 /* Match .hp-table styles for death save box */
 .death-save-row {
@@ -61,18 +52,7 @@ button.mat-icon-button {
   transition: border-color 0.2s, box-shadow 0.2s;
   box-shadow: none;
 }
-button.mat-icon-button.active-success {
-  border-color: #1976d2 !important; /* Material primary */
-  box-shadow: 0 0 0 2px #1976d233;
-}
-button.mat-icon-button.active-failure {
-  border-color: #d32f2f !important; /* Material warn */
-  box-shadow: 0 0 0 2px #d32f2f33;
-}
-button.mat-icon-button:focus {
-  outline: 2px solid #1976d2;
-  outline-offset: 2px;
-}
+
 mat-form-field.classLevel {
   max-width: 200px;
   min-width: 120px;
@@ -179,6 +159,7 @@ mat-form-field.classLevel {
   ); /* Dark red to light red */
   font-size: 2rem;
   border-radius: 10px;
+  border: 1px solid black; /* Ensure the button has a border */
   color: white; /* Ensure the text is readable */
 }
 
@@ -191,6 +172,7 @@ mat-form-field.classLevel {
   ); /* Dark green to light green */
   font-size: 2rem;
   border-radius: 10px;
+  border: 1px solid black; /* Ensure the button has a border */
   color: white; /* Ensure the text is readable */
 }
 
@@ -301,6 +283,7 @@ mat-form-field {
   background: linear-gradient(to bottom, navy, lightblue);
   font-size: 1.5rem;
   border-radius: 10px;
+  border: 1px solid black; /* Ensure the button has a border */
   color: white; /* Ensure the text is readable */
   min-width: 90px;
   padding: 0 20px;
