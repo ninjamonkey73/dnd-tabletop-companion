@@ -17,6 +17,7 @@ To deploy:
 ```bash
 ng build --configuration production --base-href /REPO_NAME/
 git checkout gh-pages
+npx rimraf ./browser
 cp -r dist/PROJECT_NAME/* .
 git add .
 git commit -m "Deploy"
