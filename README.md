@@ -23,7 +23,7 @@ npm run deploy
 ```bash
 ng build --configuration production --base-href /dnd-tabletop-companion/
 git checkout gh-pages
-Remove-Item -Recurse -Force .\browser -ErrorAction SilentlyContinue
+npx rimraf ./browser
 cp -r dist/dnd-tabletop-companion/* .
 git add .
 git commit -m "Deploy"
