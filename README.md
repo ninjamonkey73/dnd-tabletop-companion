@@ -15,13 +15,12 @@ Once the server is running, open your browser and navigate to `http://localhost:
 To deploy:
 
 ```bash
+ng build --configuration production --base-href /REPO_NAME/
 git checkout gh-pages
-git merge main
+cp -r dist/PROJECT_NAME/* .
+git add .
+git commit -m "Deploy"
 git push origin gh-pages
-```
-Commit and push, then
-
-```bash
 git checkout main
 ```
 
