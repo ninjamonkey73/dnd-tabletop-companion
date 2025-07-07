@@ -18,6 +18,7 @@ To deploy:
 ng build --configuration production --base-href /dnd-tabletop-companion/
 git checkout gh-pages
 cp -r dist/dnd-tabletop-companion/* .
+Remove-Item -Recurse -Force .\browser
 git add .
 git commit -m "Deploy"
 git push origin gh-pages
