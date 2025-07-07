@@ -158,30 +158,28 @@
               <div>{{ percentHP }}%</div>
             </div>
           </div>
-          <div class="hp-controls">
-            <mat-form-field appearance="fill" class="HPInput">
-              <input
-                matInput
-                placeholder="HP to +/-"
-                type="number"
-                [(ngModel)]="changeVal"
-                class="hp-input"
-              />
-            </mat-form-field>
-            <mat-card-footer>
-              <span class="button-container">
+          <div class="hp-controls hp-controls-flex">
+            <div class="hp-controls-flex-row">
+              <mat-form-field appearance="fill" class="HPInput">
+                <input
+                  matInput
+                  placeholder="HP to +/-"
+                  type="number"
+                  [(ngModel)]="changeVal"
+                  class="hp-input"
+                />
+              </mat-form-field>
+              <div class="hp-button-stack">
                 <button mat-fab extended class="hurt-button" (click)="hurt()">
                   <mat-icon>remove</mat-icon>
                   Hurt
                 </button>
-              </span>
-              <span class="button-container">
                 <button mat-fab extended class="heal-button" (click)="heal()">
                   <mat-icon>add</mat-icon>
                   Heal
                 </button>
-              </span>
-            </mat-card-footer>
+              </div>
+            </div>
           </div>
         </mat-card-content>
       </div>
@@ -189,46 +187,130 @@
     <div class="row money-row">
       <mat-card-content>
         <div class="money-flex">
-          <mat-form-field appearance="fill" class="cp-input">
-            <mat-label>Copper</mat-label>
+          <mat-form-field appearance="fill" class="money-input">
+            <mat-label>Coin +/-</mat-label>
             <input
               matInput
               type="number"
-              [(ngModel)]="character.cp"
-              class="cp-input"
-              (change)="updateChar()"
+              [(ngModel)]="money"
+              class="money-input"
+              (focus)="selectMoneyInput($event)"
             />
           </mat-form-field>
-          <mat-form-field appearance="fill" class="sp-input">
-            <mat-label>Silver</mat-label>
-            <input
-              matInput
-              type="number"
-              [(ngModel)]="character.sp"
-              class="sp-input"
-              (change)="updateChar()"
-            />
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="gp-input">
-            <mat-label>Gold</mat-label>
-            <input
-              matInput
-              type="number"
-              [(ngModel)]="character.gp"
-              class="gp-input"
-              (change)="updateChar()"
-            />
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="pp-input">
-            <mat-label>Platinum</mat-label>
-            <input
-              matInput
-              type="number"
-              [(ngModel)]="character.pp"
-              class="pp-input"
-              (change)="updateChar()"
-            />
-          </mat-form-field>
+          <div class="money-display-stack">
+            <div class="money-display-col">
+              <mat-form-field appearance="fill" class="coins">
+                <mat-label>Copper</mat-label>
+                <input
+                  matInput
+                  [value]="character.cp"
+                  class="cp-input"
+                  readonly
+                  tabindex="-1"
+                />
+              </mat-form-field>
+              <div class="money-buttons">
+                <button
+                  mat-mini-button
+                  class="sub"
+                  (click)="adjustMoney('cp', -money)"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                  mat-mini-button
+                  class="add"
+                  (click)="adjustMoney('cp', money)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="money-display-col">
+              <mat-form-field appearance="fill" class="coins">
+                <mat-label>Silver</mat-label>
+                <input
+                  matInput
+                  [value]="character.sp"
+                  class="sp-input"
+                  readonly
+                  tabindex="-1"
+                />
+              </mat-form-field>
+              <div class="money-buttons">
+                <button
+                  mat-mini-button
+                  class="sub"
+                  (click)="adjustMoney('sp', -money)"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                  mat-mini-button
+                  class="add"
+                  (click)="adjustMoney('sp', money)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="money-display-col">
+              <mat-form-field appearance="fill" class="coins">
+                <mat-label>Gold</mat-label>
+                <input
+                  matInput
+                  [value]="character.gp"
+                  class="gp-input"
+                  readonly
+                  tabindex="-1"
+                />
+              </mat-form-field>
+              <div class="money-buttons">
+                <button
+                  mat-mini-button
+                  class="sub"
+                  (click)="adjustMoney('gp', -money)"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                  mat-mini-button
+                  class="add"
+                  (click)="adjustMoney('gp', money)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="money-display-col">
+              <mat-form-field appearance="fill" class="coins">
+                <mat-label>Platinum</mat-label>
+                <input
+                  matInput
+                  [value]="character.pp"
+                  class="pp-input"
+                  readonly
+                  tabindex="-1"
+                />
+              </mat-form-field>
+              <div class="money-buttons">
+                <button
+                  mat-mini-button
+                  class="sub"
+                  (click)="adjustMoney('pp', -money)"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                  mat-mini-button
+                  class="add"
+                  (click)="adjustMoney('pp', money)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </mat-card-content>
     </div>

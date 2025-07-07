@@ -58,7 +58,7 @@ mat-form-field.classLevel {
   min-width: 120px;
   flex: 0 0 160px;
 }
-/* HP Table Flex Layout */
+
 /* HP Table Flex Layout */
 .hp-table {
   display: flex;
@@ -103,8 +103,9 @@ mat-form-field.classLevel {
   justify-content: center;
 }
 
-/* HP Controls */
+/* HP Controls Flex Layout: input and buttons side by side */
 .hp-controls {
+  /* fallback for old layout, overridden by .hp-controls-flex */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,6 +113,57 @@ mat-form-field.classLevel {
   gap: 16px;
   margin-top: 8px;
 }
+.hp-controls-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.HPInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  min-width: 80px;
+  max-width: 140px;
+  align-self: center;
+  margin: 0;
+  /* Remove height from .HPInput, let .hp-input control input height */
+}
+
+.hp-controls-flex > .HPInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  margin: 0;
+}
+.hp-controls-flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.hp-button-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding-bottom: 15px;
+}
+
+/* Stack the hurt/heal buttons vertically */
+/* Removed duplicate .hp-button-stack for vertical layout */
 
 /* Card container styles */
 .card-container {
@@ -127,53 +179,55 @@ mat-form-field.classLevel {
   font-size: 3rem;
 }
 
-/* HP input field styles */
-.HPInput {
-  padding-top: 0px;
-  width: 100px;
-}
-
 .hp-input {
-  font-size: 3rem;
-  width: 100px;
+  font-size: 1.3rem;
+  width: 110px;
+  min-width: 80px;
+  max-width: 120px;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tempHP-input {
   width: 80px;
+  font-size: 1.25rem;
 }
 
-.button-container:first-child {
-  padding-right: 15px;
-}
-
-.button-container:last-child {
-  padding-left: 15px;
-}
-
-/* Hurt button styles with a dark-to-light red gradient */
+/* Hurt button styles with a dark-to-light red gradient, 75% size */
 .hurt-button {
   background: linear-gradient(
     to bottom,
     #8b0000,
     #ff6347
   ); /* Dark red to light red */
-  font-size: 2rem;
+  font-size: 1.5rem;
   border-radius: 10px;
   border: 1px solid black; /* Ensure the button has a border */
   color: white; /* Ensure the text is readable */
+  min-width: 68px;
+  height: 36px;
+  padding: 0 15px;
 }
 
-/* Heal button styles with a dark-to-light green gradient */
+/* Heal button styles with a dark-to-light green gradient, 75% size */
 .heal-button {
   background: linear-gradient(
     to bottom,
     #006400,
     #32cd32
   ); /* Dark green to light green */
-  font-size: 2rem;
+  font-size: 1.5rem;
   border-radius: 10px;
   border: 1px solid black; /* Ensure the button has a border */
   color: white; /* Ensure the text is readable */
+  min-width: 68px;
+  height: 36px;
+  padding: 0 15px;
 }
 
 /* Center the table with class "money" inside the card */
@@ -183,15 +237,36 @@ mat-form-field.classLevel {
   display: flex;
   flex-direction: row;
   gap: 12px;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
+  justify-content: flex-start;
+  align-items: flex-end;
+  width: 100%;
   margin: 0 auto;
+  position: relative;
 }
-.money-flex mat-form-field {
-  flex: 1 1 0;
-  min-width: 80px;
-  margin: 0;
+.money-flex mat-form-field.money-input {
+  flex: none !important;
+  min-width: 90px !important;
+  max-width: 110px !important;
+  width: 100px !important;
+  margin: 0 8px 0 0 !important;
+  z-index: 2;
+}
+
+/* Display the coin columns in a row */
+.money-display-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.money-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
 }
 
 /* Layout Flex */
@@ -286,10 +361,6 @@ mat-form-field {
   flex: 1; /* Ensure both fields take up equal space */
 }
 
-.tempHP-input {
-  font-size: 1.25rem;
-}
-
 .rest-button {
   background: linear-gradient(to bottom, navy, lightblue);
   font-size: 1.5rem;
@@ -353,4 +424,41 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield !important; /* For Firefox, show spinners */
   appearance: auto !important; /* Standard property for compatibility */
+}
+
+.coins {
+  width: 100px;
+  min-width: 100px;
+  max-width: 120px;
+}
+
+.sub {
+  background: linear-gradient(
+    to bottom,
+    #8b0000,
+    #ff6347
+  ); /* Dark red to light red */
+  font-size: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid black; /* Ensure the button has a border */
+  color: white; /* Ensure the text is readable */
+  min-width: 36px;
+  height: 36px;
+  padding: 0 15px;
+}
+
+/* Heal button styles with a dark-to-light green gradient, 75% size */
+.add {
+  background: linear-gradient(
+    to bottom,
+    #006400,
+    #32cd32
+  ); /* Dark green to light green */
+  font-size: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid black; /* Ensure the button has a border */
+  color: white; /* Ensure the text is readable */
+  min-width: 36px;
+  height: 36px;
+  padding: 0 15px;
 }

@@ -1,6 +1,3 @@
-// ...existing code...
-
-// (Removed duplicate death save state and method definitions)
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -26,8 +23,8 @@ import { NgIf, NgFor } from '@angular/common'; // Import NgIf for conditional re
     MatSlideToggle,
     MatButtonModule,
     NgIf,
-    NgFor
-    ],
+    NgFor,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
@@ -51,6 +48,8 @@ export class AppComponent implements OnInit {
     deathSaveSuccess: [false, false, false],
     deathSaveFailure: [false, false, false],
   };
+
+  money: number = 0; // Holds the value for coin +/- input
 
   // Sync arrays to character before saving
   syncDeathSavesToCharacter() {
@@ -360,5 +359,41 @@ export class AppComponent implements OnInit {
 
   saveHealToggle(): void {
     localStorage.setItem('fullHeal', JSON.stringify(this.fullHeal));
+  }
+
+  /**
+   * Selects all text in the money input when it receives focus.
+   */
+  selectMoneyInput(event: FocusEvent): void {
+    const input = event.target as HTMLInputElement | null;
+    if (input && typeof input.select === 'function') {
+      input.select();
+    }
+  }
+
+  /**
+   * Adjusts the specified coin type (cp, sp, gp, pp) by the given amount (from the money input).
+   * Ignores if money is 0 or not a number. Never allows negative totals.
+   * @param type The coin type: 'cp', 'sp', 'gp', or 'pp'.
+   * @param amount The amount to add (positive) or subtract (negative).
+   */
+  adjustMoney(type: 'cp' | 'sp' | 'gp' | 'pp', amount: number): void {
+    if (
+      !['cp', 'sp', 'gp', 'pp'].includes(type) ||
+      !Number.isFinite(amount) ||
+      amount === 0
+    ) {
+      return;
+    }
+    // Only allow integer math
+    const current = this.character[type] || 0;
+    const newValue = current + amount;
+    if (newValue < 0) {
+      alert(`You cannot subtract more than you have! (${current} available)`);
+      return;
+    }
+    this.character[type] = newValue;
+    this.updateChar();
+    this.money = 0; // Reset the money input after adjustment
   }
 }
