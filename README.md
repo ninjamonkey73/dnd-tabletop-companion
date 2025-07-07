@@ -17,7 +17,7 @@ To deploy:
 ```bash
 ng build --configuration production --base-href /dnd-tabletop-companion/
 git checkout gh-pages
-Remove-Item -Recurse -Force .\browser
+Remove-Item -Recurse -Force .\browser -ErrorAction SilentlyContinue
 cp -r dist/dnd-tabletop-companion/* .
 git add .
 git commit -m "Deploy"
