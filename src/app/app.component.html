@@ -57,9 +57,13 @@
           </button>
         </div>
         <div class="longRest">
-          <mat-slide-toggle [(ngModel)]="fullHeal" (change)="saveHealToggle()"
-            >LR Heals</mat-slide-toggle
-          >
+          <div class="long-rest-toggle">
+            <mat-slide-toggle
+              [(ngModel)]="fullHeal"
+              (change)="saveHealToggle()"
+            ></mat-slide-toggle>
+            <span>LR Heals</span>
+          </div>
         </div>
         <div class="button-container">
           <button mat-fab extended class="rest-button" (click)="longRest()">

@@ -230,6 +230,17 @@ mat-form-field.classLevel {
   align-items: center;
   gap: 8px;
 }
+
+/* For long rest toggle: label under switch */
+.long-rest-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.long-rest-toggle span {
+  white-space: nowrap;
+}
 .new-character-row {
   gap: 12px;
   justify-content: flex-start;
@@ -299,12 +310,30 @@ mat-form-field {
 
 .edit {
   border-radius: 10px;
+  font-size: 1rem;
+  padding: 0;
+  min-width: 32px;
+  min-height: 0;
+  height: 32px;
+  width: 32px;
+  line-height: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .top {
   width: 400px;
 }
 
+.edit mat-icon,
+.edit .mat-icon {
+  font-size: 20px;
+  line-height: 1;
+  margin: 0 auto;
+  display: block;
+}
 button mat-icon,
 button .mat-icon {
   vertical-align: -3px; /* Adjust vertical alignment as needed */
