@@ -18,7 +18,7 @@ To deploy:
 ng build --configuration production --base-href /REPO_NAME/
 git checkout gh-pages
 npx rimraf ./browser
-cp -r dist/PROJECT_NAME/* .
+npx cpy "dist/PROJECT_NAME/*" . --flat
 git add .
 git commit -m "Deploy"
 git push origin gh-pages
