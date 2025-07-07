@@ -14,6 +14,12 @@ Once the server is running, open your browser and navigate to `http://localhost:
 
 To deploy:
 
+Run deploy runs the commands listed below, don't do both
+
+```bash
+npm run deploy
+```
+
 ```bash
 ng build --configuration production --base-href /dnd-tabletop-companion/
 git checkout gh-pages
