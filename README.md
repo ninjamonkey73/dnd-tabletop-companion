@@ -15,10 +15,10 @@ Once the server is running, open your browser and navigate to `http://localhost:
 To deploy:
 
 ```bash
-ng build --configuration production --base-href /REPO_NAME/
+ng build --configuration production --base-href /dnd-tabletop-companion/
 git checkout gh-pages
 npx rimraf ./browser
-npx cpy "dist/PROJECT_NAME/*" . --flat
+npx cpy "dist/dnd-tabletop-companion/*" . --flat
 git add .
 git commit -m "Deploy"
 git push origin gh-pages
