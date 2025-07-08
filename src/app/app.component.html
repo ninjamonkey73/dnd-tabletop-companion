@@ -343,6 +343,7 @@
       <div class="death-save-buttons">
         <div class="death-save-group">
           <button
+            class="success"
             *ngFor="let s of [0, 1, 2]"
             mat-icon-button
             [class.active-class]="{ 'active-success': deathSaveSuccess[s] }"
@@ -355,6 +356,7 @@
         </div>
         <div class="death-save-group">
           <button
+            class="failure"
             *ngFor="let f of [0, 1, 2]"
             mat-icon-button
             [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"

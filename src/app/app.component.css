@@ -405,6 +405,17 @@ mat-form-field {
   margin: 0 auto;
   display: block;
 }
+
+.success .mat-icon,
+.success mat-icon {
+  color: darkgreen;
+}
+
+.failure .mat-icon,
+.failure mat-icon {
+  color: darkred;
+}
+
 button mat-icon,
 button .mat-icon {
   vertical-align: -3px; /* Adjust vertical alignment as needed */
