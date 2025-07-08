@@ -423,7 +423,7 @@ button .mat-icon {
   line-height: 1;
 }
 
-/* Show number input spinners on all platforms */
+/* Show number input spinners on all platforms, including Chrome Android */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: auto !important;
@@ -438,11 +438,11 @@ input[type="number"] {
   appearance: number-input !important;
 }
 
-/* Remove appearance override for Chrome Android, force spinners */
+/* Remove all appearance overrides for Chrome Android, force default spinners */
 @media (pointer: coarse) {
   input[type="number"] {
-    -webkit-appearance: number-input !important;
-    appearance: number-input !important;
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
   }
 }
 
