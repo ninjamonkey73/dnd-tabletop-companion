@@ -120,8 +120,9 @@
           @if (character.currentHP == 0 && character.stable == true) {
           <span class="stable">You are stable</span>
           } @if (deathSaveMessage) {
-          <div class="death-save-message">{{ deathSaveMessage }}</div>
-          } else if (character.currentHP == 0 && character.stable == false) {
+          <div class="incapacitated">{{ deathSaveMessage }}</div>
+          } @if (character.currentHP == 0 && character.stable == false &&
+          !deathSaveMessage) {
           <!-- The letter inside the square -->
           <span class="incapacitated">You are incapacitated</span>
           }
@@ -147,10 +148,16 @@
                   <!-- The letter inside the square -->
                   <span>S</span>
                 </span>
-                } @if (character.currentHP == 0 && character.stable == false) {
+                } @if (character.currentHP == 0 && character.stable == false &&
+                deathSaveMessage == null) {
                 <span class="incapacitated-icon">
                   <!-- The letter inside the square -->
                   <span>I</span>
+                </span>
+                } @if (deathSaveMessage) {
+                <span class="incapacitated-icon">
+                  <!-- The letter inside the square -->
+                  <span>D</span>
                 </span>
                 }
               </div>
@@ -367,7 +374,7 @@
       </div>
       <div class="death-save-buttons">
         <div class="death-save-group">
-          @for (let s of [0, 1, 2]; track s) {
+          @for (s of [0, 1, 2]; track s) {
           <button
             class="success"
             mat-icon-button
@@ -382,7 +389,7 @@
           }
         </div>
         <div class="death-save-group">
-          @for (let f of [0, 1, 2]; track f) {
+          @for (f of [0, 1, 2]; track f) {
           <button
             class="failure"
             mat-icon-button
@@ -399,4 +406,3 @@
     </div>
   </div>
 </body>
-<router-outlet />

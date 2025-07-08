@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,12 +9,10 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngMode
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule for buttons
- // Import NgIf for conditional rendering
 
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet,
     MatCardModule,
     MatIconModule,
     MatFormField,
@@ -21,8 +20,9 @@ import { MatButtonModule } from '@angular/material/button'; // Import MatButtonM
     FormsModule,
     MatSelectModule,
     MatSlideToggle,
-    MatButtonModule
-],
+    MatButtonModule,
+    CommonModule,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
@@ -45,6 +45,7 @@ export class AppComponent implements OnInit {
     tempHP: 0,
     deathSaveSuccess: [false, false, false],
     deathSaveFailure: [false, false, false],
+    stable: false, // Tracks if the character is stable
   };
 
   money: number = 0; // Holds the value for coin +/- input
@@ -64,6 +65,10 @@ export class AppComponent implements OnInit {
       : [false, false, false];
   }
 
+  // Message for death save alerts
+  deathSaveMessage: string | null = null;
+  deathSaveMessageTimeout: any = null;
+
   toggleDeathSave(type: 'success' | 'failure', index: number): void {
     if (type === 'success') {
       this.deathSaveSuccess[index] = !this.deathSaveSuccess[index];
@@ -71,11 +76,15 @@ export class AppComponent implements OnInit {
       this.deathSaveFailure[index] = !this.deathSaveFailure[index];
     }
     if (this.deathSaveSuccess.every((val) => val)) {
-      alert('You are stable!');
+      this.character.stable = true; // Set stable state
       this.deathSaveSuccess = [false, false, false]; // Reset success saves
       this.deathSaveFailure = [false, false, false]; // Reset failure saves
+      this.deathSaveMessage = null; // Clear any previous message
     } else if (this.deathSaveFailure.every((val) => val)) {
-      alert('You are dead!');
+      this.deathSaveMessage = 'You are dead!';
+    } else {
+      this.deathSaveMessage = null; // Clear message if not all success or failure
+      this.character.stable = false; // Reset stable state
     }
     this.syncDeathSavesToCharacter();
     this.saveCharacterData();
@@ -183,6 +192,7 @@ export class AppComponent implements OnInit {
         tempHP: 0,
         deathSaveSuccess: [false, false, false],
         deathSaveFailure: [false, false, false],
+        stable: false, // Initialize stable state
       };
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
@@ -228,6 +238,8 @@ export class AppComponent implements OnInit {
     this.updatePercentHP();
     this.deathSaveSuccess = [false, false, false]; // Reset success saves
     this.deathSaveFailure = [false, false, false]; // Reset failure saves
+    this.character.stable = false; // Reset stable state
+    this.deathSaveMessage = null;
     this.syncDeathSavesToCharacter();
     this.saveCharacterData();
   }
@@ -305,6 +317,7 @@ export class AppComponent implements OnInit {
         tempHP: 0,
         deathSaveSuccess: [false, false, false],
         deathSaveFailure: [false, false, false],
+        stable: false, // Initialize stable state
       };
 
       this.syncDeathSavesFromCharacter();
@@ -338,6 +351,7 @@ export class AppComponent implements OnInit {
           tempHP: 0,
           deathSaveSuccess: [false, false, false],
           deathSaveFailure: [false, false, false],
+          stable: false, // Reset the stable state
         }; // Reset the character object
         this.syncDeathSavesFromCharacter();
       }
@@ -366,6 +380,10 @@ export class AppComponent implements OnInit {
       this.character.currentHP = this.character.maxHP;
     }
     this.character.tempHP = 0; // Reset tempHP on long rest
+    this.character.deathSaveSuccess = [false, false, false]; // Reset success saves
+    this.character.deathSaveFailure = [false, false, false]; // Reset failure saves
+    this.character.stable = false; // Reset stable state
+    this.syncDeathSavesToCharacter();
     this.updatePercentHP();
     this.updateChar();
   }

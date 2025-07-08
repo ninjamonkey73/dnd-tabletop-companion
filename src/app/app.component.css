@@ -479,3 +479,60 @@ input[type="number"] {
   font-size: 24px !important;
   line-height: 1 !important;
 }
+
+.stable-icon {
+  width: 20px; /* Equivalent to w-16 (16 * 4px = 64px) */
+  height: 20px; /* Equivalent to h-16 */
+  background-color: darkgreen; /* Equivalent to bg-green-800 */
+  color: #ffffff; /* Equivalent to text-white */
+  border-radius: 6px; /* Equivalent to rounded-lg (usually 0.5rem or 8px) */
+  display: flex;
+  align-items: center; /* Equivalent to items-center */
+  justify-content: center; /* Equivalent to justify-center */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
+  font-size: 16px; /* Equivalent to text-3xl (approximate, Tailwind's 3xl is 1.875rem or 30px) */
+  font-weight: 700; /* Equivalent to font-bold */
+  user-select: none; /* Equivalent to select-none */
+}
+
+.incapacitated-icon {
+  width: 20px; /* Equivalent to w-16 (16 * 4px = 64px) */
+  height: 20px; /* Equivalent to h-16 */
+  background-color: darkred; /* Equivalent to bg-green-800 */
+  color: #ffffff; /* Equivalent to text-white */
+  border-radius: 6px; /* Equivalent to rounded-lg (usually 0.5rem or 8px) */
+  display: flex;
+  align-items: center; /* Equivalent to items-center */
+  justify-content: center; /* Equivalent to justify-center */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
+  font-size: 16px; /* Equivalent to text-3xl (approximate, Tailwind's 3xl is 1.875rem or 30px) */
+  font-weight: 700; /* Equivalent to font-bold */
+  user-select: none; /* Equivalent to select-none */
+}
+
+.currentHP {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center; /* Equivalent to items-center */
+}
+
+.status-key {
+  align-self: center;
+}
+
+mat-icon.unchecked {
+  color: black !important;
+}
+
+.stable {
+  background-color: darkgreen;
+  color: white;
+}
+
+.incapacitated {
+  background-color: darkred;
+  color: white;
+}
