@@ -176,7 +176,7 @@ mat-form-field.classLevel {
 
 /* Card title styles */
 .card-title {
-  font-size: 3rem;
+  font-size: 1.5rem;
 }
 
 .hp-input {
@@ -422,8 +422,17 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 input[type="number"] {
-  -moz-appearance: textfield !important; /* For Firefox, show spinners */
-  appearance: auto !important; /* Standard property for compatibility */
+  -webkit-appearance: number-input !important;
+  -moz-appearance: number-input !important;
+  appearance: number-input !important;
+}
+
+/* Remove appearance override for Chrome Android, force spinners */
+@media (pointer: coarse) {
+  input[type="number"] {
+    -webkit-appearance: number-input !important;
+    appearance: number-input !important;
+  }
 }
 
 .coins {
