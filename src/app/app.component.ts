@@ -72,6 +72,13 @@ export class AppComponent implements OnInit {
     } else {
       this.deathSaveFailure[index] = !this.deathSaveFailure[index];
     }
+    if (this.deathSaveSuccess.every((val) => val)) {
+      alert('You are stable!');
+      this.deathSaveSuccess = [false, false, false]; // Reset success saves
+      this.deathSaveFailure = [false, false, false]; // Reset failure saves
+    } else if (this.deathSaveFailure.every((val) => val)) {
+      alert('You are dead!');
+    }
     this.syncDeathSavesToCharacter();
     this.saveCharacterData();
   }
@@ -210,12 +217,20 @@ export class AppComponent implements OnInit {
   }
 
   heal(): void {
+    if (this.changeVal === null || this.changeVal <= 0) {
+      console.error('Change value must be a positive number to heal.');
+      this.changeVal = null;
+      return;
+    }
     this.character.currentHP = Math.min(
       this.character.maxHP,
       this.character.currentHP + (this.changeVal ?? 0)
     );
     this.changeVal = null;
     this.updatePercentHP();
+    this.deathSaveSuccess = [false, false, false]; // Reset success saves
+    this.deathSaveFailure = [false, false, false]; // Reset failure saves
+    this.syncDeathSavesToCharacter();
     this.saveCharacterData();
   }
 
