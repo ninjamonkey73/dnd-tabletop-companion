@@ -2,23 +2,23 @@
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-  />
+    />
   <link
     href="https://fonts.googleapis.com/css2?family=Goudy+Bookletter+1911&display=swap"
     rel="stylesheet"
-  />
+    />
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=snooze"
-  />
+    />
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=bedtime"
-  />
+    />
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=edit"
-  />
+    />
 </head>
 <body>
   <div class="layout">
@@ -36,13 +36,14 @@
             <mat-select
               [(ngModel)]="selectedCharacter"
               (selectionChange)="onCharacterSelection($event.value)"
-            >
-              <mat-option
-                *ngFor="let name of savedCharacterNames"
-                [value]="name"
               >
-                {{ name }}
-              </mat-option>
+              @for (name of savedCharacterNames; track name) {
+                <mat-option
+                  [value]="name"
+                  >
+                  {{ name }}
+                </mat-option>
+              }
               <mat-option value="new">New Character</mat-option>
             </mat-select>
           </mat-form-field>
@@ -52,7 +53,7 @@
             class="delete-icon"
             [disabled]="!selectedCharacter || selectedCharacter === 'new'"
             (click)="deleteCharacter(selectedCharacter)"
-          >
+            >
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -72,19 +73,21 @@
           </button>
         </div>
       </div>
-      <div class="row new-character-row" *ngIf="isCreatingNewCharacter">
-        <mat-form-field appearance="fill">
-          <mat-label>New Character Name</mat-label>
-          <input
-            matInput
-            [(ngModel)]="newCharacterName"
-            placeholder="Enter new character name"
-          />
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="saveNewCharacter()">
-          Save Character
-        </button>
-      </div>
+      @if (isCreatingNewCharacter) {
+        <div class="row new-character-row">
+          <mat-form-field appearance="fill">
+            <mat-label>New Character Name</mat-label>
+            <input
+              matInput
+              [(ngModel)]="newCharacterName"
+              placeholder="Enter new character name"
+              />
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="saveNewCharacter()">
+            Save Character
+          </button>
+        </div>
+      }
       <div class="row form-row">
         <mat-form-field class="classLevel">
           <mat-label>Character Class</mat-label>
@@ -92,10 +95,12 @@
             id="class"
             [(ngModel)]="character.class"
             (selectionChange)="updateChar()"
-          >
-            <mat-option *ngFor="let class of classes" [value]="class">
-              {{ class }}
-            </mat-option>
+            >
+            @for (class of classes; track class) {
+              <mat-option [value]="class">
+                {{ class }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <mat-form-field class="classLevel">
@@ -109,7 +114,7 @@
             placeholder="Enter Level"
             (change)="updateCharLevel()"
             (blur)="updateCharLevel()"
-          />
+            />
         </mat-form-field>
       </div>
       <div class="row hp-row">
@@ -131,7 +136,7 @@
               <div>{{ character.currentHP }}</div>
               <div>
                 <!-- Conditionally render input or plain text -->
-                <ng-container *ngIf="isEditingMaxHP; else displayMaxHP">
+                @if (isEditingMaxHP) {
                   <input
                     matInput
                     type="number"
@@ -139,11 +144,10 @@
                     class="hp-input"
                     placeholder="Enter Max HP"
                     (keydown.enter)="onEnterMaxHP()"
-                  />
-                </ng-container>
-                <ng-template #displayMaxHP>
+                    />
+                } @else {
                   {{ character.maxHP }}
-                </ng-template>
+                }
               </div>
               <div>
                 <input
@@ -153,7 +157,7 @@
                   class="tempHP-input"
                   placeholder="Enter Temp HP"
                   (keydown.enter)="updateChar()"
-                />
+                  />
               </div>
               <div>{{ percentHP }}%</div>
             </div>
@@ -167,7 +171,7 @@
                   type="number"
                   [(ngModel)]="changeVal"
                   class="hp-input"
-                />
+                  />
               </mat-form-field>
               <div class="hp-button-stack">
                 <button mat-fab extended class="hurt-button" (click)="hurt()">
@@ -195,7 +199,7 @@
               [(ngModel)]="money"
               class="money-input"
               (focus)="selectMoneyInput($event)"
-            />
+              />
           </mat-form-field>
           <div class="money-display-stack">
             <div class="money-display-col">
@@ -207,21 +211,21 @@
                   class="cp-input"
                   readonly
                   tabindex="-1"
-                />
+                  />
               </mat-form-field>
               <div class="money-buttons">
                 <button
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('cp', -money)"
-                >
+                  >
                   <mat-icon>remove</mat-icon>
                 </button>
                 <button
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('cp', money)"
-                >
+                  >
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
@@ -235,21 +239,21 @@
                   class="sp-input"
                   readonly
                   tabindex="-1"
-                />
+                  />
               </mat-form-field>
               <div class="money-buttons">
                 <button
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('sp', -money)"
-                >
+                  >
                   <mat-icon>remove</mat-icon>
                 </button>
                 <button
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('sp', money)"
-                >
+                  >
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
@@ -263,21 +267,21 @@
                   class="gp-input"
                   readonly
                   tabindex="-1"
-                />
+                  />
               </mat-form-field>
               <div class="money-buttons">
                 <button
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('gp', -money)"
-                >
+                  >
                   <mat-icon>remove</mat-icon>
                 </button>
                 <button
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('gp', money)"
-                >
+                  >
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
@@ -291,21 +295,21 @@
                   class="pp-input"
                   readonly
                   tabindex="-1"
-                />
+                  />
               </mat-form-field>
               <div class="money-buttons">
                 <button
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('pp', -money)"
-                >
+                  >
                   <mat-icon>remove</mat-icon>
                 </button>
                 <button
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('pp', money)"
-                >
+                  >
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
@@ -315,60 +319,62 @@
       </mat-card-content>
     </div>
     @if (character.class === "Monk") {
-    <div class="row ki-row">
-      <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
-          >Ki Points</mat-card-title
-        >
-        <br />
-        <mat-form-field appearance="fill" class="ki-input">
-          <input
-            matInput
-            type="number"
-            [(ngModel)]="character.kiPoints"
-            class="ki-input"
-            (change)="updateChar()"
-          />
-        </mat-form-field>
+      <div class="row ki-row">
+        <div mat-card>
+          <mat-card-title class="card-title" style="font-size: x-large"
+            >Ki Points</mat-card-title
+            >
+            <br />
+            <mat-form-field appearance="fill" class="ki-input">
+              <input
+                matInput
+                type="number"
+                [(ngModel)]="character.kiPoints"
+                class="ki-input"
+                (change)="updateChar()"
+                />
+            </mat-form-field>
+          </div>
+        </div>
+      }
+      <!-- Death Save Row: Successes and Failures -->
+      <div class="death-save-row">
+        <div class="death-save-header">Death Saves</div>
+        <div class="death-save-labels">
+          <span>Successes</span>
+          <span>Failures</span>
+        </div>
+        <div class="death-save-buttons">
+          <div class="death-save-group">
+            @for (s of [0, 1, 2]; track s) {
+              <button
+                class="success"
+                mat-icon-button
+                [class.active-class]="{ 'active-success': deathSaveSuccess[s] }"
+                (click)="toggleDeathSave('success', s)"
+                >
+                <mat-icon>{{
+                  deathSaveSuccess[s] ? "check_circle" : "radio_button_unchecked"
+                }}</mat-icon>
+              </button>
+            }
+          </div>
+          <div class="death-save-group">
+            @for (f of [0, 1, 2]; track f) {
+              <button
+                class="failure"
+                mat-icon-button
+                [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
+                (click)="toggleDeathSave('failure', f)"
+                >
+                <mat-icon>{{
+                  deathSaveFailure[f] ? "cancel" : "radio_button_unchecked"
+                }}</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
       </div>
     </div>
-    }
-    <!-- Death Save Row: Successes and Failures -->
-    <div class="death-save-row">
-      <div class="death-save-header">Death Saves</div>
-      <div class="death-save-labels">
-        <span>Successes</span>
-        <span>Failures</span>
-      </div>
-      <div class="death-save-buttons">
-        <div class="death-save-group">
-          <button
-            class="success"
-            *ngFor="let s of [0, 1, 2]"
-            mat-icon-button
-            [class.active-class]="{ 'active-success': deathSaveSuccess[s] }"
-            (click)="toggleDeathSave('success', s)"
-          >
-            <mat-icon>{{
-              deathSaveSuccess[s] ? "check_circle" : "radio_button_unchecked"
-            }}</mat-icon>
-          </button>
-        </div>
-        <div class="death-save-group">
-          <button
-            class="failure"
-            *ngFor="let f of [0, 1, 2]"
-            mat-icon-button
-            [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
-            (click)="toggleDeathSave('failure', f)"
-          >
-            <mat-icon>{{
-              deathSaveFailure[f] ? "cancel" : "radio_button_unchecked"
-            }}</mat-icon>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
-<router-outlet />
+  </body>
+  <router-outlet />

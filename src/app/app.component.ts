@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngMode
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule for buttons
-import { NgIf, NgFor } from '@angular/common'; // Import NgIf for conditional rendering
+ // Import NgIf for conditional rendering
 
 @Component({
   selector: 'app-root',
@@ -21,10 +21,8 @@ import { NgIf, NgFor } from '@angular/common'; // Import NgIf for conditional re
     FormsModule,
     MatSelectModule,
     MatSlideToggle,
-    MatButtonModule,
-    NgIf,
-    NgFor,
-  ],
+    MatButtonModule
+],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
