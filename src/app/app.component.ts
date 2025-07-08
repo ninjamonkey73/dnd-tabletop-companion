@@ -383,6 +383,7 @@ export class AppComponent implements OnInit {
     this.character.deathSaveSuccess = [false, false, false]; // Reset success saves
     this.character.deathSaveFailure = [false, false, false]; // Reset failure saves
     this.character.stable = false; // Reset stable state
+    this.deathSaveMessage = null; // Clear any previous death save message
     this.syncDeathSavesToCharacter();
     this.updatePercentHP();
     this.updateChar();
