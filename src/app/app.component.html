@@ -357,6 +357,7 @@
           <input
             matInput
             type="number"
+            min="0"
             [(ngModel)]="character.kiPoints"
             class="classData-input"
             (change)="updateChar()"
@@ -374,10 +375,11 @@
         <div class="spellSlots">
           @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
           <mat-form-field appearance="fill" class="classData-input">
-            <mat-label>Level {{$index + 1}}</mat-label>
+            <mat-label>Level {{ $index + 1 }}</mat-label>
             <input
               matInput
               type="number"
+              min="0"
               [(ngModel)]="character.spellSlotsRemaining[$index]"
               class="classData-input"
               (change)="updateChar()"
