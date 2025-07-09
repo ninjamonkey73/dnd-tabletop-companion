@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms'; // Import FormsModule for [(ngModel)]
+import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule for buttons
+import { MatButtonModule } from '@angular/material/button';
+import { Character, defaultCharacter } from './character.model';
 
 @Component({
   selector: 'app-root',
@@ -31,22 +31,7 @@ export class AppComponent implements OnInit {
   deathSaveSuccess: boolean[] = [false, false, false];
   deathSaveFailure: boolean[] = [false, false, false];
 
-  character = {
-    name: '',
-    currentHP: 0,
-    maxHP: 100,
-    kiPoints: 2,
-    class: '',
-    cp: 0,
-    sp: 0,
-    gp: 0,
-    pp: 0,
-    level: 1,
-    tempHP: 0,
-    deathSaveSuccess: [false, false, false],
-    deathSaveFailure: [false, false, false],
-    stable: false, // Tracks if the character is stable
-  };
+  character: Character = { ...defaultCharacter };
 
   money: number = 0; // Holds the value for coin +/- input
 
@@ -94,21 +79,38 @@ export class AppComponent implements OnInit {
 
   fullHeal = false;
 
-  classes = [
-    'Artificer',
-    'Barbarian',
-    'Bard',
-    'Cleric',
-    'Druid',
-    'Fighter',
-    'Monk',
-    'Paladin',
-    'Ranger',
-    'Rogue',
-    'Sorcerer',
-    'Warlock',
-    'Wizard',
-  ];
+  classes: string[] = [];
+  classesError: string | null = null;
+  isLoadingClasses = false;
+  /**
+   * Fetches the list of classes from the D&D 5e API and sets the classes array.
+   * Handles loading and error state.
+   */
+  fetchClassesFromAPI(): void {
+    this.isLoadingClasses = true;
+    this.classesError = null;
+    fetch('https://www.dnd5eapi.co/api/2014/classes')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data && Array.isArray(data.results)) {
+          this.classes = data.results.map((c: any) => c.name);
+        } else {
+          this.classesError = 'API returned unexpected data.';
+        }
+      })
+      .catch((err) => {
+        this.classesError = 'Failed to fetch classes from API.';
+        console.error('Failed to fetch classes from API:', err);
+      })
+      .finally(() => {
+        this.isLoadingClasses = false;
+      });
+  }
 
   levels: number[] = Array.from({ length: 20 }, (_, i) => i + 1); // Generate levels 1 through 20
 
@@ -130,6 +132,7 @@ export class AppComponent implements OnInit {
       this.fullHeal = JSON.parse(savedFullHeal);
     }
     this.syncDeathSavesFromCharacter();
+    this.fetchClassesFromAPI();
   }
 
   loadSavedCharacterNames(): void {
@@ -182,7 +185,7 @@ export class AppComponent implements OnInit {
         name: this.newCharacterName.trim(),
         currentHP: 0,
         maxHP: 100,
-        kiPoints: 2,
+        kiPoints: 0,
         class: '',
         cp: 0,
         sp: 0,
@@ -193,6 +196,9 @@ export class AppComponent implements OnInit {
         deathSaveSuccess: [false, false, false],
         deathSaveFailure: [false, false, false],
         stable: false, // Initialize stable state
+        spellSlots: [], // Initialize spell slots if needed
+        spellSlotsRemaining: [], // Initialize spell slots remaining if needed
+        hitDie: 0, // Initialize hitDie if needed
       };
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
@@ -274,8 +280,17 @@ export class AppComponent implements OnInit {
   }
 
   updateChar(): void {
-    this.lastCharacterSelected = this.character.name;
-    this.saveCharacterData();
+    this.updateClassData();
+  }
+
+  updateClassData(): void {
+    this.characterIsSpellcaster(
+      this.character.class,
+      this.character.level
+    ).then(() => {
+      this.lastCharacterSelected = this.character.name;
+      this.saveCharacterData();
+    });
   }
 
   updateCharLevel(): void {
@@ -288,16 +303,82 @@ export class AppComponent implements OnInit {
       this.character.level = 20;
       errorMsg = 'Level cannot be greater than 20.';
     }
-    // Update kiPoints based on level
-    this.character.kiPoints =
-      this.character.level > 1 ? this.character.level : 0; // Set kiPoints only if level > 1
-    this.updatePercentHP();
-    this.lastCharacterSelected = this.character.name;
-    // Save the character data to localStorage
-    this.saveCharacterData();
-    if (errorMsg) {
-      alert(errorMsg);
+    if (this.character.class === 'Monk' && this.character.level > 1) {
+      // Update kiPoints based on level
+      this.character.kiPoints = this.character.level;
     }
+    // Check for spellcasting asynchronously
+    this.characterIsSpellcaster(
+      this.character.class,
+      this.character.level
+    ).then(() => {
+      this.updatePercentHP();
+      this.lastCharacterSelected = this.character.name;
+      // Save the character data to localStorage
+      this.saveCharacterData();
+      if (errorMsg) {
+        alert(errorMsg);
+      }
+    });
+    return; // Prevent duplicate save below
+  }
+
+  /**
+   * Checks if the given class/level combination has spellcasting by calling the D&D 5e API.
+   * If spellcasting is present, saves the spell slots to the character and returns true.
+   * Otherwise, clears spell slots and returns false.
+   */
+  async characterIsSpellcaster(
+    className: string,
+    level?: number
+  ): Promise<boolean> {
+    if (!className) return false;
+    const lvl = level ?? this.character.level;
+    const url = `https://www.dnd5eapi.co/api/2014/classes/${className.toLowerCase()}/levels/${lvl}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) return false;
+      const data = await response.json();
+      if (data.spellcasting) {
+        this.getSpellSlotsForLevel(data.spellcasting);
+        return true;
+      } else {
+        this.character.spellSlots = [];
+        return false;
+      }
+    } catch (e) {
+      console.error(
+        'Failed to check spellcasting for',
+        className,
+        'level',
+        lvl,
+        e
+      );
+      this.character.spellSlots = [];
+      return false;
+    }
+  }
+
+  /**
+   * Saves the spell slot values from the spellcasting object to the character's spellSlots array.
+   * @param spellcasting The spellcasting object from the API response.
+   */
+  getSpellSlotsForLevel(spellcasting: any): void {
+    if (!spellcasting) {
+      this.character.spellSlots = [];
+      return;
+    }
+    // Extract all keys that match 'spell_slots_level_X' and sort by level
+    const slots: number[] = [];
+    for (let i = 1; i <= 9; i++) {
+      const key = `spell_slots_level_${i}`;
+      if (spellcasting.hasOwnProperty(key)) {
+        slots.push(spellcasting[key]);
+      } else {
+        slots.push(0);
+      }
+    }
+    this.character.spellSlots = slots;
   }
 
   saveNewCharacter(): void {
@@ -318,6 +399,9 @@ export class AppComponent implements OnInit {
         deathSaveSuccess: [false, false, false],
         deathSaveFailure: [false, false, false],
         stable: false, // Initialize stable state
+        spellSlots: [], // Initialize spell slots if needed
+        spellSlotsRemaining: [], // Initialize spell slots remaining if needed
+        hitDie: 0, // Initialize hitDie if needed
       };
 
       this.syncDeathSavesFromCharacter();
@@ -352,6 +436,9 @@ export class AppComponent implements OnInit {
           deathSaveSuccess: [false, false, false],
           deathSaveFailure: [false, false, false],
           stable: false, // Reset the stable state
+          spellSlots: [], // Reset spell slots if needed
+          spellSlotsRemaining: [], // Reset spell slots remaining if needed
+          hitDie: 0, // Reset hitDie if needed
         }; // Reset the character object
         this.syncDeathSavesFromCharacter();
       }
@@ -376,6 +463,24 @@ export class AppComponent implements OnInit {
         this.character.kiPoints = this.character.level;
       }
     }
+    // Check for spellcasting asynchronously
+    this.characterIsSpellcaster(
+      this.character.class,
+      this.character.level
+    ).then(() => {
+      this.character.spellSlotsRemaining = this.character.spellSlots.map(
+        (slot) => {
+          return slot; // Reset spell slots remaining to the full amount
+        }
+      );
+    });
+    this.character.hitDie =
+      this.character.hitDie < this.character.level
+        ? this.character.hitDie + Math.floor(this.character.level / 2) >
+          this.character.level
+          ? this.character.level
+          : this.character.hitDie + Math.floor(this.character.level / 2)
+        : this.character.hitDie;
     if (this.fullHeal) {
       this.character.currentHP = this.character.maxHP;
     }
@@ -384,6 +489,11 @@ export class AppComponent implements OnInit {
     this.character.deathSaveFailure = [false, false, false]; // Reset failure saves
     this.character.stable = false; // Reset stable state
     this.deathSaveMessage = null; // Clear any previous death save message
+    this.character.spellSlotsRemaining = this.character.spellSlots.map(
+      (slot) => {
+        return slot; // Reset spell slots remaining to the full amount
+      }
+    );
     this.syncDeathSavesToCharacter();
     this.updatePercentHP();
     this.updateChar();
