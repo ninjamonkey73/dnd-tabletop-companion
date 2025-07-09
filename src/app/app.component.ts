@@ -27,6 +27,16 @@ import { Character, defaultCharacter } from './character.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  classHasBeenSet: boolean = false;
+
+  onClassSelection(selectedClass: string): void {
+    // Only do the first-time action if class was not set before
+    if (!this.classHasBeenSet && selectedClass) {
+      this.classHasBeenSet = true;
+      this.updateCharLevel();
+    }
+    this.updateChar();
+  }
   // Death save state arrays (mirrored in character object)
   deathSaveSuccess: boolean[] = [false, false, false];
   deathSaveFailure: boolean[] = [false, false, false];
@@ -153,6 +163,7 @@ export class AppComponent implements OnInit {
       // If "New Character" is selected, show the input field for a new name
       this.isCreatingNewCharacter = true;
       this.newCharacterName = '';
+      this.classHasBeenSet = false;
     } else {
       // Load the selected character's data
       this.isCreatingNewCharacter = false;
@@ -167,6 +178,8 @@ export class AppComponent implements OnInit {
         this.selectedCharacter = name; // Update the selected character
         localStorage.setItem('lastSelectedCharacter', name); // Save the last selected character
         this.syncDeathSavesFromCharacter();
+        // Reset classHasBeenSet for this character
+        this.classHasBeenSet = !!this.character.class;
       }
     }
   }
@@ -209,6 +222,8 @@ export class AppComponent implements OnInit {
         spellSlots: [],
         spellSlotsRemaining: [],
         hitDie: 0,
+        rage: 0,
+        rageRemaining: 0, // Initialize rage remaining if needed
       };
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
@@ -307,6 +322,28 @@ export class AppComponent implements OnInit {
     if (this.character.class === 'Monk' && this.character.level > 1) {
       // Update kiPoints based on level
       this.character.kiPoints = this.character.level;
+    }
+
+    if (this.character.class === 'Barbarian') {
+      // Fetch rage count from API and set it
+      const url = `https://www.dnd5eapi.co/api/2014/classes/barbarian/levels/${this.character.level}`;
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) throw new Error('Failed to fetch rage count');
+          return response.json();
+        })
+        .then((data) => {
+          if (
+            data.class_specific &&
+            typeof data.class_specific.rage_count === 'number'
+          ) {
+            this.character.rage = data.class_specific.rage_count;
+            this.character.rageRemaining = data.class_specific.rage_count;
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to fetch rage count:', err);
+        });
     }
     // Check for spellcasting asynchronously
     this.characterIsSpellcaster(
@@ -430,6 +467,8 @@ export class AppComponent implements OnInit {
         spellSlots: [], // Initialize spell slots if needed
         spellSlotsRemaining: [], // Initialize spell slots remaining if needed
         hitDie: 0, // Initialize hitDie if needed
+        rage: 0, // Initialize rage if needed
+        rageRemaining: 0, // Initialize rage remaining if needed
       };
 
       this.syncDeathSavesFromCharacter();
@@ -467,6 +506,8 @@ export class AppComponent implements OnInit {
           spellSlots: [], // Reset spell slots if needed
           spellSlotsRemaining: [], // Reset spell slots remaining if needed
           hitDie: 0, // Reset hitDie if needed
+          rage: 0, // Reset rage if needed
+          rageRemaining: 0,
         }; // Reset the character object
         this.syncDeathSavesFromCharacter();
       }

@@ -16,6 +16,8 @@ export interface Character {
   spellSlots: number[];
   spellSlotsRemaining: number[];
   hitDie: number;
+  rage: number;
+  rageRemaining: number;
 }
 
 export const defaultCharacter: Character = {
@@ -36,4 +38,6 @@ export const defaultCharacter: Character = {
   spellSlots: [],
   spellSlotsRemaining: [],
   hitDie: 0,
+  rage: 0,
+  rageRemaining: 0,
 };

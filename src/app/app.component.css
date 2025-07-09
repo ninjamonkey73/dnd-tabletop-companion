@@ -561,3 +561,11 @@ mat-icon.unchecked {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.newChar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}

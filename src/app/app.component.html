@@ -73,17 +73,19 @@
         </div>
       </div>
       @if (isCreatingNewCharacter) {
-      <mat-form-field appearance="fill">
-        <mat-label>New Character Name</mat-label>
-        <input
-          matInput
-          [(ngModel)]="newCharacterName"
-          placeholder="Enter new character name"
-        />
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="saveNewCharacter()">
-        Save Character
-      </button>
+      <div class="newChar">
+        <mat-form-field appearance="fill">
+          <mat-label>New Character Name</mat-label>
+          <input
+            matInput
+            [(ngModel)]="newCharacterName"
+            placeholder="Enter new character name"
+          />
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="saveNewCharacter()">
+          Save Character
+        </button>
+      </div>
       }
       <div class="row form-row">
         <mat-form-field class="classLevel">
@@ -91,7 +93,7 @@
           <mat-select
             id="class"
             [(ngModel)]="character.class"
-            (selectionChange)="updateChar()"
+            (selectionChange)="onClassSelection($event.value)"
           >
             @for (class of classes; track class) {
             <mat-option [value]="class">
@@ -387,6 +389,25 @@
           </mat-form-field>
           } }
         </div>
+      </div>
+    </div>
+    } @if (character.class === "Barbarian") {
+    <div>
+      <div mat-card>
+        <mat-card-title class="card-title" style="font-size: x-large"
+          >Rage</mat-card-title
+        >
+        <br />
+        <mat-form-field appearance="fill" class="classData-input">
+          <input
+            matInput
+            type="number"
+            min="0"
+            [(ngModel)]="character.rage"
+            class="classData-input"
+            (change)="updateChar()"
+          />
+        </mat-form-field>
       </div>
     </div>
     }
