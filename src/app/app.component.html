@@ -360,6 +360,7 @@
             matInput
             type="number"
             min="0"
+            max="{{ character.level }}"
             [(ngModel)]="character.kiPoints"
             class="classData-input"
             (change)="updateChar()"
@@ -382,6 +383,7 @@
               matInput
               type="number"
               min="0"
+              max="{{ slot }}"
               [(ngModel)]="character.spellSlotsRemaining[$index]"
               class="classData-input"
               (change)="updateChar()"
@@ -403,7 +405,8 @@
             matInput
             type="number"
             min="0"
-            [(ngModel)]="character.rage"
+            max="{{ character.rage }}"
+            [(ngModel)]="character.rageRemaining"
             class="classData-input"
             (change)="updateChar()"
           />

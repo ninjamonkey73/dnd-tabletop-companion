@@ -350,9 +350,9 @@ export class AppComponent implements OnInit {
       this.character.class,
       this.character.level
     ).then(() => {
-      this.character.spellSlotsRemaining = this.character.spellSlots.map(
+      /* this.character.spellSlotsRemaining = this.character.spellSlots.map(
         (slot) => slot // Initialize spell slots remaining to the full amount
-      );
+      ); */
       this.updatePercentHP();
       this.lastCharacterSelected = this.character.name;
       // Save the character data to localStorage
@@ -547,6 +547,7 @@ export class AppComponent implements OnInit {
     if (this.fullHeal) {
       this.character.currentHP = this.character.maxHP;
     }
+    this.character.rageRemaining = this.character.rage; // Reset rage remaining to max rage
     this.character.tempHP = 0; // Reset tempHP on long rest
     this.character.deathSaveSuccess = [false, false, false]; // Reset success saves
     this.character.deathSaveFailure = [false, false, false]; // Reset failure saves
