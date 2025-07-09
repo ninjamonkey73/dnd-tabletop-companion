@@ -365,23 +365,26 @@
       </div>
     </div>
     } @if (character.spellSlots.length > 0) {
-    <div class="charClass-row">
+    <div>
       <div mat-card>
         <mat-card-title class="card-title" style="font-size: x-large"
           >Spell Slots</mat-card-title
         >
         <br />
-        @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
-        <mat-form-field appearance="fill" class="classData-input">
-          <input
-            matInput
-            type="number"
-            [(ngModel)]="character.spellSlotsRemaining[$index]"
-            class="classData-input"
-            (change)="updateChar()"
-          />
-        </mat-form-field>
-        } }
+        <div class="spellSlots">
+          @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
+          <mat-form-field appearance="fill" class="classData-input">
+            <mat-label>Level {{$index + 1}}</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="character.spellSlotsRemaining[$index]"
+              class="classData-input"
+              (change)="updateChar()"
+            />
+          </mat-form-field>
+          } }
+        </div>
       </div>
     </div>
     }

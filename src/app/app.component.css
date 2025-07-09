@@ -536,3 +536,28 @@ mat-icon.unchecked {
   background-color: darkred;
   color: white;
 }
+
+.spellSlots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  justify-items: center;
+  align-items: center;
+}
+
+.spellSlots > * {
+  min-width: 90px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 120px;
+}
+
+@media (max-width: 700px) {
+  .spellSlots {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
