@@ -347,21 +347,41 @@
       </mat-card-content>
     </div>
     @if (character.class === "Monk") {
-    <div class="row ki-row">
+    <div>
       <div mat-card>
         <mat-card-title class="card-title" style="font-size: x-large"
           >Ki Points</mat-card-title
         >
         <br />
-        <mat-form-field appearance="fill" class="ki-input">
+        <mat-form-field appearance="fill" class="classData-input">
           <input
             matInput
             type="number"
             [(ngModel)]="character.kiPoints"
-            class="ki-input"
+            class="classData-input"
             (change)="updateChar()"
           />
         </mat-form-field>
+      </div>
+    </div>
+    } @if (character.spellSlots.length > 0) {
+    <div class="charClass-row">
+      <div mat-card>
+        <mat-card-title class="card-title" style="font-size: x-large"
+          >Spell Slots</mat-card-title
+        >
+        <br />
+        @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
+        <mat-form-field appearance="fill" class="classData-input">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="character.spellSlotsRemaining[$index]"
+            class="classData-input"
+            (change)="updateChar()"
+          />
+        </mat-form-field>
+        } }
       </div>
     </div>
     }

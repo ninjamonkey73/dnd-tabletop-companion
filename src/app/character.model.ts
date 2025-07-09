@@ -14,7 +14,7 @@ export interface Character {
   deathSaveFailure: boolean[];
   stable: boolean;
   spellSlots: number[];
-  spellSlotsRemaining?: number[];
+  spellSlotsRemaining: number[];
   hitDie: number;
 }
 

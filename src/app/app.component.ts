@@ -159,6 +159,11 @@ export class AppComponent implements OnInit {
       const savedCharacter = localStorage.getItem(name);
       if (savedCharacter) {
         this.character = JSON.parse(savedCharacter);
+        // Defensive: ensure spellSlots and spellSlotsRemaining are always arrays
+        if (!Array.isArray(this.character.spellSlots))
+          this.character.spellSlots = [];
+        if (!Array.isArray(this.character.spellSlotsRemaining))
+          this.character.spellSlotsRemaining = [];
         this.selectedCharacter = name; // Update the selected character
         localStorage.setItem('lastSelectedCharacter', name); // Save the last selected character
         this.syncDeathSavesFromCharacter();
@@ -172,6 +177,11 @@ export class AppComponent implements OnInit {
       const savedCharacter = localStorage.getItem(lastCharacterName); // Retrieve the character data
       if (savedCharacter) {
         this.character = JSON.parse(savedCharacter); // Load the character data
+        // Defensive: ensure spellSlots and spellSlotsRemaining are always arrays
+        if (!Array.isArray(this.character.spellSlots))
+          this.character.spellSlots = [];
+        if (!Array.isArray(this.character.spellSlotsRemaining))
+          this.character.spellSlotsRemaining = [];
         this.selectedCharacter = lastCharacterName; // Set the dropdown to the last selected character
         this.syncDeathSavesFromCharacter();
       }
@@ -195,10 +205,10 @@ export class AppComponent implements OnInit {
         tempHP: 0,
         deathSaveSuccess: [false, false, false],
         deathSaveFailure: [false, false, false],
-        stable: false, // Initialize stable state
-        spellSlots: [], // Initialize spell slots if needed
-        spellSlotsRemaining: [], // Initialize spell slots remaining if needed
-        hitDie: 0, // Initialize hitDie if needed
+        stable: false,
+        spellSlots: [],
+        spellSlotsRemaining: [],
+        hitDie: 0,
       };
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
@@ -280,17 +290,8 @@ export class AppComponent implements OnInit {
   }
 
   updateChar(): void {
-    this.updateClassData();
-  }
-
-  updateClassData(): void {
-    this.characterIsSpellcaster(
-      this.character.class,
-      this.character.level
-    ).then(() => {
-      this.lastCharacterSelected = this.character.name;
-      this.saveCharacterData();
-    });
+    this.lastCharacterSelected = this.character.name;
+    this.saveCharacterData();
   }
 
   updateCharLevel(): void {
@@ -312,6 +313,9 @@ export class AppComponent implements OnInit {
       this.character.class,
       this.character.level
     ).then(() => {
+      this.character.spellSlotsRemaining = this.character.spellSlots.map(
+        (slot) => slot // Initialize spell slots remaining to the full amount
+      );
       this.updatePercentHP();
       this.lastCharacterSelected = this.character.name;
       // Save the character data to localStorage
@@ -366,6 +370,7 @@ export class AppComponent implements OnInit {
   getSpellSlotsForLevel(spellcasting: any): void {
     if (!spellcasting) {
       this.character.spellSlots = [];
+      this.character.spellSlotsRemaining = [];
       return;
     }
     // Extract all keys that match 'spell_slots_level_X' and sort by level
@@ -379,6 +384,29 @@ export class AppComponent implements OnInit {
       }
     }
     this.character.spellSlots = slots;
+    this.syncSpellSlotsRemaining();
+  }
+
+  /**
+   * Ensures spellSlotsRemaining is always an array of the same length as spellSlots,
+   * with each value defaulting to the corresponding spellSlots value if undefined.
+   */
+  private syncSpellSlotsRemaining(): void {
+    if (!this.character.spellSlots) {
+      this.character.spellSlots = [];
+    }
+    if (!this.character.spellSlotsRemaining) {
+      this.character.spellSlotsRemaining = [];
+    }
+    this.character.spellSlotsRemaining = this.character.spellSlots.map(
+      (slot, i) => {
+        // If already has a value for this slot, keep it, else default to max slots
+        return this.character.spellSlotsRemaining &&
+          typeof this.character.spellSlotsRemaining[i] === 'number'
+          ? this.character.spellSlotsRemaining[i]
+          : slot;
+      }
+    );
   }
 
   saveNewCharacter(): void {
@@ -463,17 +491,11 @@ export class AppComponent implements OnInit {
         this.character.kiPoints = this.character.level;
       }
     }
-    // Check for spellcasting asynchronously
-    this.characterIsSpellcaster(
-      this.character.class,
-      this.character.level
-    ).then(() => {
-      this.character.spellSlotsRemaining = this.character.spellSlots.map(
-        (slot) => {
-          return slot; // Reset spell slots remaining to the full amount
-        }
-      );
-    });
+    this.character.spellSlotsRemaining = this.character.spellSlots.map(
+      (slot) => {
+        return slot; // Reset spell slots remaining to the full amount
+      }
+    );
     this.character.hitDie =
       this.character.hitDie < this.character.level
         ? this.character.hitDie + Math.floor(this.character.level / 2) >
