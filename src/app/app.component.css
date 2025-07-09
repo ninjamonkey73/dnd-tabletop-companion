@@ -316,10 +316,6 @@ mat-form-field.classLevel {
 .long-rest-toggle span {
   white-space: nowrap;
 }
-.new-character-row {
-  gap: 12px;
-  justify-content: flex-start;
-}
 
 mat-form-field.classData-input {
   width: 90px;
@@ -335,11 +331,6 @@ textarea {
 }
 
 /* Style the dropdown item container */
-.dropdown-item {
-  display: flex;
-  align-items: center; /* Vertically center the content */
-  width: 100%; /* Ensure the container spans the full width of the dropdown */
-}
 
 /* Style the delete button */
 .delete-icon {
@@ -379,72 +370,13 @@ mat-form-field {
   width: 180px;
 }
 
-.edit {
-  border-radius: 10px;
-  font-size: 1rem;
-  padding: 0;
-  min-width: 32px;
-  min-height: 0;
-  height: 32px;
-  width: 32px;
-  line-height: 1;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .top {
   width: 400px;
 }
 
-.edit mat-icon,
-.edit .mat-icon {
-  font-size: 20px;
-  line-height: 1;
-  margin: 0 auto;
-  display: block;
-}
-
-.success .mat-icon,
-.success mat-icon {
-  color: darkgreen;
-}
-
-.failure .mat-icon,
-.failure mat-icon {
-  color: darkred;
-}
-
-button mat-icon,
-button .mat-icon {
-  vertical-align: -3px; /* Adjust vertical alignment as needed */
-  font-size: 24px; /* or your preferred size */
-  line-height: 1;
-}
-
 /* Show number input spinners on all platforms, including Chrome Android */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: auto !important;
-  appearance: auto !important;
-  opacity: 1 !important;
-  display: inline-block !important;
-}
-
-input[type="number"] {
-  -webkit-appearance: number-input !important;
-  -moz-appearance: number-input !important;
-  appearance: number-input !important;
-}
 
 /* Remove all appearance overrides for Chrome Android, force default spinners */
-@media (pointer: coarse) {
-  input[type="number"] {
-    -webkit-appearance: auto !important;
-    appearance: auto !important;
-  }
-}
 
 .coins {
   width: 100px;
