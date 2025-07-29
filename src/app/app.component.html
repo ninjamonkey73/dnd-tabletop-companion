@@ -247,7 +247,26 @@
         </mat-card-content>
       </div>
     </div>
+    <div class="body-buttons">
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="showingMoney"
+        (click)="showingMoney = true"
+      >
+        Money
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="!showingMoney"
+        (click)="showingMoney = false"
+      >
+        Trackable Resources
+      </button>
+    </div>
     <div class="row money-row" [class.disabled]="isCreatingNewCharacter">
+      @if (showingMoney) {
       <mat-card-content>
         <div class="money-flex">
           <mat-form-field appearance="fill" class="money-input">
@@ -389,6 +408,33 @@
           </div>
         </div>
       </mat-card-content>
+      } @if (!showingMoney) {
+      <mat-card-content>
+        <div class="resources">
+          @for (record of character.resources; track $index ) {
+          <mat-form-field appearance="fill" class="classData-input">
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="character.resources[$index].name"
+              placeholder="Resource Name"
+              [disabled]="isCreatingNewCharacter"
+              style="margin-bottom: 8px"
+            />
+            <input
+              matInput
+              type="number"
+              min="0"
+              [(ngModel)]="character.resources[$index].value"
+              class="classData-input"
+              (change)="updateChar()"
+              [disabled]="isCreatingNewCharacter"
+            />
+          </mat-form-field>
+          }
+        </div>
+      </mat-card-content>
+      }
     </div>
     @if (character.class === "Monk") {
     <div>
@@ -480,46 +526,68 @@
       </div>
     </div>
     }
-    <!-- Death Save Row: Successes and Failures -->
-    <div class="death-save-row">
-      <div class="death-save-header">Death Saves</div>
-      <div class="death-save-labels">
-        <span>Successes</span>
-        <span>Failures</span>
-      </div>
-      <div class="death-save-buttons">
-        <div class="death-save-group">
-          @for (s of [0, 1, 2]; track s) {
-          <button
-            class="success"
-            mat-icon-button
-            (click)="toggleDeathSave('success', s)"
-          >
-            <mat-icon [class]="deathSaveSuccess[s] ? 'checked' : 'unchecked'">
-              {{
-                deathSaveSuccess[s] ? "check_circle" : "radio_button_unchecked"
-              }}
-            </mat-icon>
-          </button>
-          }
-        </div>
-        <div class="death-save-group">
-          @for (f of [0, 1, 2]; track f) {
-          <button
-            class="failure"
-            mat-icon-button
-            [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
-            (click)="toggleDeathSave('failure', f)"
-          >
-            <mat-icon [class]="deathSaveFailure[f] ? 'checked' : 'unchecked'">
-              {{ deathSaveFailure[f] ? "cancel" : "radio_button_unchecked" }}
-            </mat-icon>
-          </button>
-          }
-        </div>
-      </div>
+    <!-- Death Saves & Hit Dice Toggle Area -->
+    <div class="body-buttons">
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="showingDeathSaves"
+        (click)="showingDeathSaves = true"
+      >
+        Death Saves
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="!showingDeathSaves"
+        (click)="showingDeathSaves = false"
+      >
+        Hit Dice
+      </button>
     </div>
     <div>
+      @if (showingDeathSaves) {
+      <div class="death-save-row">
+        <div class="death-save-header">Death Saves</div>
+        <div class="death-save-labels">
+          <span>Successes</span>
+          <span>Failures</span>
+        </div>
+        <div class="death-save-buttons">
+          <div class="death-save-group">
+            @for (s of [0, 1, 2]; track s) {
+            <button
+              class="success"
+              mat-icon-button
+              (click)="toggleDeathSave('success', s)"
+            >
+              <mat-icon [class]="deathSaveSuccess[s] ? 'checked' : 'unchecked'">
+                {{
+                  deathSaveSuccess[s]
+                    ? "check_circle"
+                    : "radio_button_unchecked"
+                }}
+              </mat-icon>
+            </button>
+            }
+          </div>
+          <div class="death-save-group">
+            @for (f of [0, 1, 2]; track f) {
+            <button
+              class="failure"
+              mat-icon-button
+              [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
+              (click)="toggleDeathSave('failure', f)"
+            >
+              <mat-icon [class]="deathSaveFailure[f] ? 'checked' : 'unchecked'">
+                {{ deathSaveFailure[f] ? "cancel" : "radio_button_unchecked" }}
+              </mat-icon>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @if (!showingDeathSaves) {
       <div mat-card>
         <mat-card-title class="card-title" style="font-size: x-large"
           >Hit Dice</mat-card-title
@@ -538,37 +606,7 @@
           />
         </mat-form-field>
       </div>
-    </div>
-    <div>
-      <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
-          >Other Trackable Resources (editable names)</mat-card-title
-        >
-        <br />
-        <div class="resources">
-          @for (record of character.resources; track $index ) {
-          <mat-form-field appearance="fill" class="classData-input">
-            <input
-              matInput
-              type="text"
-              [(ngModel)]="character.resources[$index].name"
-              placeholder="Resource Name"
-              [disabled]="isCreatingNewCharacter"
-              style="margin-bottom: 8px"
-            />
-            <input
-              matInput
-              type="number"
-              min="0"
-              [(ngModel)]="character.resources[$index].value"
-              class="classData-input"
-              (change)="updateChar()"
-              [disabled]="isCreatingNewCharacter"
-            />
-          </mat-form-field>
-          }
-        </div>
-      </div>
+      }
     </div>
   </div>
 </body>

@@ -166,7 +166,6 @@ mat-form-field.classLevel {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
 }
 
 .card-title {
@@ -262,7 +261,7 @@ mat-form-field.classLevel {
   flex-direction: row;
   align-items: center;
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   justify-content: center;
 }
 
@@ -354,7 +353,8 @@ mat-form-field {
 }
 
 .sub,
-.add {
+.add,
+.edit {
   font-size: 1.5rem;
   border-radius: 10px;
   border: 1px solid black;
@@ -374,11 +374,17 @@ mat-form-field {
   background: linear-gradient(to bottom, #006400, #32cd32);
 }
 .sub mat-icon,
-.add mat-icon {
+.add mat-icon,
+.edit mat-icon {
   margin: 0 !important;
   padding: 0 !important;
   font-size: 24px !important;
   line-height: 1 !important;
+}
+.edit {
+  background: rgb(199, 199, 250);
+  color: black;
+  align-content: center;
 }
 
 .stable-icon {
@@ -482,4 +488,16 @@ mat-icon.unchecked {
   align-items: center;
   gap: 8px;
   width: 100%;
+}
+
+.body-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 0px 0 8px 0;
+  gap: 8px;
+}
+.body-buttons button {
+  font-size: 1.35rem !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }

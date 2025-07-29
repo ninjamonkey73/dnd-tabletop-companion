@@ -27,6 +27,8 @@ import { Character, defaultCharacter } from './character.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  showingMoney = true;
+  showingDeathSaves = true;
   classHasBeenSet: boolean = false;
 
   onClassSelection(selectedClass: string): void {
