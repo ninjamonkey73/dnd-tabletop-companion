@@ -142,6 +142,14 @@ export class AppComponent implements OnInit {
     }
     this.syncDeathSavesFromCharacter();
     this.fetchClassesFromAPI();
+    if (!this.character.resources) {
+      this.character.resources = [
+        { name: 'Resource 1', value: 0 },
+        { name: 'Resource 2', value: 0 },
+        { name: 'Resource 3', value: 0 },
+        { name: 'Resource 4', value: 0 },
+      ];
+    }
   }
 
   loadSavedCharacterNames(): void {
@@ -200,28 +208,7 @@ export class AppComponent implements OnInit {
   createNewCharacter(): void {
     if (this.newCharacterName.trim()) {
       // Create a new character with the entered name
-      this.character = {
-        name: this.newCharacterName.trim(),
-        currentHP: 0,
-        maxHP: 0,
-        kiPoints: 0,
-        class: '',
-        cp: 0,
-        sp: 0,
-        gp: 0,
-        pp: 0,
-        level: 1,
-        tempHP: 0,
-        deathSaveSuccess: [false, false, false],
-        deathSaveFailure: [false, false, false],
-        stable: false,
-        spellSlots: [],
-        spellSlotsRemaining: [],
-        hitDie: 0,
-        rage: 0,
-        rageRemaining: 0,
-        wildShapeRemaining: 0,
-      };
+      this.saveNewCharacter();
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
       this.isCreatingNewCharacter = false;
@@ -470,7 +457,13 @@ export class AppComponent implements OnInit {
         hitDie: 0,
         rage: 0,
         rageRemaining: 0,
-        wildShapeRemaining: this.character.level > 1 ? 2 : 0, // Set wildShapeRemaining only if level > 1
+        wildShapeRemaining: this.character.level > 1 ? 2 : 0,
+        resources: [
+          { name: 'Resource 1', value: 0 },
+          { name: 'Resource 2', value: 0 },
+          { name: 'Resource 3', value: 0 },
+          { name: 'Resource 4', value: 0 },
+        ],
       };
 
       this.syncDeathSavesFromCharacter();
@@ -511,6 +504,12 @@ export class AppComponent implements OnInit {
           rage: 0,
           rageRemaining: 0,
           wildShapeRemaining: 0,
+          resources: [
+            { name: '', value: 0 },
+            { name: '', value: 0 },
+            { name: '', value: 0 },
+            { name: '', value: 0 },
+          ],
         };
         this.syncDeathSavesFromCharacter();
       }

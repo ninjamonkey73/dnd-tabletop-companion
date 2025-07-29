@@ -539,5 +539,36 @@
         </mat-form-field>
       </div>
     </div>
+    <div>
+      <div mat-card>
+        <mat-card-title class="card-title" style="font-size: x-large"
+          >Other Trackable Resources (editable names)</mat-card-title
+        >
+        <br />
+        <div class="resources">
+          @for (record of character.resources; track $index ) {
+          <mat-form-field appearance="fill" class="classData-input">
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="character.resources[$index].name"
+              placeholder="Resource Name"
+              [disabled]="isCreatingNewCharacter"
+              style="margin-bottom: 8px"
+            />
+            <input
+              matInput
+              type="number"
+              min="0"
+              [(ngModel)]="character.resources[$index].value"
+              class="classData-input"
+              (change)="updateChar()"
+              [disabled]="isCreatingNewCharacter"
+            />
+          </mat-form-field>
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </body>

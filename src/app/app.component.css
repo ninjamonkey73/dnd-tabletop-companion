@@ -450,7 +450,20 @@ mat-icon.unchecked {
   align-items: center;
 }
 
-.spellSlots > * {
+.resources {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  justify-items: center;
+  align-items: center;
+}
+
+.spellSlots > *,
+.resources > * {
   min-width: 90px;
   box-sizing: border-box;
   width: 100%;

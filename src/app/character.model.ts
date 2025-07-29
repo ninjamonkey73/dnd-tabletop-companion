@@ -1,3 +1,8 @@
+export interface Resource {
+  name: string;
+  value: number;
+}
+
 export interface Character {
   name: string;
   currentHP: number;
@@ -19,6 +24,7 @@ export interface Character {
   rage: number;
   rageRemaining: number;
   wildShapeRemaining: number;
+  resources: Resource[];
 }
 
 export const defaultCharacter: Character = {
@@ -42,4 +48,10 @@ export const defaultCharacter: Character = {
   rage: 0,
   rageRemaining: 0,
   wildShapeRemaining: 0,
+  resources: [
+    { name: 'Resource 1', value: 0 },
+    { name: 'Resource 2', value: 0 },
+    { name: 'Resource 3', value: 0 },
+    { name: 'Resource 4', value: 0 },
+  ],
 };
