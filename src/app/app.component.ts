@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     }
     this.updateChar();
   }
-  // Death save state arrays (mirrored in character object)
+
   deathSaveSuccess: boolean[] = [false, false, false];
   deathSaveFailure: boolean[] = [false, false, false];
 
@@ -60,7 +60,6 @@ export class AppComponent implements OnInit {
       : [false, false, false];
   }
 
-  // Message for death save alerts
   deathSaveMessage: string | null = null;
   deathSaveMessageTimeout: any = null;
 
@@ -71,15 +70,15 @@ export class AppComponent implements OnInit {
       this.deathSaveFailure[index] = !this.deathSaveFailure[index];
     }
     if (this.deathSaveSuccess.every((val) => val)) {
-      this.character.stable = true; // Set stable state
-      this.deathSaveSuccess = [false, false, false]; // Reset success saves
-      this.deathSaveFailure = [false, false, false]; // Reset failure saves
-      this.deathSaveMessage = null; // Clear any previous message
+      this.character.stable = true;
+      this.deathSaveSuccess = [false, false, false];
+      this.deathSaveFailure = [false, false, false];
+      this.deathSaveMessage = null;
     } else if (this.deathSaveFailure.every((val) => val)) {
       this.deathSaveMessage = 'You are dead!';
     } else {
-      this.deathSaveMessage = null; // Clear message if not all success or failure
-      this.character.stable = false; // Reset stable state
+      this.deathSaveMessage = null;
+      this.character.stable = false;
     }
     this.syncDeathSavesToCharacter();
     this.saveCharacterData();
@@ -124,14 +123,14 @@ export class AppComponent implements OnInit {
 
   levels: number[] = Array.from({ length: 20 }, (_, i) => i + 1); // Generate levels 1 through 20
 
-  savedCharacterNames: string[] = []; // List of saved character names
-  selectedCharacter: string | null = null; // Tracks the selected character
-  isCreatingNewCharacter = false; // Flag to show the new character input field
-  newCharacterName = ''; // Holds the name of the new character being created
+  savedCharacterNames: string[] = [];
+  selectedCharacter: string | null = null;
+  isCreatingNewCharacter = false;
+  newCharacterName = '';
 
-  changeVal: number | null = null; // Initialize as null
+  changeVal: number | null = null;
   percentHP = 0;
-  isEditingMaxHP = false; // Flag to toggle edit mode
+  isEditingMaxHP = false;
 
   ngOnInit(): void {
     this.loadSavedCharacterNames();
@@ -170,32 +169,29 @@ export class AppComponent implements OnInit {
       const savedCharacter = localStorage.getItem(name);
       if (savedCharacter) {
         this.character = JSON.parse(savedCharacter);
-        // Defensive: ensure spellSlots and spellSlotsRemaining are always arrays
         if (!Array.isArray(this.character.spellSlots))
           this.character.spellSlots = [];
         if (!Array.isArray(this.character.spellSlotsRemaining))
           this.character.spellSlotsRemaining = [];
-        this.selectedCharacter = name; // Update the selected character
-        localStorage.setItem('lastSelectedCharacter', name); // Save the last selected character
+        this.selectedCharacter = name;
+        localStorage.setItem('lastSelectedCharacter', name);
         this.syncDeathSavesFromCharacter();
-        // Reset classHasBeenSet for this character
         this.classHasBeenSet = !!this.character.class;
       }
     }
   }
 
   loadLastSelectedCharacter(): void {
-    const lastCharacterName = localStorage.getItem('lastSelectedCharacter'); // Retrieve the last selected character name
+    const lastCharacterName = localStorage.getItem('lastSelectedCharacter');
     if (lastCharacterName) {
-      const savedCharacter = localStorage.getItem(lastCharacterName); // Retrieve the character data
+      const savedCharacter = localStorage.getItem(lastCharacterName);
       if (savedCharacter) {
         this.character = JSON.parse(savedCharacter); // Load the character data
-        // Defensive: ensure spellSlots and spellSlotsRemaining are always arrays
         if (!Array.isArray(this.character.spellSlots))
           this.character.spellSlots = [];
         if (!Array.isArray(this.character.spellSlotsRemaining))
           this.character.spellSlotsRemaining = [];
-        this.selectedCharacter = lastCharacterName; // Set the dropdown to the last selected character
+        this.selectedCharacter = lastCharacterName;
         this.syncDeathSavesFromCharacter();
       }
     }
@@ -207,7 +203,7 @@ export class AppComponent implements OnInit {
       this.character = {
         name: this.newCharacterName.trim(),
         currentHP: 0,
-        maxHP: 100,
+        maxHP: 0,
         kiPoints: 0,
         class: '',
         cp: 0,
@@ -223,7 +219,8 @@ export class AppComponent implements OnInit {
         spellSlotsRemaining: [],
         hitDie: 0,
         rage: 0,
-        rageRemaining: 0, // Initialize rage remaining if needed
+        rageRemaining: 0,
+        wildShapeRemaining: 0,
       };
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
@@ -267,41 +264,42 @@ export class AppComponent implements OnInit {
     );
     this.changeVal = null;
     this.updatePercentHP();
-    this.deathSaveSuccess = [false, false, false]; // Reset success saves
-    this.deathSaveFailure = [false, false, false]; // Reset failure saves
-    this.character.stable = false; // Reset stable state
+    this.deathSaveSuccess = [false, false, false];
+    this.deathSaveFailure = [false, false, false];
+    this.character.stable = false;
     this.deathSaveMessage = null;
     this.syncDeathSavesToCharacter();
     this.saveCharacterData();
   }
 
   updatePercentHP(): void {
-    this.percentHP = Math.round(
-      (this.character.currentHP / this.character.maxHP) * 100
-    );
+    this.percentHP =
+      this.character.currentHP === 0
+        ? 0
+        : Math.round((this.character.currentHP / this.character.maxHP) * 100);
   }
 
   saveCharacterData(): void {
     if (this.character.name) {
       this.syncDeathSavesToCharacter();
-      localStorage.setItem(this.character.name, JSON.stringify(this.character)); // Save character data
-      this.loadSavedCharacterNames(); // Refresh the list of saved names
-      localStorage.setItem('lastSelectedCharacter', this.character.name); // Save the last selected character
+      localStorage.setItem(this.character.name, JSON.stringify(this.character));
+      this.loadSavedCharacterNames();
+      localStorage.setItem('lastSelectedCharacter', this.character.name);
     } else {
       console.error('Character name is required to save data.');
     }
   }
 
   editMaxHP(): void {
-    this.isEditingMaxHP = !this.isEditingMaxHP; // Toggle edit mode
+    this.isEditingMaxHP = !this.isEditingMaxHP;
     if (!this.isEditingMaxHP) {
-      this.saveCharacterData(); // Save changes when exiting edit mode
+      this.saveCharacterData();
     }
   }
 
   onEnterMaxHP(): void {
-    this.isEditingMaxHP = false; // Exit edit mode
-    this.saveCharacterData(); // Save changes
+    this.isEditingMaxHP = false;
+    this.saveCharacterData();
   }
 
   updateChar(): void {
@@ -345,14 +343,17 @@ export class AppComponent implements OnInit {
           console.error('Failed to fetch rage count:', err);
         });
     }
+    if (this.character.class === 'Druid' && this.character.level > 1) {
+      this.character.wildShapeRemaining = 2;
+    }
+
+    this.character.hitDie = this.character.level;
+
     // Check for spellcasting asynchronously
     this.characterIsSpellcaster(
       this.character.class,
       this.character.level
     ).then(() => {
-      /* this.character.spellSlotsRemaining = this.character.spellSlots.map(
-        (slot) => slot // Initialize spell slots remaining to the full amount
-      ); */
       this.updatePercentHP();
       this.lastCharacterSelected = this.character.name;
       // Save the character data to localStorage
@@ -452,7 +453,7 @@ export class AppComponent implements OnInit {
       this.character = {
         name: this.newCharacterName.trim(),
         currentHP: 0,
-        maxHP: 100,
+        maxHP: 0,
         kiPoints: this.character.level > 1 ? this.character.level : 0, // Set kiPoints only if level > 1
         class: '',
         cp: 0,
@@ -463,20 +464,21 @@ export class AppComponent implements OnInit {
         tempHP: 0,
         deathSaveSuccess: [false, false, false],
         deathSaveFailure: [false, false, false],
-        stable: false, // Initialize stable state
-        spellSlots: [], // Initialize spell slots if needed
-        spellSlotsRemaining: [], // Initialize spell slots remaining if needed
-        hitDie: 0, // Initialize hitDie if needed
-        rage: 0, // Initialize rage if needed
-        rageRemaining: 0, // Initialize rage remaining if needed
+        stable: false,
+        spellSlots: [],
+        spellSlotsRemaining: [],
+        hitDie: 0,
+        rage: 0,
+        rageRemaining: 0,
+        wildShapeRemaining: this.character.level > 1 ? 2 : 0, // Set wildShapeRemaining only if level > 1
       };
 
       this.syncDeathSavesFromCharacter();
-      this.saveCharacterData(); // Save the new character to localStorage
-      this.loadSavedCharacterNames(); // Refresh the list of saved names
-      this.selectedCharacter = this.character.name; // Set the dropdown to the new character
-      this.isCreatingNewCharacter = false; // Hide the new character input field
-      this.newCharacterName = ''; // Clear the input field
+      this.saveCharacterData();
+      this.loadSavedCharacterNames();
+      this.selectedCharacter = this.character.name;
+      this.isCreatingNewCharacter = false;
+      this.newCharacterName = '';
     } else {
       console.error('Character name cannot be empty.');
     }
@@ -485,14 +487,14 @@ export class AppComponent implements OnInit {
   deleteCharacter(name: string | null): void {
     if (name && name !== 'new') {
       if (confirm(`Are you sure you want to delete the character "${name}"?`)) {
-        localStorage.removeItem(name); // Remove the character from localStorage
-        this.loadSavedCharacterNames(); // Refresh the list of saved names
-        this.selectedCharacter = null; // Reset the selected character
+        localStorage.removeItem(name);
+        this.loadSavedCharacterNames();
+        this.selectedCharacter = null;
         this.character = {
           name: '',
           currentHP: 0,
-          maxHP: 100,
-          kiPoints: 2,
+          maxHP: 0,
+          kiPoints: 0,
           class: '',
           cp: 0,
           sp: 0,
@@ -502,13 +504,14 @@ export class AppComponent implements OnInit {
           tempHP: 0,
           deathSaveSuccess: [false, false, false],
           deathSaveFailure: [false, false, false],
-          stable: false, // Reset the stable state
-          spellSlots: [], // Reset spell slots if needed
-          spellSlotsRemaining: [], // Reset spell slots remaining if needed
-          hitDie: 0, // Reset hitDie if needed
-          rage: 0, // Reset rage if needed
+          stable: false,
+          spellSlots: [],
+          spellSlotsRemaining: [],
+          hitDie: 0,
+          rage: 0,
           rageRemaining: 0,
-        }; // Reset the character object
+          wildShapeRemaining: 0,
+        };
         this.syncDeathSavesFromCharacter();
       }
     }
@@ -516,25 +519,23 @@ export class AppComponent implements OnInit {
 
   shortRest() {
     if (this.character.class === 'Monk') {
-      if (this.character.level === 1) {
-        this.character.kiPoints = 0;
-      } else {
-        this.character.kiPoints = this.character.level;
-      }
+      this.character.kiPoints =
+        this.character.level > 1 ? this.character.level : 0;
+    } else if (this.character.class === 'Druid') {
+      this.character.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
     }
   }
 
   longRest() {
     if (this.character.class === 'Monk') {
-      if (this.character.level === 1) {
-        this.character.kiPoints = 0;
-      } else {
-        this.character.kiPoints = this.character.level;
-      }
+      this.character.kiPoints =
+        this.character.level > 1 ? this.character.level : 0;
+    } else if (this.character.class === 'Druid') {
+      this.character.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
     }
     this.character.spellSlotsRemaining = this.character.spellSlots.map(
       (slot) => {
-        return slot; // Reset spell slots remaining to the full amount
+        return slot;
       }
     );
     this.character.hitDie =
@@ -542,20 +543,23 @@ export class AppComponent implements OnInit {
         ? this.character.hitDie + Math.floor(this.character.level / 2) >
           this.character.level
           ? this.character.level
-          : this.character.hitDie + Math.floor(this.character.level / 2)
+          : this.character.hitDie +
+            Math.floor(
+              (this.character.level < 2 ? 2 : this.character.level) / 2
+            )
         : this.character.hitDie;
     if (this.fullHeal) {
       this.character.currentHP = this.character.maxHP;
     }
-    this.character.rageRemaining = this.character.rage; // Reset rage remaining to max rage
-    this.character.tempHP = 0; // Reset tempHP on long rest
-    this.character.deathSaveSuccess = [false, false, false]; // Reset success saves
-    this.character.deathSaveFailure = [false, false, false]; // Reset failure saves
-    this.character.stable = false; // Reset stable state
-    this.deathSaveMessage = null; // Clear any previous death save message
+    this.character.rageRemaining = this.character.rage;
+    this.character.tempHP = 0;
+    this.character.deathSaveSuccess = [false, false, false];
+    this.character.deathSaveFailure = [false, false, false];
+    this.character.stable = false;
+    this.deathSaveMessage = null;
     this.character.spellSlotsRemaining = this.character.spellSlots.map(
       (slot) => {
-        return slot; // Reset spell slots remaining to the full amount
+        return slot;
       }
     );
     this.syncDeathSavesToCharacter();

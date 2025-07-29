@@ -18,13 +18,14 @@ export interface Character {
   hitDie: number;
   rage: number;
   rageRemaining: number;
+  wildShapeRemaining: number;
 }
 
 export const defaultCharacter: Character = {
   name: '',
   currentHP: 0,
-  maxHP: 100,
-  kiPoints: 2,
+  maxHP: 0,
+  kiPoints: 0,
   class: '',
   cp: 0,
   sp: 0,
@@ -40,4 +41,5 @@ export const defaultCharacter: Character = {
   hitDie: 0,
   rage: 0,
   rageRemaining: 0,
+  wildShapeRemaining: 0,
 };

@@ -131,7 +131,6 @@ mat-form-field.classLevel {
   max-width: 140px;
   align-self: center;
   margin: 0;
-  /* Remove height from .HPInput, let .hp-input control input height */
 }
 
 .hp-controls-flex > .HPInput {
@@ -162,19 +161,14 @@ mat-form-field.classLevel {
   padding-bottom: 15px;
 }
 
-/* Stack the hurt/heal buttons vertically */
-/* Removed duplicate .hp-button-stack for vertical layout */
-
-/* Card container styles */
 .card-container {
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center children horizontally */
-  justify-content: center; /* Center children vertically */
-  padding: 20px; /* Add padding around the card */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-/* Card title styles */
 .card-title {
   font-size: 1.5rem;
 }
@@ -198,41 +192,28 @@ mat-form-field.classLevel {
   font-size: 1.25rem;
 }
 
-/* Hurt button styles with a dark-to-light red gradient, 75% size */
 .hurt-button {
-  background: linear-gradient(
-    to bottom,
-    #8b0000,
-    #ff6347
-  ); /* Dark red to light red */
+  background: linear-gradient(to bottom, #8b0000, #ff6347);
   font-size: 1.5rem;
   border-radius: 10px;
-  border: 1px solid black; /* Ensure the button has a border */
-  color: white; /* Ensure the text is readable */
+  border: 1px solid black;
+  color: white;
   min-width: 68px;
   height: 36px;
   padding: 0 15px;
 }
 
-/* Heal button styles with a dark-to-light green gradient, 75% size */
 .heal-button {
-  background: linear-gradient(
-    to bottom,
-    #006400,
-    #32cd32
-  ); /* Dark green to light green */
+  background: linear-gradient(to bottom, #006400, #32cd32);
   font-size: 1.5rem;
   border-radius: 10px;
-  border: 1px solid black; /* Ensure the button has a border */
-  color: white; /* Ensure the text is readable */
+  border: 1px solid black;
+  color: white;
   min-width: 68px;
   height: 36px;
   padding: 0 15px;
 }
 
-/* Center the table with class "money" inside the card */
-
-/* Money Row Flex Layout */
 .money-flex {
   display: flex;
   flex-direction: row;
@@ -252,7 +233,6 @@ mat-form-field.classLevel {
   z-index: 2;
 }
 
-/* Display the coin columns in a row */
 .money-display-stack {
   display: flex;
   flex-direction: row;
@@ -269,7 +249,6 @@ mat-form-field.classLevel {
   justify-content: center;
 }
 
-/* Layout Flex */
 .layout {
   display: flex;
   flex-direction: column;
@@ -289,7 +268,7 @@ mat-form-field.classLevel {
 
 .row.hp-row {
   flex-direction: column;
-  align-items: stretch; /* or center, as needed */
+  align-items: stretch;
 }
 .top {
   gap: 16px;
@@ -306,7 +285,6 @@ mat-form-field.classLevel {
   gap: 8px;
 }
 
-/* For long rest toggle: label under switch */
 .long-rest-toggle {
   display: flex;
   flex-direction: column;
@@ -321,7 +299,6 @@ mat-form-field.classData-input {
   width: 90px;
 }
 
-/* Apply Goudy Bookletter 1911 font to the entire page */
 body,
 input,
 button,
@@ -330,34 +307,30 @@ textarea {
   font-family: "Goudy Bookletter 1911", serif;
 }
 
-/* Style the dropdown item container */
-
-/* Style the delete button */
 .delete-icon {
   justify-content: right;
-  border: none; /* Remove any border around the button */
-  background: none; /* Remove background color */
-  padding: 0; /* Remove padding for a cleaner look */
-  cursor: pointer; /* Show a pointer cursor on hover */
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-/* Align the class and level fields on the same line */
 .form-row {
   display: flex;
-  gap: 16px; /* Add spacing between the fields */
-  align-items: center; /* Vertically align the fields */
+  gap: 16px;
+  align-items: center;
 }
 
 mat-form-field {
-  flex: 1; /* Ensure both fields take up equal space */
+  flex: 1;
 }
 
 .rest-button {
   background: linear-gradient(to bottom, navy, lightblue);
   font-size: 1.5rem;
   border-radius: 10px;
-  border: 1px solid black; /* Ensure the button has a border */
-  color: white; /* Ensure the text is readable */
+  border: 1px solid black;
+  color: white;
   min-width: 90px;
   padding: 0 20px;
   display: flex;
@@ -373,10 +346,6 @@ mat-form-field {
 .top {
   width: 400px;
 }
-
-/* Show number input spinners on all platforms, including Chrome Android */
-
-/* Remove all appearance overrides for Chrome Android, force default spinners */
 
 .coins {
   width: 100px;
@@ -413,42 +382,42 @@ mat-form-field {
 }
 
 .stable-icon {
-  width: 20px; /* Equivalent to w-16 (16 * 4px = 64px) */
-  height: 20px; /* Equivalent to h-16 */
-  background-color: darkgreen; /* Equivalent to bg-green-800 */
-  color: #ffffff; /* Equivalent to text-white */
-  border-radius: 6px; /* Equivalent to rounded-lg (usually 0.5rem or 8px) */
+  width: 20px;
+  height: 20px;
+  background-color: darkgreen;
+  color: #ffffff;
+  border-radius: 6px;
   display: flex;
-  align-items: center; /* Equivalent to items-center */
-  justify-content: center; /* Equivalent to justify-center */
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
-  font-size: 16px; /* Equivalent to text-3xl (approximate, Tailwind's 3xl is 1.875rem or 30px) */
-  font-weight: 700; /* Equivalent to font-bold */
-  user-select: none; /* Equivalent to select-none */
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-size: 16px;
+  font-weight: 700;
+  user-select: none;
 }
 
 .incapacitated-icon {
-  width: 20px; /* Equivalent to w-16 (16 * 4px = 64px) */
-  height: 20px; /* Equivalent to h-16 */
-  background-color: darkred; /* Equivalent to bg-green-800 */
-  color: #ffffff; /* Equivalent to text-white */
-  border-radius: 6px; /* Equivalent to rounded-lg (usually 0.5rem or 8px) */
+  width: 20px;
+  height: 20px;
+  background-color: darkred;
+  color: #ffffff;
+  border-radius: 6px;
   display: flex;
-  align-items: center; /* Equivalent to items-center */
-  justify-content: center; /* Equivalent to justify-center */
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
-  font-size: 16px; /* Equivalent to text-3xl (approximate, Tailwind's 3xl is 1.875rem or 30px) */
-  font-weight: 700; /* Equivalent to font-bold */
-  user-select: none; /* Equivalent to select-none */
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-size: 16px;
+  font-weight: 700;
+  user-select: none;
 }
 
 .currentHP {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  align-items: center; /* Equivalent to items-center */
+  align-items: center;
 }
 
 .status-key {

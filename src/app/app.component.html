@@ -36,6 +36,7 @@
             <mat-select
               [(ngModel)]="selectedCharacter"
               (selectionChange)="onCharacterSelection($event.value)"
+              [disabled]="isCreatingNewCharacter"
             >
               <mat-option
                 *ngFor="let name of savedCharacterNames"
@@ -50,7 +51,11 @@
             mat-icon-button
             color="warn"
             class="delete-icon"
-            [disabled]="!selectedCharacter || selectedCharacter === 'new'"
+            [disabled]="
+              !selectedCharacter ||
+              selectedCharacter === 'new' ||
+              isCreatingNewCharacter
+            "
             (click)="deleteCharacter(selectedCharacter)"
           >
             <mat-icon>delete</mat-icon>
@@ -94,6 +99,7 @@
             id="class"
             [(ngModel)]="character.class"
             (selectionChange)="onClassSelection($event.value)"
+            [disabled]="isCreatingNewCharacter"
           >
             @for (class of classes; track class) {
             <mat-option [value]="class">
@@ -113,10 +119,11 @@
             placeholder="Enter Level"
             (change)="updateCharLevel()"
             (blur)="updateCharLevel()"
+            [disabled]="isCreatingNewCharacter"
           />
         </mat-form-field>
       </div>
-      <div class="row hp-row">
+      <div class="row hp-row" [class.disabled]="isCreatingNewCharacter">
         <mat-card-title class="card-title">Hit Points</mat-card-title>
         <div class="status-key">
           @if (character.currentHP == 0 && character.stable == true) {
@@ -125,7 +132,6 @@
           <div class="incapacitated">{{ deathSaveMessage }}</div>
           } @if (character.currentHP == 0 && character.stable == false &&
           !deathSaveMessage) {
-          <!-- The letter inside the square -->
           <span class="incapacitated">You are incapacitated</span>
           }
         </div>
@@ -135,7 +141,13 @@
               <div>Current HP</div>
               <div class="maxHP-header">
                 <span>Max HP</span>
-                <button class="edit" mat-fab extended (click)="editMaxHP()">
+                <button
+                  class="edit"
+                  mat-fab
+                  extended
+                  (click)="editMaxHP()"
+                  [disabled]="isCreatingNewCharacter"
+                >
                   <mat-icon>edit</mat-icon>
                 </button>
               </div>
@@ -164,7 +176,6 @@
                 }
               </div>
               <div>
-                <!-- Conditionally render input or plain text -->
                 <ng-container *ngIf="isEditingMaxHP; else displayMaxHP">
                   <input
                     matInput
@@ -173,6 +184,7 @@
                     class="hp-input"
                     placeholder="Enter Max HP"
                     (keydown.enter)="onEnterMaxHP()"
+                    [disabled]="isCreatingNewCharacter"
                   />
                 </ng-container>
                 <ng-template #displayMaxHP>
@@ -187,12 +199,16 @@
                   class="tempHP-input"
                   placeholder="Enter Temp HP"
                   (keydown.enter)="updateChar()"
+                  [disabled]="isCreatingNewCharacter"
                 />
               </div>
               <div>{{ percentHP }}%</div>
             </div>
           </div>
-          <div class="hp-controls hp-controls-flex">
+          <div
+            class="hp-controls hp-controls-flex"
+            [class.disabled]="isCreatingNewCharacter"
+          >
             <div class="hp-controls-flex-row">
               <mat-form-field appearance="fill" class="HPInput">
                 <input
@@ -201,14 +217,27 @@
                   type="number"
                   [(ngModel)]="changeVal"
                   class="hp-input"
+                  [disabled]="isCreatingNewCharacter"
                 />
               </mat-form-field>
               <div class="hp-button-stack">
-                <button mat-fab extended class="hurt-button" (click)="hurt()">
+                <button
+                  mat-fab
+                  extended
+                  class="hurt-button"
+                  (click)="hurt()"
+                  [disabled]="isCreatingNewCharacter"
+                >
                   <mat-icon>remove</mat-icon>
                   Hurt
                 </button>
-                <button mat-fab extended class="heal-button" (click)="heal()">
+                <button
+                  mat-fab
+                  extended
+                  class="heal-button"
+                  (click)="heal()"
+                  [disabled]="isCreatingNewCharacter"
+                >
                   <mat-icon>add</mat-icon>
                   Heal
                 </button>
@@ -218,7 +247,7 @@
         </mat-card-content>
       </div>
     </div>
-    <div class="row money-row">
+    <div class="row money-row" [class.disabled]="isCreatingNewCharacter">
       <mat-card-content>
         <div class="money-flex">
           <mat-form-field appearance="fill" class="money-input">
@@ -229,6 +258,7 @@
               [(ngModel)]="money"
               class="money-input"
               (focus)="selectMoneyInput($event)"
+              [disabled]="isCreatingNewCharacter"
             />
           </mat-form-field>
           <div class="money-display-stack">
@@ -241,6 +271,7 @@
                   class="cp-input"
                   readonly
                   tabindex="-1"
+                  [disabled]="isCreatingNewCharacter"
                 />
               </mat-form-field>
               <div class="money-buttons">
@@ -248,6 +279,7 @@
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('cp', -money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -255,6 +287,7 @@
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('cp', money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -269,6 +302,7 @@
                   class="sp-input"
                   readonly
                   tabindex="-1"
+                  [disabled]="isCreatingNewCharacter"
                 />
               </mat-form-field>
               <div class="money-buttons">
@@ -276,6 +310,7 @@
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('sp', -money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -283,6 +318,7 @@
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('sp', money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -297,6 +333,7 @@
                   class="gp-input"
                   readonly
                   tabindex="-1"
+                  [disabled]="isCreatingNewCharacter"
                 />
               </mat-form-field>
               <div class="money-buttons">
@@ -304,6 +341,7 @@
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('gp', -money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -311,6 +349,7 @@
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('gp', money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -325,6 +364,7 @@
                   class="pp-input"
                   readonly
                   tabindex="-1"
+                  [disabled]="isCreatingNewCharacter"
                 />
               </mat-form-field>
               <div class="money-buttons">
@@ -332,6 +372,7 @@
                   mat-mini-button
                   class="sub"
                   (click)="adjustMoney('pp', -money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -339,6 +380,7 @@
                   mat-mini-button
                   class="add"
                   (click)="adjustMoney('pp', money)"
+                  [disabled]="isCreatingNewCharacter"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -364,6 +406,28 @@
             [(ngModel)]="character.kiPoints"
             class="classData-input"
             (change)="updateChar()"
+            [disabled]="isCreatingNewCharacter"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    } @if (character.class === "Druid") {
+    <div>
+      <div mat-card>
+        <mat-card-title class="card-title" style="font-size: x-large"
+          >Wild Shape</mat-card-title
+        >
+        <br />
+        <mat-form-field appearance="fill" class="classData-input">
+          <input
+            matInput
+            type="number"
+            min="0"
+            max="2"
+            [(ngModel)]="character.wildShapeRemaining"
+            class="classData-input"
+            (change)="updateChar()"
+            [disabled]="isCreatingNewCharacter"
           />
         </mat-form-field>
       </div>
@@ -387,6 +451,7 @@
               [(ngModel)]="character.spellSlotsRemaining[$index]"
               class="classData-input"
               (change)="updateChar()"
+              [disabled]="isCreatingNewCharacter"
             />
           </mat-form-field>
           } }
@@ -409,6 +474,7 @@
             [(ngModel)]="character.rageRemaining"
             class="classData-input"
             (change)="updateChar()"
+            [disabled]="isCreatingNewCharacter"
           />
         </mat-form-field>
       </div>
@@ -451,6 +517,26 @@
           </button>
           }
         </div>
+      </div>
+    </div>
+    <div>
+      <div mat-card>
+        <mat-card-title class="card-title" style="font-size: x-large"
+          >Hit Dice</mat-card-title
+        >
+        <br />
+        <mat-form-field appearance="fill" class="classData-input">
+          <input
+            matInput
+            type="number"
+            min="0"
+            max="{{ character.level }}"
+            [(ngModel)]="character.hitDie"
+            class="classData-input"
+            (change)="updateChar()"
+            [disabled]="isCreatingNewCharacter"
+          />
+        </mat-form-field>
       </div>
     </div>
   </div>
