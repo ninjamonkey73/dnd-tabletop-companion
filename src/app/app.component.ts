@@ -134,6 +134,16 @@ export class AppComponent implements OnInit {
   percentHP = 0;
   isEditingMaxHP = false;
 
+  editingResourceNameId: number | null = null;
+
+  startEditingResourceName(id: number) {
+    this.editingResourceNameId = id;
+  }
+
+  stopEditingResourceName() {
+    this.editingResourceNameId = null;
+  }
+
   ngOnInit(): void {
     this.loadSavedCharacterNames();
     this.loadLastSelectedCharacter();

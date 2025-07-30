@@ -412,16 +412,29 @@
       <mat-card-content>
         <div class="resources">
           @for (record of character.resources; track record.id ) {
-          <mat-form-field appearance="fill" class="classData-input">
-            <input
-              matInput
-              type="text"
-              [(ngModel)]="record.name"
-              placeholder="Resource Name"
-              [disabled]="isCreatingNewCharacter"
-              style="margin-bottom: 8px"
-              (change)="updateChar()"
-            />
+          <mat-form-field subscriptSizing="dynamic" class="resource-name">
+            <div class="resource-name">
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="record.name"
+                placeholder="Resource Name"
+                [readonly]="editingResourceNameId !== record.id"
+                [disabled]="isCreatingNewCharacter"
+                (blur)="stopEditingResourceName()"
+              />
+              <button
+                mat-icon-button
+                type="button"
+                (click)="startEditingResourceName(record.id)"
+                [disabled]="isCreatingNewCharacter"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </mat-form-field>
+          } @for (record of character.resources; track record.id ) {
+          <mat-form-field>
             <input
               matInput
               type="number"
