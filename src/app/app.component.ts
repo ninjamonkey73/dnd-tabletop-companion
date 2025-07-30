@@ -144,7 +144,7 @@ export class AppComponent implements OnInit {
     }
     this.syncDeathSavesFromCharacter();
     this.fetchClassesFromAPI();
-    if (!this.character.resources) {
+    /* if (!this.character.resources) {
       this.character.resources = [
         { name: 'Resource 1', value: 0 },
         { name: 'Resource 2', value: 0 },
@@ -152,6 +152,15 @@ export class AppComponent implements OnInit {
         { name: 'Resource 4', value: 0 },
       ];
     }
+     if (!this.character.spellSlots) {
+      this.character.spellSlots = [];
+    }
+    if (!this.character.spellSlotsRemaining) {
+      this.character.spellSlotsRemaining = [];
+    }
+    if (!this.character.hitDie) {
+      this.character.hitDie = this.character.level;
+    } */
   }
 
   loadSavedCharacterNames(): void {
@@ -178,7 +187,8 @@ export class AppComponent implements OnInit {
       this.isCreatingNewCharacter = false;
       const savedCharacter = localStorage.getItem(name);
       if (savedCharacter) {
-        this.character = JSON.parse(savedCharacter);
+        const loaded = JSON.parse(savedCharacter);
+        Object.assign(this.character, loaded);
         if (!Array.isArray(this.character.spellSlots))
           this.character.spellSlots = [];
         if (!Array.isArray(this.character.spellSlotsRemaining))
@@ -196,7 +206,8 @@ export class AppComponent implements OnInit {
     if (lastCharacterName) {
       const savedCharacter = localStorage.getItem(lastCharacterName);
       if (savedCharacter) {
-        this.character = JSON.parse(savedCharacter); // Load the character data
+        const loaded = JSON.parse(savedCharacter);
+        Object.assign(this.character, loaded);
         if (!Array.isArray(this.character.spellSlots))
           this.character.spellSlots = [];
         if (!Array.isArray(this.character.spellSlotsRemaining))
@@ -461,10 +472,10 @@ export class AppComponent implements OnInit {
         rageRemaining: 0,
         wildShapeRemaining: this.character.level > 1 ? 2 : 0,
         resources: [
-          { name: 'Resource 1', value: 0 },
-          { name: 'Resource 2', value: 0 },
-          { name: 'Resource 3', value: 0 },
-          { name: 'Resource 4', value: 0 },
+          { id: 1, name: 'Resource 1', value: 0 },
+          { id: 2, name: 'Resource 2', value: 0 },
+          { id: 3, name: 'Resource 3', value: 0 },
+          { id: 4, name: 'Resource 4', value: 0 },
         ],
       };
 
@@ -507,10 +518,10 @@ export class AppComponent implements OnInit {
           rageRemaining: 0,
           wildShapeRemaining: 0,
           resources: [
-            { name: '', value: 0 },
-            { name: '', value: 0 },
-            { name: '', value: 0 },
-            { name: '', value: 0 },
+            { id: 1, name: 'Resource 1', value: 0 },
+            { id: 2, name: 'Resource 2', value: 0 },
+            { id: 3, name: 'Resource 3', value: 0 },
+            { id: 4, name: 'Resource 4', value: 0 },
           ],
         };
         this.syncDeathSavesFromCharacter();
@@ -533,11 +544,11 @@ export class AppComponent implements OnInit {
         this.character.level > 1 ? this.character.level : 0;
     } else if (this.character.class === 'Druid') {
       this.character.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
+    } else if (this.character.class === 'Barbarian') {
+      this.character.rageRemaining = this.character.rage;
     }
     this.character.spellSlotsRemaining = this.character.spellSlots.map(
-      (slot) => {
-        return slot;
-      }
+      (slot) => slot
     );
     this.character.hitDie =
       this.character.hitDie < this.character.level
@@ -554,14 +565,12 @@ export class AppComponent implements OnInit {
     }
     this.character.rageRemaining = this.character.rage;
     this.character.tempHP = 0;
-    this.character.deathSaveSuccess = [false, false, false];
-    this.character.deathSaveFailure = [false, false, false];
+    this.deathSaveSuccess = [false, false, false];
+    this.deathSaveFailure = [false, false, false];
     this.character.stable = false;
     this.deathSaveMessage = null;
     this.character.spellSlotsRemaining = this.character.spellSlots.map(
-      (slot) => {
-        return slot;
-      }
+      (slot) => slot
     );
     this.syncDeathSavesToCharacter();
     this.updatePercentHP();

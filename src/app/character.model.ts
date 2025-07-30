@@ -1,4 +1,5 @@
 export interface Resource {
+  id: number;
   name: string;
   value: number;
 }
@@ -49,9 +50,9 @@ export const defaultCharacter: Character = {
   rageRemaining: 0,
   wildShapeRemaining: 0,
   resources: [
-    { name: 'Resource 1', value: 0 },
-    { name: 'Resource 2', value: 0 },
-    { name: 'Resource 3', value: 0 },
-    { name: 'Resource 4', value: 0 },
+    { id: 1, name: 'Resource 1', value: 0 },
+    { id: 2, name: 'Resource 2', value: 0 },
+    { id: 3, name: 'Resource 3', value: 0 },
+    { id: 4, name: 'Resource 4', value: 0 },
   ],
 };

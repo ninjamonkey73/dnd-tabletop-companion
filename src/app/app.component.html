@@ -72,7 +72,7 @@
         </div>
         <div class="button-container">
           <button mat-fab extended class="rest-button" (click)="longRest()">
-            <mat-icon class="logRest">bedtime</mat-icon>
+            <mat-icon class="longRest">bedtime</mat-icon>
             LR
           </button>
         </div>
@@ -411,21 +411,22 @@
       } @if (!showingMoney) {
       <mat-card-content>
         <div class="resources">
-          @for (record of character.resources; track $index ) {
+          @for (record of character.resources; track record.id ) {
           <mat-form-field appearance="fill" class="classData-input">
             <input
               matInput
               type="text"
-              [(ngModel)]="character.resources[$index].name"
+              [(ngModel)]="record.name"
               placeholder="Resource Name"
               [disabled]="isCreatingNewCharacter"
               style="margin-bottom: 8px"
+              (change)="updateChar()"
             />
             <input
               matInput
               type="number"
               min="0"
-              [(ngModel)]="character.resources[$index].value"
+              [(ngModel)]="record.value"
               class="classData-input"
               (change)="updateChar()"
               [disabled]="isCreatingNewCharacter"
