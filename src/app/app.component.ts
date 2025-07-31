@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { Character, defaultCharacter } from './character.model';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ import { Character, defaultCharacter } from './character.model';
     MatSlideToggle,
     MatButtonModule,
     CommonModule,
+    MatTooltipModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],

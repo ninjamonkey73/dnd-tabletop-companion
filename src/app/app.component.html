@@ -25,7 +25,13 @@
     <div mat-card class="card-container">
       <div class="row top">
         <div class="button-container">
-          <button mat-fab extended class="rest-button" (click)="shortRest()">
+          <button
+            mat-fab
+            extended
+            class="rest-button"
+            (click)="shortRest()"
+            matTooltip="Short Rest"
+          >
             <mat-icon>snooze</mat-icon>
             SR
           </button>
@@ -57,8 +63,9 @@
               isCreatingNewCharacter
             "
             (click)="deleteCharacter(selectedCharacter)"
+            [attr.aria-label]="'delete character ' + selectedCharacter"
           >
-            <mat-icon>delete</mat-icon>
+            <mat-icon matTooltip="Delete Character">delete</mat-icon>
           </button>
         </div>
         <div class="longRest">
@@ -66,12 +73,19 @@
             <mat-slide-toggle
               [(ngModel)]="fullHeal"
               (change)="saveHealToggle()"
-            ></mat-slide-toggle>
-            <span>LR Heals</span>
+              [attr.aria-label]="'long rest heals'"
+              >LR Heals</mat-slide-toggle
+            >
           </div>
         </div>
         <div class="button-container">
-          <button mat-fab extended class="rest-button" (click)="longRest()">
+          <button
+            mat-fab
+            extended
+            class="rest-button"
+            (click)="longRest()"
+            matTooltip="Long Rest"
+          >
             <mat-icon class="longRest">bedtime</mat-icon>
             LR
           </button>
@@ -147,6 +161,8 @@
                   extended
                   (click)="editMaxHP()"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Edit Max HP"
+                  [attr.aria-label]="'edit max HP for ' + character.name"
                 >
                   <mat-icon>edit</mat-icon>
                 </button>
@@ -227,6 +243,8 @@
                   class="hurt-button"
                   (click)="hurt()"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Apply Damage"
+                  [attr.aria-label]="'apply damage to ' + character.name"
                 >
                   <mat-icon>remove</mat-icon>
                   Hurt
@@ -237,6 +255,8 @@
                   class="heal-button"
                   (click)="heal()"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Heal Character"
+                  [attr.aria-label]="'heal ' + character.name"
                 >
                   <mat-icon>add</mat-icon>
                   Heal
@@ -299,6 +319,8 @@
                   class="sub"
                   (click)="adjustMoney('cp', -money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Subtract Copper"
+                  [attr.aria-label]="'subtract copper from ' + character.name"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -307,6 +329,8 @@
                   class="add"
                   (click)="adjustMoney('cp', money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Add Copper"
+                  [attr.aria-label]="'add copper to ' + character.name"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -330,6 +354,8 @@
                   class="sub"
                   (click)="adjustMoney('sp', -money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Subtract Silver"
+                  [attr.aria-label]="'subtract silver from ' + character.name"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -338,6 +364,8 @@
                   class="add"
                   (click)="adjustMoney('sp', money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Add Silver"
+                  [attr.aria-label]="'add silver to ' + character.name"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -361,6 +389,8 @@
                   class="sub"
                   (click)="adjustMoney('gp', -money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Subtract Gold"
+                  [attr.aria-label]="'subtract gold from ' + character.name"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -369,6 +399,8 @@
                   class="add"
                   (click)="adjustMoney('gp', money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Add Gold"
+                  [attr.aria-label]="'add gold to ' + character.name"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -392,6 +424,8 @@
                   class="sub"
                   (click)="adjustMoney('pp', -money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Subtract Platinum"
+                  [attr.aria-label]="'subtract platinum from ' + character.name"
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -400,6 +434,8 @@
                   class="add"
                   (click)="adjustMoney('pp', money)"
                   [disabled]="isCreatingNewCharacter"
+                  matTooltip="Add Platinum"
+                  [attr.aria-label]="'add platinum to ' + character.name"
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -467,6 +503,7 @@
             class="classData-input"
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
+            [attr.aria-label]="'ki points for ' + character.name"
           />
         </mat-form-field>
       </div>
@@ -488,6 +525,7 @@
             class="classData-input"
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
+            [attr.aria-label]="'wild shapes for ' + character.name"
           />
         </mat-form-field>
       </div>
@@ -535,6 +573,7 @@
             class="classData-input"
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
+            [attr.aria-label]="'rages for ' + character.name"
           />
         </mat-form-field>
       </div>
@@ -574,6 +613,7 @@
               class="success"
               mat-icon-button
               (click)="toggleDeathSave('success', s)"
+              [attr.aria-label]="'toggle death save success ' + s"
             >
               <mat-icon [class]="deathSaveSuccess[s] ? 'checked' : 'unchecked'">
                 {{
@@ -592,6 +632,7 @@
               mat-icon-button
               [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
               (click)="toggleDeathSave('failure', f)"
+              [attr.aria-label]="'toggle death save failure ' + f"
             >
               <mat-icon [class]="deathSaveFailure[f] ? 'checked' : 'unchecked'">
                 {{ deathSaveFailure[f] ? "cancel" : "radio_button_unchecked" }}
