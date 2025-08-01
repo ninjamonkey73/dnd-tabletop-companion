@@ -31,6 +31,8 @@
             class="rest-button"
             (click)="shortRest()"
             matTooltip="Short Rest"
+            i18n-matTooltip
+            i18n
           >
             <mat-icon>snooze</mat-icon>
             SR
@@ -38,7 +40,7 @@
         </div>
         <div class="char-select-container">
           <mat-form-field appearance="fill" class="charName">
-            <mat-label>Character Name</mat-label>
+            <mat-label i18n>Character Name</mat-label>
             <mat-select
               [(ngModel)]="selectedCharacter"
               (selectionChange)="onCharacterSelection($event.value)"
@@ -50,7 +52,7 @@
               >
                 {{ name }}
               </mat-option>
-              <mat-option value="new">New Character</mat-option>
+              <mat-option i18n value="new">New Character</mat-option>
             </mat-select>
           </mat-form-field>
           <button
@@ -64,8 +66,11 @@
             "
             (click)="deleteCharacter(selectedCharacter)"
             [attr.aria-label]="'delete character ' + selectedCharacter"
+            i18n-aria-label
           >
-            <mat-icon matTooltip="Delete Character">delete</mat-icon>
+            <mat-icon i18n-matTooltip matTooltip="Delete Character"
+              >delete</mat-icon
+            >
           </button>
         </div>
         <div class="longRest">
@@ -74,6 +79,8 @@
               [(ngModel)]="fullHeal"
               (change)="saveHealToggle()"
               [attr.aria-label]="'long rest heals'"
+              i18n-aria-label
+              i18n
               >LR Heals</mat-slide-toggle
             >
           </div>
@@ -85,6 +92,8 @@
             class="rest-button"
             (click)="longRest()"
             matTooltip="Long Rest"
+            i18n-matTooltip
+            i18n
           >
             <mat-icon class="longRest">bedtime</mat-icon>
             LR
@@ -94,21 +103,27 @@
       @if (isCreatingNewCharacter) {
       <div class="newChar">
         <mat-form-field appearance="fill">
-          <mat-label>New Character Name</mat-label>
+          <mat-label i18n>New Character Name</mat-label>
           <input
             matInput
             [(ngModel)]="newCharacterName"
             placeholder="Enter new character name"
+            i18n-placeholder
           />
         </mat-form-field>
-        <button mat-raised-button color="primary" (click)="saveNewCharacter()">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="saveNewCharacter()"
+          i18n
+        >
           Save Character
         </button>
       </div>
       }
       <div class="row form-row">
         <mat-form-field class="classLevel">
-          <mat-label>Character Class</mat-label>
+          <mat-label i18n>Character Class</mat-label>
           <mat-select
             id="class"
             [(ngModel)]="character.class"
@@ -123,7 +138,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="classLevel">
-          <mat-label>Character Level</mat-label>
+          <mat-label i18n>Character Level</mat-label>
           <input
             matInput
             type="number"
@@ -134,27 +149,30 @@
             (change)="updateCharLevel()"
             (blur)="updateCharLevel()"
             [disabled]="isCreatingNewCharacter"
+            i18n-placeholder
+            [attr.aria-label]="'character level for ' + character.name"
+            i18n-aria-label
           />
         </mat-form-field>
       </div>
       <div class="row hp-row" [class.disabled]="isCreatingNewCharacter">
-        <mat-card-title class="card-title">Hit Points</mat-card-title>
+        <mat-card-title i18n class="card-title">Hit Points</mat-card-title>
         <div class="status-key">
           @if (character.currentHP == 0 && character.stable == true) {
-          <span class="stable">You are stable</span>
+          <span i18n class="stable">You are stable</span>
           } @if (deathSaveMessage) {
           <div class="incapacitated">{{ deathSaveMessage }}</div>
           } @if (character.currentHP == 0 && character.stable == false &&
           !deathSaveMessage) {
-          <span class="incapacitated">You are incapacitated</span>
+          <span i18n class="incapacitated">You are incapacitated</span>
           }
         </div>
         <mat-card-content>
           <div class="hp-table">
             <div class="hp-header">
-              <div>Current HP</div>
+              <div i18n>Current HP</div>
               <div class="maxHP-header">
-                <span>Max HP</span>
+                <span i18n>Max HP</span>
                 <button
                   class="edit"
                   mat-fab
@@ -163,12 +181,14 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Edit Max HP"
                   [attr.aria-label]="'edit max HP for ' + character.name"
+                  i18n-aria-label
+                  i18n-matTooltip
                 >
                   <mat-icon>edit</mat-icon>
                 </button>
               </div>
-              <div>Temp HP</div>
-              <div>% of Max</div>
+              <div i18n>Temp HP</div>
+              <div i18n>% of Max</div>
             </div>
             <div class="hpRow">
               <div class="currentHP">
@@ -176,18 +196,18 @@
                 @if (character.currentHP == 0 && character.stable == true) {
                 <span class="stable-icon">
                   <!-- The letter inside the square -->
-                  <span>S</span>
+                  <span i18n="Letter for stable health">S</span>
                 </span>
                 } @if (character.currentHP == 0 && character.stable == false &&
                 deathSaveMessage == null) {
                 <span class="incapacitated-icon">
                   <!-- The letter inside the square -->
-                  <span>I</span>
+                  <span i18n="Letter for incapacitated">I</span>
                 </span>
                 } @if (deathSaveMessage) {
                 <span class="incapacitated-icon">
                   <!-- The letter inside the square -->
-                  <span>D</span>
+                  <span i18n="Letter for dead">D</span>
                 </span>
                 }
               </div>
@@ -201,6 +221,9 @@
                     placeholder="Enter Max HP"
                     (keydown.enter)="onEnterMaxHP()"
                     [disabled]="isCreatingNewCharacter"
+                    i18n-placeholder
+                    [attr.aria-label]="'max HP for ' + character.name"
+                    i18n-aria-label
                   />
                 </ng-container>
                 <ng-template #displayMaxHP>
@@ -216,6 +239,9 @@
                   placeholder="Enter Temp HP"
                   (keydown.enter)="updateChar()"
                   [disabled]="isCreatingNewCharacter"
+                  i18n-placeholder
+                  [attr.aria-label]="'temp HP for ' + character.name"
+                  i18n-aria-label
                 />
               </div>
               <div>{{ percentHP }}%</div>
@@ -245,6 +271,9 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Apply Damage"
                   [attr.aria-label]="'apply damage to ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
+                  i18n
                 >
                   <mat-icon>remove</mat-icon>
                   Hurt
@@ -257,6 +286,9 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Heal Character"
                   [attr.aria-label]="'heal ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
+                  i18n
                 >
                   <mat-icon>add</mat-icon>
                   Heal
@@ -281,6 +313,7 @@
         color="primary"
         [disabled]="!showingMoney"
         (click)="showingMoney = false"
+        i18n
       >
         Trackable Resources
       </button>
@@ -290,7 +323,7 @@
       <mat-card-content>
         <div class="money-flex">
           <mat-form-field appearance="fill" class="money-input">
-            <mat-label>Coin +/-</mat-label>
+            <mat-label i18n>Coin +/-</mat-label>
             <input
               matInput
               type="number"
@@ -303,7 +336,7 @@
           <div class="money-display-stack">
             <div class="money-display-col">
               <mat-form-field appearance="fill" class="coins">
-                <mat-label>Copper</mat-label>
+                <mat-label i18n>Copper</mat-label>
                 <input
                   matInput
                   [value]="character.cp"
@@ -321,6 +354,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Subtract Copper"
                   [attr.aria-label]="'subtract copper from ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -331,6 +366,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Add Copper"
                   [attr.aria-label]="'add copper to ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -338,7 +375,7 @@
             </div>
             <div class="money-display-col">
               <mat-form-field appearance="fill" class="coins">
-                <mat-label>Silver</mat-label>
+                <mat-label i18n>Silver</mat-label>
                 <input
                   matInput
                   [value]="character.sp"
@@ -356,6 +393,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Subtract Silver"
                   [attr.aria-label]="'subtract silver from ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -366,6 +405,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Add Silver"
                   [attr.aria-label]="'add silver to ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -373,7 +414,7 @@
             </div>
             <div class="money-display-col">
               <mat-form-field appearance="fill" class="coins">
-                <mat-label>Gold</mat-label>
+                <mat-label i18n>Gold</mat-label>
                 <input
                   matInput
                   [value]="character.gp"
@@ -391,6 +432,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Subtract Gold"
                   [attr.aria-label]="'subtract gold from ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -401,6 +444,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Add Gold"
                   [attr.aria-label]="'add gold to ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -408,7 +453,7 @@
             </div>
             <div class="money-display-col">
               <mat-form-field appearance="fill" class="coins">
-                <mat-label>Platinum</mat-label>
+                <mat-label i18n>Platinum</mat-label>
                 <input
                   matInput
                   [value]="character.pp"
@@ -426,6 +471,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Subtract Platinum"
                   [attr.aria-label]="'subtract platinum from ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>remove</mat-icon>
                 </button>
@@ -436,6 +483,8 @@
                   [disabled]="isCreatingNewCharacter"
                   matTooltip="Add Platinum"
                   [attr.aria-label]="'add platinum to ' + character.name"
+                  i18n-matTooltip
+                  i18n-aria-label
                 >
                   <mat-icon>add</mat-icon>
                 </button>
@@ -458,12 +507,15 @@
                 [readonly]="editingResourceNameId !== record.id"
                 [disabled]="isCreatingNewCharacter"
                 (blur)="stopEditingResourceName()"
+                i18n-placeholder
               />
               <button
                 mat-icon-button
                 type="button"
                 (click)="startEditingResourceName(record.id)"
                 [disabled]="isCreatingNewCharacter"
+                [attr.aria-label]="'edit resource name for ' + record.name"
+                i18n-aria-label
               >
                 <mat-icon>edit</mat-icon>
               </button>
@@ -479,6 +531,8 @@
               class="classData-input"
               (change)="updateChar()"
               [disabled]="isCreatingNewCharacter"
+              [attr.aria-label]="'resource value for ' + record.name"
+              i18n-aria-label
             />
           </mat-form-field>
           }
@@ -489,7 +543,7 @@
     @if (character.class === "Monk") {
     <div>
       <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
+        <mat-card-title class="card-title" style="font-size: x-large" i18n
           >Ki Points</mat-card-title
         >
         <br />
@@ -504,6 +558,7 @@
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
             [attr.aria-label]="'ki points for ' + character.name"
+            i18n-aria-label
           />
         </mat-form-field>
       </div>
@@ -511,7 +566,7 @@
     } @if (character.class === "Druid") {
     <div>
       <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
+        <mat-card-title class="card-title" style="font-size: x-large" i18n
           >Wild Shape</mat-card-title
         >
         <br />
@@ -526,6 +581,7 @@
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
             [attr.aria-label]="'wild shapes for ' + character.name"
+            i18n-aria-label
           />
         </mat-form-field>
       </div>
@@ -533,7 +589,7 @@
     } @if (character.spellSlots.length > 0) {
     <div>
       <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
+        <mat-card-title class="card-title" style="font-size: x-large" i18n
           >Spell Slots</mat-card-title
         >
         <br />
@@ -550,6 +606,13 @@
               class="classData-input"
               (change)="updateChar()"
               [disabled]="isCreatingNewCharacter"
+              [attr.aria-label]="
+                'spell slots remaining for level ' +
+                ($index + 1) +
+                ' for ' +
+                character.name
+              "
+              i18n-aria-label
             />
           </mat-form-field>
           } }
@@ -559,7 +622,7 @@
     } @if (character.class === "Barbarian") {
     <div>
       <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
+        <mat-card-title class="card-title" style="font-size: x-large" i18n
           >Rage</mat-card-title
         >
         <br />
@@ -574,6 +637,7 @@
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
             [attr.aria-label]="'rages for ' + character.name"
+            i18n-aria-label
           />
         </mat-form-field>
       </div>
@@ -586,6 +650,7 @@
         color="primary"
         [disabled]="showingDeathSaves"
         (click)="showingDeathSaves = true"
+        i18n
       >
         Death Saves
       </button>
@@ -594,6 +659,7 @@
         color="primary"
         [disabled]="!showingDeathSaves"
         (click)="showingDeathSaves = false"
+        i18n
       >
         Hit Dice
       </button>
@@ -601,10 +667,10 @@
     <div>
       @if (showingDeathSaves) {
       <div class="death-save-row">
-        <div class="death-save-header">Death Saves</div>
+        <div class="death-save-header" i18n>Death Saves</div>
         <div class="death-save-labels">
-          <span>Successes</span>
-          <span>Failures</span>
+          <span i18n>Successes</span>
+          <span i18n>Failures</span>
         </div>
         <div class="death-save-buttons">
           <div class="death-save-group">
@@ -614,6 +680,7 @@
               mat-icon-button
               (click)="toggleDeathSave('success', s)"
               [attr.aria-label]="'toggle death save success ' + s"
+              i18n-aria-label
             >
               <mat-icon [class]="deathSaveSuccess[s] ? 'checked' : 'unchecked'">
                 {{
@@ -633,6 +700,7 @@
               [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
               (click)="toggleDeathSave('failure', f)"
               [attr.aria-label]="'toggle death save failure ' + f"
+              i18n-aria-label
             >
               <mat-icon [class]="deathSaveFailure[f] ? 'checked' : 'unchecked'">
                 {{ deathSaveFailure[f] ? "cancel" : "radio_button_unchecked" }}
@@ -644,7 +712,7 @@
       </div>
       } @if (!showingDeathSaves) {
       <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large"
+        <mat-card-title class="card-title" style="font-size: x-large" i18n
           >Hit Dice</mat-card-title
         >
         <br />
@@ -658,6 +726,8 @@
             class="classData-input"
             (change)="updateChar()"
             [disabled]="isCreatingNewCharacter"
+            [attr.aria-label]="'hit dice for ' + character.name"
+            i18n-aria-label
           />
         </mat-form-field>
       </div>

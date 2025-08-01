@@ -79,7 +79,7 @@ export class AppComponent implements OnInit {
       this.deathSaveFailure = [false, false, false];
       this.deathSaveMessage = null;
     } else if (this.deathSaveFailure.every((val) => val)) {
-      this.deathSaveMessage = 'You are dead!';
+      this.deathSaveMessage = $localize`You are dead!`;
     } else {
       this.deathSaveMessage = null;
       this.character.stable = false;
@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
     fetch('https://www.dnd5eapi.co/api/2014/classes')
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error($localize`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
@@ -113,12 +113,12 @@ export class AppComponent implements OnInit {
         if (data && Array.isArray(data.results)) {
           this.classes = data.results.map((c: any) => c.name);
         } else {
-          this.classesError = 'API returned unexpected data.';
+          this.classesError = $localize`API returned unexpected data.`;
         }
       })
       .catch((err) => {
-        this.classesError = 'Failed to fetch classes from API.';
-        console.error('Failed to fetch classes from API:', err);
+        this.classesError = $localize`Failed to fetch classes from API.`;
+        console.error($localize`Failed to fetch classes from API:`, err);
       })
       .finally(() => {
         this.isLoadingClasses = false;
@@ -156,23 +156,6 @@ export class AppComponent implements OnInit {
     }
     this.syncDeathSavesFromCharacter();
     this.fetchClassesFromAPI();
-    /* if (!this.character.resources) {
-      this.character.resources = [
-        { name: 'Resource 1', value: 0 },
-        { name: 'Resource 2', value: 0 },
-        { name: 'Resource 3', value: 0 },
-        { name: 'Resource 4', value: 0 },
-      ];
-    }
-     if (!this.character.spellSlots) {
-      this.character.spellSlots = [];
-    }
-    if (!this.character.spellSlotsRemaining) {
-      this.character.spellSlotsRemaining = [];
-    }
-    if (!this.character.hitDie) {
-      this.character.hitDie = this.character.level;
-    } */
   }
 
   loadSavedCharacterNames(): void {
@@ -239,7 +222,7 @@ export class AppComponent implements OnInit {
       this.isCreatingNewCharacter = false;
       this.newCharacterName = '';
     } else {
-      console.error('Character name cannot be empty.');
+      console.error($localize`Character name cannot be empty.`);
     }
   }
 
@@ -266,7 +249,7 @@ export class AppComponent implements OnInit {
 
   heal(): void {
     if (this.changeVal === null || this.changeVal <= 0) {
-      console.error('Change value must be a positive number to heal.');
+      console.error($localize`Change value must be a positive number to heal.`);
       this.changeVal = null;
       return;
     }
@@ -298,7 +281,7 @@ export class AppComponent implements OnInit {
       this.loadSavedCharacterNames();
       localStorage.setItem('lastSelectedCharacter', this.character.name);
     } else {
-      console.error('Character name is required to save data.');
+      console.error($localize`Character name is required to save data.`);
     }
   }
 
@@ -324,10 +307,10 @@ export class AppComponent implements OnInit {
     let errorMsg = '';
     if (this.character.level < 1) {
       this.character.level = 1;
-      errorMsg = 'Level cannot be less than 1.';
+      errorMsg = $localize`Level cannot be less than 1.`;
     } else if (this.character.level > 20) {
       this.character.level = 20;
-      errorMsg = 'Level cannot be greater than 20.';
+      errorMsg = $localize`Level cannot be greater than 20.`;
     }
     if (this.character.class === 'Monk' && this.character.level > 1) {
       // Update kiPoints based on level
@@ -339,7 +322,8 @@ export class AppComponent implements OnInit {
       const url = `https://www.dnd5eapi.co/api/2014/classes/barbarian/levels/${this.character.level}`;
       fetch(url)
         .then((response) => {
-          if (!response.ok) throw new Error('Failed to fetch rage count');
+          if (!response.ok)
+            throw new Error($localize`Failed to fetch rage count`);
           return response.json();
         })
         .then((data) => {
@@ -352,7 +336,7 @@ export class AppComponent implements OnInit {
           }
         })
         .catch((err) => {
-          console.error('Failed to fetch rage count:', err);
+          console.error($localize`Failed to fetch rage count:`, err);
         });
     }
     if (this.character.class === 'Druid' && this.character.level > 1) {
@@ -402,9 +386,9 @@ export class AppComponent implements OnInit {
       }
     } catch (e) {
       console.error(
-        'Failed to check spellcasting for',
+        $localize`Failed to check spellcasting for`,
         className,
-        'level',
+        $localize`level`,
         lvl,
         e
       );
@@ -462,34 +446,8 @@ export class AppComponent implements OnInit {
   saveNewCharacter(): void {
     if (this.newCharacterName.trim()) {
       // Create a new character with the entered name
-      this.character = {
-        name: this.newCharacterName.trim(),
-        currentHP: 0,
-        maxHP: 0,
-        kiPoints: this.character.level > 1 ? this.character.level : 0, // Set kiPoints only if level > 1
-        class: '',
-        cp: 0,
-        sp: 0,
-        gp: 0,
-        pp: 0,
-        level: 1,
-        tempHP: 0,
-        deathSaveSuccess: [false, false, false],
-        deathSaveFailure: [false, false, false],
-        stable: false,
-        spellSlots: [],
-        spellSlotsRemaining: [],
-        hitDie: 0,
-        rage: 0,
-        rageRemaining: 0,
-        wildShapeRemaining: this.character.level > 1 ? 2 : 0,
-        resources: [
-          { id: 1, name: 'Resource 1', value: 0 },
-          { id: 2, name: 'Resource 2', value: 0 },
-          { id: 3, name: 'Resource 3', value: 0 },
-          { id: 4, name: 'Resource 4', value: 0 },
-        ],
-      };
+      this.character = defaultCharacter;
+      this.character.name = this.newCharacterName.trim();
 
       this.syncDeathSavesFromCharacter();
       this.saveCharacterData();
@@ -498,44 +456,21 @@ export class AppComponent implements OnInit {
       this.isCreatingNewCharacter = false;
       this.newCharacterName = '';
     } else {
-      console.error('Character name cannot be empty.');
+      console.error($localize`Character name cannot be empty.`);
     }
   }
 
   deleteCharacter(name: string | null): void {
     if (name && name !== 'new') {
-      if (confirm(`Are you sure you want to delete the character "${name}"?`)) {
+      if (
+        confirm(
+          $localize`Are you sure you want to delete the character "${name}"?`
+        )
+      ) {
         localStorage.removeItem(name);
         this.loadSavedCharacterNames();
         this.selectedCharacter = null;
-        this.character = {
-          name: '',
-          currentHP: 0,
-          maxHP: 0,
-          kiPoints: 0,
-          class: '',
-          cp: 0,
-          sp: 0,
-          gp: 0,
-          pp: 0,
-          level: 1,
-          tempHP: 0,
-          deathSaveSuccess: [false, false, false],
-          deathSaveFailure: [false, false, false],
-          stable: false,
-          spellSlots: [],
-          spellSlotsRemaining: [],
-          hitDie: 0,
-          rage: 0,
-          rageRemaining: 0,
-          wildShapeRemaining: 0,
-          resources: [
-            { id: 1, name: 'Resource 1', value: 0 },
-            { id: 2, name: 'Resource 2', value: 0 },
-            { id: 3, name: 'Resource 3', value: 0 },
-            { id: 4, name: 'Resource 4', value: 0 },
-          ],
-        };
+        this.character = defaultCharacter;
         this.syncDeathSavesFromCharacter();
       }
     }
@@ -621,7 +556,9 @@ export class AppComponent implements OnInit {
     const current = this.character[type] || 0;
     const newValue = current + amount;
     if (newValue < 0) {
-      alert(`You cannot subtract more than you have! (${current} available)`);
+      alert(
+        $localize`You cannot subtract more than you have! (${current} available)`
+      );
       return;
     }
     this.character[type] = newValue;
