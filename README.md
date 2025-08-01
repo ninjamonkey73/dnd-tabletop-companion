@@ -21,7 +21,7 @@ npm run deploy
 ```
 
 ```bash
-ng build --configuration production
+ng build --configuration production --localize
 git checkout gh-pages
 npm install
 npx rimraf ./browser
