@@ -25,7 +25,7 @@ ng build --configuration production --localize
 git checkout gh-pages
 npm install
 npx rimraf ./browser
-npx cpy-cli "dist/dnd-tabletop-companion/browser/**" . --flat
+npx cpy-cli "dist/dnd-tabletop-companion/browser/**" .
 git add .
 git commit -m 'Deploy'
 git push origin gh-pages
