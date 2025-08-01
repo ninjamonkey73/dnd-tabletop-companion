@@ -21,14 +21,16 @@ npm run deploy
 ```
 
 ```bash
-ng build --configuration production --base-href /dnd-tabletop-companion/
+ng build --configuration production
 git checkout gh-pages
+npm install
 npx rimraf ./browser
 npx cpy-cli "dist/dnd-tabletop-companion/browser/**" . --flat
 git add .
-git commit -m "Deploy"
+git commit -m 'Deploy'
 git push origin gh-pages
 git checkout main
+npm install
 ```
 
 ## Code scaffolding
