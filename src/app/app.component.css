@@ -258,6 +258,7 @@ mat-form-field.classLevel {
   width: 100%;
   margin: 0 auto;
   text-align: center;
+  padding-top: 20px;
 }
 .row {
   display: flex;
