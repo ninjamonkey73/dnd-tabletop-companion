@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
-    "deploy": "ng build --configuration production --base-href /dnd-tabletop-companion/ && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . --flat && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
+    "deploy": "ng build --configuration production --base-href /dnd-tabletop-companion/ && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . --flat && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main && npm install",
     "open": "ng serve --open"
   },
   "private": true,
