@@ -26,8 +26,8 @@ git checkout gh-pages
 npx rimraf ./browser
 npx cpy-cli "dist/dnd-tabletop-companion/browser/**" .
 ## move en-US folder to main
-move dist\dnd-tabletop-companion\en-US\* dist\dnd-tabletop-companion\
-rmdir dist\dnd-tabletop-companion\en-US
+move .\en-US\* .\
+rmdir .\en-US -Recurse
 git add .
 git commit -m 'Deploy'
 git push origin gh-pages
