@@ -22,6 +22,16 @@
 </head>
 <body>
   <div class="layout">
+    <div class="language-button-container">
+      <a
+        mat-stroked-button
+        class="language-button"
+        [href]="currentLocale === 'es' ? '/' : '/es/'"
+        onclick="currentLocale = currentLocale === 'es' ? 'en' : 'es';"
+      >
+        {{ currentLocale === "es" ? "Inglés" : "Spanish" }}
+      </a>
+    </div>
     <div mat-card class="card-container">
       <div class="row top">
         <div class="button-container">
@@ -305,6 +315,7 @@
         color="primary"
         [disabled]="showingMoney"
         (click)="showingMoney = true"
+        i18n
       >
         Money
       </button>
@@ -596,7 +607,7 @@
         <div class="spellSlots">
           @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
           <mat-form-field appearance="fill" class="classData-input">
-            <mat-label>Level {{ $index + 1 }}</mat-label>
+            <mat-label i18n>Level {{ $index + 1 }}</mat-label>
             <input
               matInput
               type="number"

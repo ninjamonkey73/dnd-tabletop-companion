@@ -10,6 +10,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { Character, defaultCharacter } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,27 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  currentLocale: 'en' | 'es' = 'en';
+
+  constructor(private location: Location) {}
+
+  ngOnInit() {
+    if (window.location.pathname.includes('/es/')) {
+      this.currentLocale = 'es';
+    } else {
+      this.currentLocale = 'en';
+    }
+    this.loadSavedCharacterNames();
+    this.loadLastSelectedCharacter();
+    // Load the fullHeal toggle value from localStorage
+    const savedFullHeal = localStorage.getItem('fullHeal');
+    if (savedFullHeal !== null) {
+      this.fullHeal = JSON.parse(savedFullHeal);
+    }
+    this.syncDeathSavesFromCharacter();
+    this.fetchClassesFromAPI();
+  }
+
   showingMoney = true;
   showingDeathSaves = true;
   classHasBeenSet: boolean = false;
@@ -144,18 +166,6 @@ export class AppComponent implements OnInit {
 
   stopEditingResourceName() {
     this.editingResourceNameId = null;
-  }
-
-  ngOnInit(): void {
-    this.loadSavedCharacterNames();
-    this.loadLastSelectedCharacter();
-    // Load the fullHeal toggle value from localStorage
-    const savedFullHeal = localStorage.getItem('fullHeal');
-    if (savedFullHeal !== null) {
-      this.fullHeal = JSON.parse(savedFullHeal);
-    }
-    this.syncDeathSavesFromCharacter();
-    this.fetchClassesFromAPI();
   }
 
   loadSavedCharacterNames(): void {

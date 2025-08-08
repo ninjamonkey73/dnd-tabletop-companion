@@ -216,6 +216,26 @@ mat-form-field.classLevel {
   padding: 0 15px;
 }
 
+.language-button-container {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end; /* Move button to the right */
+  width: 42%;
+}
+
+.language-button {
+  background: linear-gradient(to bottom, yellow, lightyellow);
+  font-size: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 68px;
+  height: 36px;
+  padding: 0 15px;
+  justify-self: right;
+  font: inherit;
+}
+
 .money-flex {
   display: flex;
   flex-direction: row;
