@@ -8,7 +8,8 @@
     "build:prod": "ng build --configuration production --localize",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
-    "deploy": "npm run build:prod && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
+    "move-en": "move en-US\\* \\ && rmdir en-US",
+    "deploy": "npm run build:prod && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . && npm run move-en && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
     "open": "ng serve --open",
     "extract-i18n": "ng extract-i18n --output-path=src/locale",
     "localize": "ng build --localize"
