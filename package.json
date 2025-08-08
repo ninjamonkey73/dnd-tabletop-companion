@@ -5,9 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production --localize",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
-    "deploy": "ng build --configuration production --localize && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
+    "deploy": "npm run build:prod && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
     "open": "ng serve --open",
     "extract-i18n": "ng extract-i18n --output-path=src/locale",
     "localize": "ng build --localize"
