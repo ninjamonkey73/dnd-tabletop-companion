@@ -22,6 +22,7 @@ npm run deploy
 
 ```bash
 ng build --configuration production --localize
+npx replace-in-file '<base href="/en-US/">' '<base href="/dnd-tabletop-companion/en-US/">' dist/dnd-tabletop-companion/browser/en-US/index.html
 git checkout gh-pages
 npx rimraf ./browser
 npx cpy-cli "dist/dnd-tabletop-companion/browser/**" .
