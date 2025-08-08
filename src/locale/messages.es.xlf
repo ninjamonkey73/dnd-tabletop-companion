@@ -221,12 +221,20 @@
           <context context-type="linenumber">249,250</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="8932315332459943454" datatype="html">
+        <source>HP to +/-</source>
+        <target>PG a +/-</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">268,269</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="829273492393190848" datatype="html">
         <source>Apply Damage</source>
         <target>Aplicar Daño</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">282,283</context>
+          <context context-type="linenumber">283,284</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1808363832871376701" datatype="html">
@@ -234,7 +242,7 @@
         <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>remove<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Herir </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">288,290</context>
+          <context context-type="linenumber">289,291</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1944993042316878408" datatype="html">
@@ -242,7 +250,7 @@
         <target>Curar Personaje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">297,298</context>
+          <context context-type="linenumber">298,299</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9098810728073904750" datatype="html">
@@ -250,7 +258,7 @@
         <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Curar </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">303,305</context>
+          <context context-type="linenumber">304,306</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6815678271368518310" datatype="html">
@@ -258,7 +266,7 @@
         <target> Dinero </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">320,321</context>
+          <context context-type="linenumber">321,322</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3737431157827318883" datatype="html">
@@ -266,7 +274,7 @@
         <target> Recursos Seguibles </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">329,330</context>
+          <context context-type="linenumber">330,331</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7596370843610200711" datatype="html">
@@ -274,7 +282,7 @@
         <target>Monedas +/-</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8070430854256560045" datatype="html">
@@ -282,7 +290,7 @@
         <target>Cobre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3297934398260266152" datatype="html">
@@ -290,7 +298,7 @@
         <target>Restar Cobre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">366,367</context>
+          <context context-type="linenumber">367,368</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8160695167424450790" datatype="html">
@@ -298,7 +306,7 @@
         <target>Añadir Cobre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">378,379</context>
+          <context context-type="linenumber">379,380</context>
         </context-group>
       </trans-unit>
       <trans-unit id="265773158334492361" datatype="html">
@@ -306,7 +314,7 @@
         <target>Plata</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">389</context>
+          <context context-type="linenumber">390</context>
         </context-group>
       </trans-unit>
       <trans-unit id="761079136911865552" datatype="html">
@@ -314,7 +322,7 @@
         <target>Restar Plata</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">405,406</context>
+          <context context-type="linenumber">406,407</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4539601288719572495" datatype="html">
@@ -322,7 +330,7 @@
         <target>Añadir Plata</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">417,418</context>
+          <context context-type="linenumber">418,419</context>
         </context-group>
       </trans-unit>
       <trans-unit id="620013521855260281" datatype="html">
@@ -330,7 +338,7 @@
         <target>Oro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">428</context>
+          <context context-type="linenumber">429</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9031744882191945207" datatype="html">
@@ -338,7 +346,7 @@
         <target>Restar Oro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">444,445</context>
+          <context context-type="linenumber">445,446</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4772735716183092177" datatype="html">
@@ -346,7 +354,7 @@
         <target>Añadir Oro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">456,457</context>
+          <context context-type="linenumber">457,458</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3649596314294718487" datatype="html">
@@ -354,7 +362,7 @@
         <target>Platino</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">467</context>
+          <context context-type="linenumber">468</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6946789059186741693" datatype="html">
@@ -362,7 +370,7 @@
         <target>Restar Platino</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">483,484</context>
+          <context context-type="linenumber">484,485</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4256701978085684165" datatype="html">
@@ -370,7 +378,7 @@
         <target>Añadir Platino</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">495,496</context>
+          <context context-type="linenumber">496,497</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6813396031694137692" datatype="html">
@@ -378,7 +386,7 @@
         <target>Nombre del Recurso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">517,518</context>
+          <context context-type="linenumber">518,519</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8963958948382802578" datatype="html">
@@ -386,7 +394,7 @@
         <target>Puntos de Ki</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">558</context>
+          <context context-type="linenumber">559</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4322898453753074677" datatype="html">
@@ -394,7 +402,7 @@
         <target>Forma Salvaje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">581</context>
+          <context context-type="linenumber">582</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7334871540066022424" datatype="html">
@@ -402,7 +410,7 @@
         <target>Ranuras de Conjuros</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">604</context>
+          <context context-type="linenumber">605</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8800476882871783599" datatype="html">
@@ -410,7 +418,7 @@
         <target>Nivel <x id="INTERPOLATION" equiv-text="{{ $index + 1 }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">610,611</context>
+          <context context-type="linenumber">611,612</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1335264826504206980" datatype="html">
@@ -418,7 +426,7 @@
         <target>Rabia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">637</context>
+          <context context-type="linenumber">638</context>
         </context-group>
       </trans-unit>
       <trans-unit id="736621534510182715" datatype="html">
@@ -426,7 +434,7 @@
         <target> Salvaciones de Muerte </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">666,667</context>
+          <context context-type="linenumber">667,668</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7914631302172987707" datatype="html">
@@ -434,7 +442,7 @@
         <target> Dados de Golpe </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">675,676</context>
+          <context context-type="linenumber">676,677</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2818331375871778084" datatype="html">
@@ -442,7 +450,7 @@
         <target>Salvaciones de Muerte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">681,682</context>
+          <context context-type="linenumber">682,683</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7371828559700789647" datatype="html">
@@ -450,7 +458,7 @@
         <target>Éxitos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">683,684</context>
+          <context context-type="linenumber">684,685</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8400522507688703742" datatype="html">
@@ -458,7 +466,7 @@
         <target>Fracasos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">684,685</context>
+          <context context-type="linenumber">685,686</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8385700267919540924" datatype="html">
@@ -466,7 +474,7 @@
         <target>Dados de Golpe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">727</context>
+          <context context-type="linenumber">728</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2300463029012428814" datatype="html">
