@@ -46,3 +46,6 @@ Thumbs.db
 # Ignore workspace file
 dnd-tabletop-companion.code-workspace
 node_modules/.cache/gh-pages/https!github.com!ninjamonkey73!dnd-tabletop-companion.git
+
+.cursor\rules\nx-rules.mdc
+.github\instructions\nx.instructions.md
