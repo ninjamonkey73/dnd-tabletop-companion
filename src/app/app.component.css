@@ -1,50 +1,3 @@
-/* Death Save Tracker Button Styles */
-/* Match .hp-table styles for death save box */
-.death-save-row {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 8px;
-  background: #fff;
-  width: 320px;
-  margin: 0 auto 16px auto;
-  overflow: hidden;
-  box-shadow: none;
-  padding: 0;
-}
-
-.death-save-header {
-  font-size: 1.3rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
-  text-align: center;
-}
-
-.death-save-labels {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 48px;
-  width: 240px;
-  margin-bottom: 4px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.death-save-buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
-}
-.death-save-group {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-}
-
 button.mat-icon-button {
   border: 2px solid #bdbdbd;
   border-radius: 50%;
@@ -214,26 +167,6 @@ mat-form-field.classLevel {
   min-width: 68px;
   height: 36px;
   padding: 0 15px;
-}
-
-.language-button-container {
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: flex-end; /* Move button to the right */
-  width: 42%;
-}
-
-.language-button {
-  background: linear-gradient(to bottom, yellow, lightyellow);
-  font-size: 1.5rem;
-  border-radius: 10px;
-  border: 1px solid black;
-  color: white;
-  min-width: 68px;
-  height: 36px;
-  padding: 0 15px;
-  justify-self: right;
-  font: inherit;
 }
 
 .money-flex {
@@ -454,10 +387,6 @@ mat-form-field {
   align-self: center;
 }
 
-mat-icon.unchecked {
-  color: black !important;
-}
-
 .stable {
   background-color: darkgreen;
   color: white;
@@ -541,12 +470,4 @@ mat-form-field.resource-name {
   font-size: 1rem !important;
   font-weight: 600;
   letter-spacing: 0.5px;
-}
-
-.success {
-  color: green;
-}
-
-.failure {
-  color: darkred;
 }

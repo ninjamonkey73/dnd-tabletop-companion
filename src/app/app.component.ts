@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,8 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { Character, defaultCharacter } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Location } from '@angular/common';
+import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
+import { DeathSavesComponent } from './death-saves/death-saves.component';
 
 @Component({
   selector: 'app-root',
@@ -25,21 +26,17 @@ import { Location } from '@angular/common';
     MatButtonModule,
     CommonModule,
     MatTooltipModule,
+    LanguageSwitcherComponent,
+    DeathSavesComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
-  currentLocale: 'en' | 'es' = 'en';
+export class AppComponent implements AfterViewInit {
+  @ViewChild(DeathSavesComponent)
+  deathSavesComponent!: DeathSavesComponent;
 
-  constructor(private location: Location) {}
-
-  ngOnInit() {
-    if (window.location.pathname.includes('/es/')) {
-      this.currentLocale = 'es';
-    } else {
-      this.currentLocale = 'en';
-    }
+  ngAfterViewInit() {
     this.loadSavedCharacterNames();
     this.loadLastSelectedCharacter();
     // Load the fullHeal toggle value from localStorage
@@ -47,7 +44,7 @@ export class AppComponent implements OnInit {
     if (savedFullHeal !== null) {
       this.fullHeal = JSON.parse(savedFullHeal);
     }
-    this.syncDeathSavesFromCharacter();
+    this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
     this.fetchClassesFromAPI();
   }
 
@@ -64,51 +61,9 @@ export class AppComponent implements OnInit {
     this.updateChar();
   }
 
-  deathSaveSuccess: boolean[] = [false, false, false];
-  deathSaveFailure: boolean[] = [false, false, false];
-
   character: Character = { ...defaultCharacter };
 
   money: number = 0; // Holds the value for coin +/- input
-
-  // Sync arrays to character before saving
-  syncDeathSavesToCharacter() {
-    this.character.deathSaveSuccess = [...this.deathSaveSuccess];
-    this.character.deathSaveFailure = [...this.deathSaveFailure];
-  }
-  // Sync arrays from character after loading
-  syncDeathSavesFromCharacter() {
-    this.deathSaveSuccess = this.character.deathSaveSuccess
-      ? [...this.character.deathSaveSuccess]
-      : [false, false, false];
-    this.deathSaveFailure = this.character.deathSaveFailure
-      ? [...this.character.deathSaveFailure]
-      : [false, false, false];
-  }
-
-  deathSaveMessage: string | null = null;
-  deathSaveMessageTimeout: any = null;
-
-  toggleDeathSave(type: 'success' | 'failure', index: number): void {
-    if (type === 'success') {
-      this.deathSaveSuccess[index] = !this.deathSaveSuccess[index];
-    } else {
-      this.deathSaveFailure[index] = !this.deathSaveFailure[index];
-    }
-    if (this.deathSaveSuccess.every((val) => val)) {
-      this.character.stable = true;
-      this.deathSaveSuccess = [false, false, false];
-      this.deathSaveFailure = [false, false, false];
-      this.deathSaveMessage = null;
-    } else if (this.deathSaveFailure.every((val) => val)) {
-      this.deathSaveMessage = $localize`You are dead!`;
-    } else {
-      this.deathSaveMessage = null;
-      this.character.stable = false;
-    }
-    this.syncDeathSavesToCharacter();
-    this.saveCharacterData();
-  }
 
   lastCharacterSelected: string = '';
 
@@ -200,7 +155,7 @@ export class AppComponent implements OnInit {
           this.character.spellSlotsRemaining = [];
         this.selectedCharacter = name;
         localStorage.setItem('lastSelectedCharacter', name);
-        this.syncDeathSavesFromCharacter();
+        this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
         this.classHasBeenSet = !!this.character.class;
       }
     }
@@ -218,7 +173,7 @@ export class AppComponent implements OnInit {
         if (!Array.isArray(this.character.spellSlotsRemaining))
           this.character.spellSlotsRemaining = [];
         this.selectedCharacter = lastCharacterName;
-        this.syncDeathSavesFromCharacter();
+        this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
       }
     }
   }
@@ -227,7 +182,7 @@ export class AppComponent implements OnInit {
     if (this.newCharacterName.trim()) {
       // Create a new character with the entered name
       this.saveNewCharacter();
-      this.syncDeathSavesFromCharacter();
+      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
       this.saveCharacterData();
       this.isCreatingNewCharacter = false;
       this.newCharacterName = '';
@@ -269,11 +224,11 @@ export class AppComponent implements OnInit {
     );
     this.changeVal = null;
     this.updatePercentHP();
-    this.deathSaveSuccess = [false, false, false];
-    this.deathSaveFailure = [false, false, false];
+    this.deathSavesComponent.deathSaveSuccess = [false, false, false];
+    this.deathSavesComponent.deathSaveFailure = [false, false, false];
     this.character.stable = false;
-    this.deathSaveMessage = null;
-    this.syncDeathSavesToCharacter();
+    this.deathSavesComponent.deathSaveMessage = null;
+    this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
     this.saveCharacterData();
   }
 
@@ -286,7 +241,7 @@ export class AppComponent implements OnInit {
 
   saveCharacterData(): void {
     if (this.character.name) {
-      this.syncDeathSavesToCharacter();
+      this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
       localStorage.setItem(this.character.name, JSON.stringify(this.character));
       this.loadSavedCharacterNames();
       localStorage.setItem('lastSelectedCharacter', this.character.name);
@@ -310,6 +265,10 @@ export class AppComponent implements OnInit {
   updateChar(): void {
     this.lastCharacterSelected = this.character.name;
     this.saveCharacterData();
+
+    if (this.deathSavesComponent) {
+      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
+    }
   }
 
   updateCharLevel(): void {
@@ -459,7 +418,7 @@ export class AppComponent implements OnInit {
       this.character = defaultCharacter;
       this.character.name = this.newCharacterName.trim();
 
-      this.syncDeathSavesFromCharacter();
+      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
       this.saveCharacterData();
       this.loadSavedCharacterNames();
       this.selectedCharacter = this.character.name;
@@ -481,7 +440,7 @@ export class AppComponent implements OnInit {
         this.loadSavedCharacterNames();
         this.selectedCharacter = null;
         this.character = defaultCharacter;
-        this.syncDeathSavesFromCharacter();
+        this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
       }
     }
   }
@@ -522,14 +481,14 @@ export class AppComponent implements OnInit {
     }
     this.character.rageRemaining = this.character.rage;
     this.character.tempHP = 0;
-    this.deathSaveSuccess = [false, false, false];
-    this.deathSaveFailure = [false, false, false];
+    this.deathSavesComponent.deathSaveSuccess = [false, false, false];
+    this.deathSavesComponent.deathSaveFailure = [false, false, false];
     this.character.stable = false;
-    this.deathSaveMessage = null;
+    this.deathSavesComponent.deathSaveMessage = null;
     this.character.spellSlotsRemaining = this.character.spellSlots.map(
       (slot) => slot
     );
-    this.syncDeathSavesToCharacter();
+    this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
     this.updatePercentHP();
     this.updateChar();
   }
@@ -575,4 +534,6 @@ export class AppComponent implements OnInit {
     this.updateChar();
     this.money = 0; // Reset the money input after adjustment
   }
+
+  deathSaveMessage: string | null = null;
 }

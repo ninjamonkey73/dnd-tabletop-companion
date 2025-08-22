@@ -1,0 +1,60 @@
+.death-save-row {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 8px;
+  background: #fff;
+  width: 320px;
+  margin: 0 auto 16px auto;
+  overflow: hidden;
+  box-shadow: none;
+  padding: 0;
+}
+
+.death-save-header {
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.death-save-labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 48px;
+  width: 240px;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.death-save-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+.death-save-group {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.success {
+  color: green;
+  border: none;
+  background: none;
+}
+
+.failure {
+  color: darkred;
+  border: none;
+  background: none;
+}
+
+mat-icon.unchecked {
+  color: black !important;
+}

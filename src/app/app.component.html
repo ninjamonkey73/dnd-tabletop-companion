@@ -22,20 +22,7 @@
 </head>
 <body>
   <div class="layout">
-    <div class="language-button-container">
-      <a
-        mat-stroked-button
-        class="language-button"
-        [href]="
-          currentLocale === 'es'
-            ? '/dnd-tabletop-companion/'
-            : '/dnd-tabletop-companion/es/'
-        "
-        onclick="currentLocale = currentLocale === 'es' ? 'en' : 'es';"
-      >
-        {{ currentLocale === "es" ? "Inglés" : "Spanish" }}
-      </a>
-    </div>
+    <app-language-switcher></app-language-switcher>
     <div mat-card class="card-container">
       <div class="row top">
         <div class="button-container">
@@ -175,7 +162,9 @@
           @if (character.currentHP == 0 && character.stable == true) {
           <span i18n class="stable">You are stable</span>
           } @if (deathSaveMessage) {
-          <div class="incapacitated">{{ deathSaveMessage }}</div>
+          <div class="incapacitated">
+            {{ deathSaveMessage }}
+          </div>
           } @if (character.currentHP == 0 && character.stable == false &&
           !deathSaveMessage) {
           <span i18n class="incapacitated">You are incapacitated</span>
@@ -682,50 +671,10 @@
     </div>
     <div>
       @if (showingDeathSaves) {
-      <div class="death-save-row">
-        <div class="death-save-header" i18n>Death Saves</div>
-        <div class="death-save-labels">
-          <span i18n>Successes</span>
-          <span i18n>Failures</span>
-        </div>
-        <div class="death-save-buttons">
-          <div class="death-save-group">
-            @for (s of [0, 1, 2]; track s) {
-            <button
-              class="success"
-              mat-icon-button
-              (click)="toggleDeathSave('success', s)"
-              [attr.aria-label]="'toggle death save success ' + s"
-              i18n-aria-label
-            >
-              <mat-icon [class]="deathSaveSuccess[s] ? 'checked' : 'unchecked'">
-                {{
-                  deathSaveSuccess[s]
-                    ? "check_circle"
-                    : "radio_button_unchecked"
-                }}
-              </mat-icon>
-            </button>
-            }
-          </div>
-          <div class="death-save-group">
-            @for (f of [0, 1, 2]; track f) {
-            <button
-              class="failure"
-              mat-icon-button
-              [class.active-class]="{ 'active-failure': deathSaveFailure[f] }"
-              (click)="toggleDeathSave('failure', f)"
-              [attr.aria-label]="'toggle death save failure ' + f"
-              i18n-aria-label
-            >
-              <mat-icon [class]="deathSaveFailure[f] ? 'checked' : 'unchecked'">
-                {{ deathSaveFailure[f] ? "cancel" : "radio_button_unchecked" }}
-              </mat-icon>
-            </button>
-            }
-          </div>
-        </div>
-      </div>
+      <app-death-saves
+        [character]="character"
+        (deathSaveMessageChange)="deathSaveMessage = $event"
+      ></app-death-saves>
       } @if (!showingDeathSaves) {
       <div mat-card>
         <mat-card-title class="card-title" style="font-size: x-large" i18n
