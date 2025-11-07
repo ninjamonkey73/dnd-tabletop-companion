@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { Character, defaultCharacter } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
+import { HitDiceComponent } from './hit-dice/hit-dice.component';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ import { DeathSavesComponent } from './death-saves/death-saves.component';
     MatTooltipModule,
     LanguageSwitcherComponent,
     DeathSavesComponent,
+    HitDiceComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -36,16 +38,20 @@ export class AppComponent implements AfterViewInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.loadSavedCharacterNames();
     this.loadLastSelectedCharacter();
-    // Load the fullHeal toggle value from localStorage
     const savedFullHeal = localStorage.getItem('fullHeal');
     if (savedFullHeal !== null) {
       this.fullHeal = JSON.parse(savedFullHeal);
     }
-    this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
     this.fetchClassesFromAPI();
+  }
+
+  ngAfterViewInit() {
+    if (this.deathSavesComponent) {
+      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
+    }
   }
 
   showingMoney = true;
@@ -173,7 +179,6 @@ export class AppComponent implements AfterViewInit {
         if (!Array.isArray(this.character.spellSlotsRemaining))
           this.character.spellSlotsRemaining = [];
         this.selectedCharacter = lastCharacterName;
-        this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
       }
     }
   }
@@ -241,7 +246,9 @@ export class AppComponent implements AfterViewInit {
 
   saveCharacterData(): void {
     if (this.character.name) {
-      this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
+      if (this.deathSavesComponent) {
+        this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
+      }
       localStorage.setItem(this.character.name, JSON.stringify(this.character));
       this.loadSavedCharacterNames();
       localStorage.setItem('lastSelectedCharacter', this.character.name);
@@ -481,14 +488,16 @@ export class AppComponent implements AfterViewInit {
     }
     this.character.rageRemaining = this.character.rage;
     this.character.tempHP = 0;
-    this.deathSavesComponent.deathSaveSuccess = [false, false, false];
-    this.deathSavesComponent.deathSaveFailure = [false, false, false];
+    if (this.deathSavesComponent) {
+      this.deathSavesComponent.deathSaveSuccess = [false, false, false];
+      this.deathSavesComponent.deathSaveFailure = [false, false, false];
+      this.deathSavesComponent.deathSaveMessage = null;
+      this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
+    }
     this.character.stable = false;
-    this.deathSavesComponent.deathSaveMessage = null;
     this.character.spellSlotsRemaining = this.character.spellSlots.map(
       (slot) => slot
     );
-    this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
     this.updatePercentHP();
     this.updateChar();
   }

@@ -1,0 +1,20 @@
+<div mat-card>
+  <mat-card-title class="card-title" style="font-size: x-large" i18n>
+    Hit Dice
+  </mat-card-title>
+  <br />
+  <mat-form-field appearance="fill" class="classData-input">
+    <input
+      matInput
+      type="number"
+      min="0"
+      [max]="character.level"
+      [(ngModel)]="character.hitDie"
+      class="classData-input"
+      (ngModelChange)="onHitDieChange()"
+      [disabled]="isCreatingNewCharacter"
+      [attr.aria-label]="'hit dice for ' + character.name"
+      i18n-aria-label
+    />
+  </mat-form-field>
+</div>

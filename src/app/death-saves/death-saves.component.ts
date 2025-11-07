@@ -11,15 +11,11 @@ import { Character } from '../character.model';
 })
 export class DeathSavesComponent implements OnInit {
   @Input() character!: Character;
-  @Output() saveCharacter = new EventEmitter<Character>();
   @Output() deathSaveMessageChange = new EventEmitter<string | null>();
+  @Output() characterChange = new EventEmitter<Character>(); // Emit character changes
 
   ngOnInit(): void {
     this.syncDeathSavesFromCharacter(this.character);
-  }
-
-  ngOnChanges() {
-    // React to character changes here
   }
 
   deathSaveMessage: string | null = null;
@@ -45,7 +41,7 @@ export class DeathSavesComponent implements OnInit {
       this.character.stable = false;
     }
     this.syncDeathSavesToCharacter(this.character);
-    this.saveCharacter.emit(this.character); // Notify parent to save
+    this.characterChange.emit(this.character); // Notify parent to save
     this.deathSaveMessageChange.emit(this.deathSaveMessage); // Emit message change
   }
 
