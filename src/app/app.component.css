@@ -27,11 +27,13 @@ button.mat-icon-button {
 .top {
   gap: 16px;
 }
+
 .char-select-container {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .longRest {
   display: flex;
   flex-direction: column;
