@@ -545,107 +545,29 @@
       }
     </div>
     @if (character.class === "Monk") {
-    <div>
-      <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large" i18n
-          >Ki Points</mat-card-title
-        >
-        <br />
-        <mat-form-field appearance="fill" class="classData-input">
-          <input
-            matInput
-            type="number"
-            min="0"
-            max="{{ character.level }}"
-            [(ngModel)]="character.kiPoints"
-            class="classData-input"
-            (change)="updateChar()"
-            [disabled]="isCreatingNewCharacter"
-            [attr.aria-label]="'ki points for ' + character.name"
-            i18n-aria-label
-          />
-        </mat-form-field>
-      </div>
-    </div>
+    <app-ki-points
+      [character]="character"
+      [isCreatingNewCharacter]="isCreatingNewCharacter"
+      (characterChange)="updateChar()"
+    ></app-ki-points>
     } @if (character.class === "Druid") {
-    <div>
-      <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large" i18n
-          >Wild Shape</mat-card-title
-        >
-        <br />
-        <mat-form-field appearance="fill" class="classData-input">
-          <input
-            matInput
-            type="number"
-            min="0"
-            max="2"
-            [(ngModel)]="character.wildShapeRemaining"
-            class="classData-input"
-            (change)="updateChar()"
-            [disabled]="isCreatingNewCharacter"
-            [attr.aria-label]="'wild shapes for ' + character.name"
-            i18n-aria-label
-          />
-        </mat-form-field>
-      </div>
-    </div>
+    <app-wild-shape
+      [character]="character"
+      [isCreatingNewCharacter]="isCreatingNewCharacter"
+      (characterChange)="updateChar()"
+    ></app-wild-shape>
     } @if (character.spellSlots.length > 0) {
-    <div>
-      <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large" i18n
-          >Spell Slots</mat-card-title
-        >
-        <br />
-        <div class="spellSlots">
-          @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
-          <mat-form-field appearance="fill" class="classData-input">
-            <mat-label i18n>Level {{ $index + 1 }}</mat-label>
-            <input
-              matInput
-              type="number"
-              min="0"
-              max="{{ slot }}"
-              [(ngModel)]="character.spellSlotsRemaining[$index]"
-              class="classData-input"
-              (change)="updateChar()"
-              [disabled]="isCreatingNewCharacter"
-              [attr.aria-label]="
-                'spell slots remaining for level ' +
-                ($index + 1) +
-                ' for ' +
-                character.name
-              "
-              i18n-aria-label
-            />
-          </mat-form-field>
-          } }
-        </div>
-      </div>
-    </div>
+    <app-spell-slots
+      [character]="character"
+      [isCreatingNewCharacter]="isCreatingNewCharacter"
+      (characterChange)="updateChar()"
+    ></app-spell-slots>
     } @if (character.class === "Barbarian") {
-    <div>
-      <div mat-card>
-        <mat-card-title class="card-title" style="font-size: x-large" i18n
-          >Rage</mat-card-title
-        >
-        <br />
-        <mat-form-field appearance="fill" class="classData-input">
-          <input
-            matInput
-            type="number"
-            min="0"
-            max="{{ character.rage }}"
-            [(ngModel)]="character.rageRemaining"
-            class="classData-input"
-            (change)="updateChar()"
-            [disabled]="isCreatingNewCharacter"
-            [attr.aria-label]="'rages for ' + character.name"
-            i18n-aria-label
-          />
-        </mat-form-field>
-      </div>
-    </div>
+    <app-rage
+      [character]="character"
+      [isCreatingNewCharacter]="isCreatingNewCharacter"
+      (characterChange)="updateChar()"
+    ></app-rage>
     }
     <!-- Death Saves & Hit Dice Toggle Area -->
     <div class="body-buttons">

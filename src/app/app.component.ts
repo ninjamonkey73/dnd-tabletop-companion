@@ -13,6 +13,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
 import { HitDiceComponent } from './hit-dice/hit-dice.component';
+import { RageComponent } from './rage/rage.component';
+import { KiPointsComponent } from './ki-points/ki-points.component';
+import { SpellSlotsComponent } from './spell-slots/spell-slots.component';
+import { WildShapeComponent } from './wild-shape/wild-shape.component';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +34,10 @@ import { HitDiceComponent } from './hit-dice/hit-dice.component';
     LanguageSwitcherComponent,
     DeathSavesComponent,
     HitDiceComponent,
+    RageComponent,
+    KiPointsComponent,
+    SpellSlotsComponent,
+    WildShapeComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],

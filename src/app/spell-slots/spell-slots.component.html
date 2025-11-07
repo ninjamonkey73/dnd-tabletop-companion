@@ -1,0 +1,30 @@
+<div mat-card>
+  <mat-card-title class="card-title" style="font-size: x-large" i18n
+    >Spell Slots</mat-card-title
+  >
+  <br />
+  <div class="spellSlots">
+    @for (slot of character.spellSlots; track $index) { @if (slot > 0) {
+    <mat-form-field appearance="fill" class="classData-input">
+      <mat-label i18n>Level {{ $index + 1 }}</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        [max]="slot"
+        [(ngModel)]="character.spellSlotsRemaining[$index]"
+        class="classData-input"
+        (ngModelChange)="onSlotChange()"
+        [disabled]="isCreatingNewCharacter"
+        [attr.aria-label]="
+          'spell slots remaining for level ' +
+          ($index + 1) +
+          ' for ' +
+          character.name
+        "
+        i18n-aria-label
+      />
+    </mat-form-field>
+    } }
+  </div>
+</div>
