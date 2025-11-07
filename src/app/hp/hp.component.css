@@ -1,0 +1,273 @@
+.hp-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 450px;
+  margin: 0 auto 16px auto;
+  background: #fff;
+  overflow: hidden;
+}
+
+.hp-header,
+.hpRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+
+.hp-header {
+  font-weight: bold;
+  background: #f2f2f2;
+  border-bottom: 1px solid #ccc;
+}
+
+.hpRow > div,
+.hp-header > div {
+  flex: 1 1 0;
+  text-align: center;
+  font-size: 16px;
+}
+
+.hpRow > div {
+  font-size: 24px;
+}
+
+.maxHP-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.hp-controls-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.HPInput {
+  width: 110px;
+  min-width: 80px;
+  max-width: 140px;
+}
+
+.hp-button-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+.tempHP-input {
+  width: 80px;
+  font-size: 1.25rem;
+}
+
+.hurt-button {
+  background: linear-gradient(to bottom, #8b0000, #ff6347);
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 68px;
+  height: 36px;
+  padding: 0 15px;
+}
+
+.heal-button {
+  background: linear-gradient(to bottom, #006400, #32cd32);
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 68px;
+  height: 36px;
+  padding: 0 15px;
+}
+
+.stable-icon,
+.incapacitated-icon {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.currentHP {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+div,
+input {
+  font-family: "Goudy Bookletter 1911", serif;
+}
+
+.edit {
+  font-size: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 36px;
+  height: 36px;
+  width: 40px;
+  padding: 0 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit mat-icon {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+}
+.edit {
+  background: rgb(199, 199, 250);
+  color: black;
+  align-content: center;
+}
+
+.stable-icon {
+  width: 20px;
+  height: 20px;
+  background-color: darkgreen;
+  color: #ffffff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-size: 16px;
+  font-weight: 700;
+  user-select: none;
+}
+
+.incapacitated-icon {
+  width: 20px;
+  height: 20px;
+  background-color: darkred;
+  color: #ffffff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-size: 16px;
+  font-weight: 700;
+  user-select: none;
+}
+
+.currentHP {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.status-key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px 0 8px;
+}
+
+.hp-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.hp-controls-flex {
+  /* keep if used in template */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hp-controls-flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.hp-button-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Generic chip style for stable/incapacitated states */
+.status-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.stable-chip {
+  background-color: darkgreen;
+  color: #fff;
+}
+
+.incapacitated-chip {
+  background-color: darkred;
+  color: #fff;
+}
+
+.death-message {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  background-color: darkred;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  flex: 0 0 auto;
+}
+
+/* Optional: shrink on very narrow screens */
+@media (max-width: 400px) {
+  .death-message {
+    max-width: 240px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}

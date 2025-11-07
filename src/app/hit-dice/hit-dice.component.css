@@ -2,11 +2,7 @@ mat-form-field.classData-input {
   width: 90px;
 }
 
-body,
-input,
-button,
-select,
-textarea {
+div {
   font-family: "Goudy Bookletter 1911", serif;
 }
 

@@ -19,6 +19,7 @@ import { SpellSlotsComponent } from './spell-slots/spell-slots.component';
 import { WildShapeComponent } from './wild-shape/wild-shape.component';
 import { MoneyComponent } from './money/money.component';
 import { ResourcesComponent } from './resources/resources.component';
+import { HpComponent } from './hp/hp.component';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,7 @@ import { ResourcesComponent } from './resources/resources.component';
     WildShapeComponent,
     MoneyComponent,
     ResourcesComponent,
+    HpComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -49,6 +51,7 @@ import { ResourcesComponent } from './resources/resources.component';
 export class AppComponent implements AfterViewInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
+  percentHP = 0;
 
   ngOnInit() {
     this.loadSavedCharacterNames();
@@ -58,6 +61,7 @@ export class AppComponent implements AfterViewInit {
       this.fullHeal = JSON.parse(savedFullHeal);
     }
     this.fetchClassesFromAPI();
+    this.updatePercentHP();
   }
 
   ngAfterViewInit() {
@@ -125,10 +129,6 @@ export class AppComponent implements AfterViewInit {
   isCreatingNewCharacter = false;
   newCharacterName = '';
 
-  changeVal: number | null = null;
-  percentHP = 0;
-  isEditingMaxHP = false;
-
   loadSavedCharacterNames(): void {
     // Load all saved character names from localStorage, excluding "lastSelectedCharacter" and "fullHeal"
     this.savedCharacterNames = Object.keys(localStorage).filter((key) => {
@@ -163,6 +163,7 @@ export class AppComponent implements AfterViewInit {
         localStorage.setItem('lastSelectedCharacter', name);
         this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
         this.classHasBeenSet = !!this.character.class;
+        this.updatePercentHP();
       }
     }
   }
@@ -179,6 +180,7 @@ export class AppComponent implements AfterViewInit {
         if (!Array.isArray(this.character.spellSlotsRemaining))
           this.character.spellSlotsRemaining = [];
         this.selectedCharacter = lastCharacterName;
+        this.updatePercentHP();
       }
     }
   }
@@ -191,57 +193,10 @@ export class AppComponent implements AfterViewInit {
       this.saveCharacterData();
       this.isCreatingNewCharacter = false;
       this.newCharacterName = '';
+      this.updatePercentHP();
     } else {
       console.error($localize`Character name cannot be empty.`);
     }
-  }
-
-  hurt(): void {
-    if (this.changeVal !== null && this.changeVal > 0) {
-      let damage = this.changeVal;
-
-      // Subtract from tempHP first
-      if (this.character.tempHP > 0) {
-        const tempDamage = Math.min(damage, this.character.tempHP);
-        this.character.tempHP -= tempDamage;
-        damage -= tempDamage;
-      }
-
-      // Subtract the remaining damage from currentHP
-      this.character.currentHP = Math.max(0, this.character.currentHP - damage);
-
-      // Reset changeVal and update percentHP
-      this.changeVal = null;
-      this.updatePercentHP();
-      this.saveCharacterData();
-    }
-  }
-
-  heal(): void {
-    if (this.changeVal === null || this.changeVal <= 0) {
-      console.error($localize`Change value must be a positive number to heal.`);
-      this.changeVal = null;
-      return;
-    }
-    this.character.currentHP = Math.min(
-      this.character.maxHP,
-      this.character.currentHP + (this.changeVal ?? 0)
-    );
-    this.changeVal = null;
-    this.updatePercentHP();
-    this.deathSavesComponent.deathSaveSuccess = [false, false, false];
-    this.deathSavesComponent.deathSaveFailure = [false, false, false];
-    this.character.stable = false;
-    this.deathSavesComponent.deathSaveMessage = null;
-    this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
-    this.saveCharacterData();
-  }
-
-  updatePercentHP(): void {
-    this.percentHP =
-      this.character.currentHP === 0
-        ? 0
-        : Math.round((this.character.currentHP / this.character.maxHP) * 100);
   }
 
   saveCharacterData(): void {
@@ -255,18 +210,6 @@ export class AppComponent implements AfterViewInit {
     } else {
       console.error($localize`Character name is required to save data.`);
     }
-  }
-
-  editMaxHP(): void {
-    this.isEditingMaxHP = !this.isEditingMaxHP;
-    if (!this.isEditingMaxHP) {
-      this.saveCharacterData();
-    }
-  }
-
-  onEnterMaxHP(): void {
-    this.isEditingMaxHP = false;
-    this.saveCharacterData();
   }
 
   updateChar(): void {
@@ -507,4 +450,66 @@ export class AppComponent implements AfterViewInit {
   }
 
   deathSaveMessage: string | null = null;
+
+  onHpCharacterChange(): void {
+    // Character mutated in child (maxHP/tempHP edits); recompute and save.
+    this.updatePercentHP();
+    this.updateChar();
+  }
+
+  onHurt(damage: number): void {
+    if (!Number.isFinite(damage) || damage <= 0) return;
+
+    let remaining = damage;
+
+    // Temp HP absorption
+    if (this.character.tempHP > 0) {
+      const absorbed = Math.min(this.character.tempHP, remaining);
+      this.character.tempHP -= absorbed;
+      remaining -= absorbed;
+    }
+
+    // Apply to current HP
+    this.character.currentHP = Math.max(
+      0,
+      this.character.currentHP - remaining
+    );
+
+    this.updatePercentHP();
+    this.saveCharacterData();
+  }
+
+  onHeal(amount: number): void {
+    if (!Number.isFinite(amount) || amount <= 0) return;
+
+    this.character.currentHP = Math.min(
+      this.character.maxHP,
+      this.character.currentHP + amount
+    );
+
+    // Reset death saves (originally in heal())
+    if (this.deathSavesComponent) {
+      this.deathSavesComponent.deathSaveSuccess = [false, false, false];
+      this.deathSavesComponent.deathSaveFailure = [false, false, false];
+      this.character.stable = false;
+      this.deathSavesComponent.deathSaveMessage = null;
+      this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
+    }
+
+    this.updatePercentHP();
+    this.saveCharacterData();
+  }
+
+  onMaxHpEditFinished(): void {
+    // Just ensure save & percent update
+    this.updatePercentHP();
+    this.saveCharacterData();
+  }
+
+  updatePercentHP(): void {
+    this.percentHP =
+      this.character.currentHP === 0
+        ? 0
+        : Math.round((this.character.currentHP / this.character.maxHP) * 100);
+  }
 }
