@@ -1,0 +1,62 @@
+.money-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: flex-start;
+  align-items: flex-end;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+.money-input {
+  flex: none;
+  min-width: 90px;
+  max-width: 110px;
+  width: 100px;
+  z-index: 2;
+}
+.money-display-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.money-display-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.money-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
+}
+.coins {
+  width: 100px;
+  min-width: 100px;
+  max-width: 120px;
+}
+.sub,
+.add {
+  font-size: 1.3rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 36px;
+  height: 36px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sub {
+  background: linear-gradient(to bottom, #8b0000, #ff6347);
+}
+.add {
+  background: linear-gradient(to bottom, #006400, #32cd32);
+}

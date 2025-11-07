@@ -17,6 +17,8 @@ import { RageComponent } from './rage/rage.component';
 import { KiPointsComponent } from './ki-points/ki-points.component';
 import { SpellSlotsComponent } from './spell-slots/spell-slots.component';
 import { WildShapeComponent } from './wild-shape/wild-shape.component';
+import { MoneyComponent } from './money/money.component';
+import { ResourcesComponent } from './resources/resources.component';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +40,8 @@ import { WildShapeComponent } from './wild-shape/wild-shape.component';
     KiPointsComponent,
     SpellSlotsComponent,
     WildShapeComponent,
+    MoneyComponent,
+    ResourcesComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -76,8 +80,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   character: Character = { ...defaultCharacter };
-
-  money: number = 0; // Holds the value for coin +/- input
 
   lastCharacterSelected: string = '';
 
@@ -126,16 +128,6 @@ export class AppComponent implements AfterViewInit {
   changeVal: number | null = null;
   percentHP = 0;
   isEditingMaxHP = false;
-
-  editingResourceNameId: number | null = null;
-
-  startEditingResourceName(id: number) {
-    this.editingResourceNameId = id;
-  }
-
-  stopEditingResourceName() {
-    this.editingResourceNameId = null;
-  }
 
   loadSavedCharacterNames(): void {
     // Load all saved character names from localStorage, excluding "lastSelectedCharacter" and "fullHeal"
@@ -512,44 +504,6 @@ export class AppComponent implements AfterViewInit {
 
   saveHealToggle(): void {
     localStorage.setItem('fullHeal', JSON.stringify(this.fullHeal));
-  }
-
-  /**
-   * Selects all text in the money input when it receives focus.
-   */
-  selectMoneyInput(event: FocusEvent): void {
-    const input = event.target as HTMLInputElement | null;
-    if (input && typeof input.select === 'function') {
-      input.select();
-    }
-  }
-
-  /**
-   * Adjusts the specified coin type (cp, sp, gp, pp) by the given amount (from the money input).
-   * Ignores if money is 0 or not a number. Never allows negative totals.
-   * @param type The coin type: 'cp', 'sp', 'gp', or 'pp'.
-   * @param amount The amount to add (positive) or subtract (negative).
-   */
-  adjustMoney(type: 'cp' | 'sp' | 'gp' | 'pp', amount: number): void {
-    if (
-      !['cp', 'sp', 'gp', 'pp'].includes(type) ||
-      !Number.isFinite(amount) ||
-      amount === 0
-    ) {
-      return;
-    }
-    // Only allow integer math
-    const current = this.character[type] || 0;
-    const newValue = current + amount;
-    if (newValue < 0) {
-      alert(
-        $localize`You cannot subtract more than you have! (${current} available)`
-      );
-      return;
-    }
-    this.character[type] = newValue;
-    this.updateChar();
-    this.money = 0; // Reset the money input after adjustment
   }
 
   deathSaveMessage: string | null = null;

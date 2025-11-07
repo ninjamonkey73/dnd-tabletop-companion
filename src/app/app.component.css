@@ -6,12 +6,6 @@ button.mat-icon-button {
   box-shadow: none;
 }
 
-mat-form-field.classLevel {
-  max-width: 200px;
-  min-width: 120px;
-  flex: 0 0 160px;
-}
-
 /* HP Table Flex Layout */
 .hp-table {
   display: flex;
@@ -158,41 +152,6 @@ mat-form-field.classLevel {
   padding: 0 15px;
 }
 
-.money-flex {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  justify-content: flex-start;
-  align-items: flex-end;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-}
-.money-flex mat-form-field.money-input {
-  flex: none !important;
-  min-width: 90px !important;
-  max-width: 110px !important;
-  width: 100px !important;
-  margin: 0 8px 0 0 !important;
-  z-index: 2;
-}
-
-.money-display-stack {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  width: 100%;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.money-buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  justify-content: center;
-}
-
 .layout {
   display: flex;
   flex-direction: column;
@@ -288,14 +247,6 @@ mat-form-field {
   width: 400px;
 }
 
-.coins {
-  width: 100px;
-  min-width: 100px;
-  max-width: 120px;
-}
-
-.sub,
-.add,
 .edit {
   font-size: 1.5rem;
   border-radius: 10px;
@@ -309,14 +260,7 @@ mat-form-field {
   align-items: center;
   justify-content: center;
 }
-.sub {
-  background: linear-gradient(to bottom, #8b0000, #ff6347);
-}
-.add {
-  background: linear-gradient(to bottom, #006400, #32cd32);
-}
-.sub mat-icon,
-.add mat-icon,
+
 .edit mat-icon {
   margin: 0 !important;
   padding: 0 !important;
@@ -380,41 +324,6 @@ mat-form-field {
 .incapacitated {
   background-color: darkred;
   color: white;
-}
-
-.resources {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0px 8px;
-  width: 100%;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  justify-items: center;
-  align-items: center;
-}
-
-.resources > * {
-  min-width: 90px;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 160px;
-}
-
-.resource-name {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-mat-form-field.resource-name {
-  height: 50px;
-}
-
-@media (max-width: 700px) {
-  .spellSlots {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .newChar {
