@@ -109,3 +109,15 @@ mat-form-field {
   font-weight: 600;
   letter-spacing: 0.5px;
 }
+
+.class-select {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 140px;
+}
+
+.classLevel {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 130px;
+}
