@@ -6,7 +6,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { Character, defaultCharacter } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -20,6 +19,7 @@ import { WildShapeComponent } from './wild-shape/wild-shape.component';
 import { MoneyComponent } from './money/money.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { HpComponent } from './hp/hp.component';
+import { HeaderComponent } from './header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +30,6 @@ import { HpComponent } from './hp/hp.component';
     MatInputModule,
     FormsModule,
     MatSelectModule,
-    MatSlideToggle,
     MatButtonModule,
     CommonModule,
     MatTooltipModule,
@@ -44,6 +43,7 @@ import { HpComponent } from './hp/hp.component';
     MoneyComponent,
     ResourcesComponent,
     HpComponent,
+    HeaderComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -52,6 +52,20 @@ export class AppComponent implements AfterViewInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
   percentHP = 0;
+
+  onFullHealToggle(value: boolean) {
+    this.fullHeal = value;
+    this.saveHealToggle();
+  }
+
+  onHeaderLevelChanged(level: number) {
+    this.character.level = level;
+    this.updateCharLevel();
+  }
+
+  onHeaderClassSelected(cls: string) {
+    this.onClassSelection(cls);
+  }
 
   ngOnInit() {
     this.loadSavedCharacterNames();

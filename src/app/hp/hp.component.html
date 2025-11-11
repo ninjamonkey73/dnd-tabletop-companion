@@ -1,5 +1,5 @@
-<div class="row hp-row" [class.disabled]="isCreatingNewCharacter">
-  <mat-card-title i18n class="card-title">Hit Points</mat-card-title>
+<div class="hp-section" [class.disabled]="isCreatingNewCharacter">
+  <div class="hp-title" i18n>Hit Points</div>
 
   @if (deathSaveMessage || character.currentHP === 0) {
   <div class="status-key">
@@ -15,132 +15,128 @@
   </div>
   }
 
-  <mat-card-content>
-    <div class="hp-table">
-      <div class="hp-header">
-        <div i18n>Current HP</div>
-        <div class="maxHP-header">
-          <span i18n>Max HP</span>
-          <button
-            class="edit"
-            mat-fab
-            extended
-            (click)="isEditingMaxHP ? finishEditMaxHP() : startEditMaxHP()"
-            [disabled]="isCreatingNewCharacter"
-            matTooltip="Edit Max HP"
-            i18n-matTooltip
-            [attr.aria-label]="'edit max HP for ' + character.name"
-            i18n-aria-label
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-        </div>
-        <div i18n>Temp HP</div>
-        <div i18n>% of Max</div>
+  <div class="hp-table">
+    <div class="hp-header">
+      <div i18n>Current HP</div>
+      <div class="maxHP-header">
+        <span i18n>Max HP</span>
+        <button
+          class="edit"
+          mat-fab
+          extended
+          (click)="isEditingMaxHP ? finishEditMaxHP() : startEditMaxHP()"
+          [disabled]="isCreatingNewCharacter"
+          matTooltip="Edit Max HP"
+          i18n-matTooltip
+          [attr.aria-label]="'edit max HP for ' + character.name"
+          i18n-aria-label
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+      <div i18n>Temp HP</div>
+      <div i18n>% of Max</div>
+    </div>
+
+    <div class="hpRow">
+      <div class="currentHP">
+        {{ character.currentHP }}
+        @if (deathSaveMessage) {
+        <span class="incapacitated-icon"
+          ><span i18n="Letter for dead">D</span></span
+        >
+        } @else if (character.currentHP === 0 && character.stable) {
+        <span class="stable-icon"
+          ><span i18n="Letter for stable health">S</span></span
+        >
+        } @else if (character.currentHP === 0 && !character.stable) {
+        <span class="incapacitated-icon"
+          ><span i18n="Letter for incapacitated">I</span></span
+        >
+        }
       </div>
 
-      <div class="hpRow">
-        <div class="currentHP">
-          {{ character.currentHP }}
-          @if (deathSaveMessage) {
-          <span class="incapacitated-icon">
-            <span i18n="Letter for dead">D</span>
-          </span>
-          } @else if (character.currentHP === 0 && character.stable) {
-          <span class="stable-icon">
-            <span i18n="Letter for stable health">S</span>
-          </span>
-          } @else if (character.currentHP === 0 && !character.stable) {
-          <span class="incapacitated-icon">
-            <span i18n="Letter for incapacitated">I</span>
-          </span>
-          }
-        </div>
-
-        <div>
-          <ng-container *ngIf="isEditingMaxHP; else displayMaxHP">
-            <input
-              matInput
-              type="number"
-              [(ngModel)]="character.maxHP"
-              class="hp-input"
-              placeholder="Enter Max HP"
-              (keydown.enter)="onEnterMaxHP()"
-              [disabled]="isCreatingNewCharacter"
-              i18n-placeholder
-              [attr.aria-label]="'max HP for ' + character.name"
-              i18n-aria-label
-            />
-          </ng-container>
-          <ng-template #displayMaxHP>
-            {{ character.maxHP }}
-          </ng-template>
-        </div>
-
-        <div>
+      <div>
+        <ng-container *ngIf="isEditingMaxHP; else displayMaxHP">
           <input
             matInput
             type="number"
-            [(ngModel)]="character.tempHP"
-            class="tempHP-input"
-            placeholder="Enter Temp HP"
-            (keydown.enter)="onTempHpEnter()"
+            [(ngModel)]="character.maxHP"
+            class="hp-input"
+            placeholder="Enter Max HP"
+            (keydown.enter)="onEnterMaxHP()"
             [disabled]="isCreatingNewCharacter"
             i18n-placeholder
-            [attr.aria-label]="'temp HP for ' + character.name"
+            [attr.aria-label]="'max HP for ' + character.name"
             i18n-aria-label
           />
-        </div>
-
-        <div>{{ percentHP }}%</div>
+        </ng-container>
+        <ng-template #displayMaxHP>{{ character.maxHP }}</ng-template>
       </div>
-    </div>
 
-    <div class="hp-controls" [class.disabled]="isCreatingNewCharacter">
-      <mat-form-field appearance="fill" class="HPInput">
+      <div>
         <input
           matInput
-          placeholder="HP to +/-"
           type="number"
-          [(ngModel)]="changeVal"
-          class="hp-input"
+          [(ngModel)]="character.tempHP"
+          class="tempHP-input"
+          placeholder="Enter Temp HP"
+          (keydown.enter)="onTempHpEnter()"
           [disabled]="isCreatingNewCharacter"
           i18n-placeholder
+          [attr.aria-label]="'temp HP for ' + character.name"
+          i18n-aria-label
         />
-      </mat-form-field>
-
-      <div class="hp-button-stack">
-        <button
-          mat-fab
-          extended
-          class="hurt-button"
-          (click)="applyHurt()"
-          [disabled]="isCreatingNewCharacter"
-          matTooltip="Apply Damage"
-          i18n-matTooltip
-          [attr.aria-label]="'apply damage to ' + character.name"
-          i18n-aria-label
-          i18n
-        >
-          <mat-icon>remove</mat-icon>
-          Hurt
-        </button>
-        <button
-          mat-fab
-          extended
-          class="heal-button"
-          (click)="applyHeal()"
-          [disabled]="isCreatingNewCharacter"
-          matTooltip="Heal Character"
-          i18n-matTooltip
-          [attr.aria-label]="'heal ' + character.name"
-          i18n-aria-label
-          i18n
-        >
-          <mat-icon>add</mat-icon>
-          Heal
-        </button>
       </div>
+
+      <div>{{ percentHP }}%</div>
     </div>
-  </mat-card-content>
+  </div>
+
+  <div class="hp-controls" [class.disabled]="isCreatingNewCharacter">
+    <mat-form-field appearance="fill" class="HPInput">
+      <input
+        matInput
+        placeholder="HP to +/-"
+        type="number"
+        [(ngModel)]="changeVal"
+        class="hp-input"
+        [disabled]="isCreatingNewCharacter"
+        i18n-placeholder
+      />
+    </mat-form-field>
+
+    <div class="hp-button-stack">
+      <button
+        mat-fab
+        extended
+        class="hurt-button"
+        (click)="applyHurt()"
+        [disabled]="isCreatingNewCharacter"
+        matTooltip="Apply Damage"
+        i18n-matTooltip
+        [attr.aria-label]="'apply damage to ' + character.name"
+        i18n-aria-label
+        i18n
+      >
+        <mat-icon>remove</mat-icon>
+        Hurt
+      </button>
+      <button
+        mat-fab
+        extended
+        class="heal-button"
+        (click)="applyHeal()"
+        [disabled]="isCreatingNewCharacter"
+        matTooltip="Heal Character"
+        i18n-matTooltip
+        [attr.aria-label]="'heal ' + character.name"
+        i18n-aria-label
+        i18n
+      >
+        <mat-icon>add</mat-icon>
+        Heal
+      </button>
+    </div>
+  </div>
 </div>

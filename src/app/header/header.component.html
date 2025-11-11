@@ -1,0 +1,106 @@
+<div class="row top">
+  <div class="button-container">
+    <button
+      mat-fab
+      extended
+      class="rest-button"
+      (click)="emitShortRest()"
+      matTooltip="Short Rest"
+      i18n-matTooltip
+      i18n
+    >
+      <mat-icon>snooze</mat-icon>
+      SR
+    </button>
+  </div>
+
+  <div class="char-select-container">
+    <mat-form-field appearance="fill" class="charName">
+      <mat-label i18n>Character Name</mat-label>
+      <mat-select
+        [(ngModel)]="internalSelectedCharacter"
+        (selectionChange)="onCharacterSelection($event.value)"
+        [disabled]="isCreatingNewCharacter"
+      >
+        <mat-option *ngFor="let name of savedCharacterNames" [value]="name">
+          {{ name }}
+        </mat-option>
+        <mat-option i18n value="new">New Character</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-icon-button
+      color="warn"
+      class="delete-icon"
+      [disabled]="
+        !internalSelectedCharacter ||
+        internalSelectedCharacter === 'new' ||
+        isCreatingNewCharacter
+      "
+      (click)="onDeleteClicked()"
+      [attr.aria-label]="'delete character ' + internalSelectedCharacter"
+      i18n-aria-label
+    >
+      <mat-icon i18n-matTooltip matTooltip="Delete Character">delete</mat-icon>
+    </button>
+  </div>
+
+  <div class="longRest">
+    <div class="long-rest-toggle">
+      <mat-slide-toggle
+        [(ngModel)]="internalFullHeal"
+        (change)="onFullHealToggleChanged()"
+        [attr.aria-label]="'long rest heals'"
+        i18n-aria-label
+        i18n
+        >LR Heals</mat-slide-toggle
+      >
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button
+      mat-fab
+      extended
+      class="rest-button"
+      (click)="emitLongRest()"
+      matTooltip="Long Rest"
+      i18n-matTooltip
+      i18n
+    >
+      <mat-icon class="longRest">bedtime</mat-icon>
+      LR
+    </button>
+  </div>
+</div>
+
+<div class="row class-level-row">
+  <mat-form-field class="class-select" appearance="fill">
+    <mat-label i18n>Character Class</mat-label>
+    <mat-select
+      [(ngModel)]="character.class"
+      (selectionChange)="onClassSelection($event.value)"
+      [disabled]="isCreatingNewCharacter"
+    >
+      <mat-option *ngFor="let c of classes" [value]="c">{{ c }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="classLevel">
+    <mat-label i18n>Character Level</mat-label>
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="character.level"
+      min="1"
+      max="20"
+      placeholder="Enter Level"
+      (change)="onLevelChange()"
+      (blur)="onLevelChange()"
+      [disabled]="isCreatingNewCharacter"
+      i18n-placeholder
+      [attr.aria-label]="'character level for ' + character.name"
+      i18n-aria-label
+    />
+  </mat-form-field>
+</div>
