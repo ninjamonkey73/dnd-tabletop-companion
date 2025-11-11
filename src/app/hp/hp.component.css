@@ -286,9 +286,3 @@ input {
   background: transparent;
   border: none;
 }
-
-.hp-header {
-  /* if you want no horizontal divider inside table: */
-  background: transparent;
-  border-bottom: none;
-}
