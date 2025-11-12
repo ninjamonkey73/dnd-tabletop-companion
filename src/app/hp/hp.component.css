@@ -275,14 +275,3 @@ input {
 .hp-section {
   width: 100%;
 }
-
-.hp-title {
-  text-align: center;
-  font-size: 1.4rem;
-  font-weight: 600;
-  padding: 4px 0 0;
-  margin: 0 0 8px;
-  /* no background, no border line */
-  background: transparent;
-  border: none;
-}
