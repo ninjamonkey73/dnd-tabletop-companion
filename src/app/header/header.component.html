@@ -20,9 +20,9 @@
       <mat-select
         [(ngModel)]="internalSelectedCharacter"
         (selectionChange)="onCharacterSelection($event.value)"
-        [disabled]="isCreatingNewCharacter"
+        [disabled]="isCreatingNewCharacter()"
       >
-        <mat-option *ngFor="let name of savedCharacterNames" [value]="name">
+        <mat-option *ngFor="let name of savedCharacterNames()" [value]="name">
           {{ name }}
         </mat-option>
         <mat-option i18n value="new">New Character</mat-option>
@@ -35,7 +35,7 @@
       [disabled]="
         !internalSelectedCharacter ||
         internalSelectedCharacter === 'new' ||
-        isCreatingNewCharacter
+        isCreatingNewCharacter()
       "
       (click)="onDeleteClicked()"
       [attr.aria-label]="'delete character ' + internalSelectedCharacter"
@@ -78,11 +78,11 @@
   <mat-form-field class="class-select" appearance="fill">
     <mat-label i18n>Character Class</mat-label>
     <mat-select
-      [(ngModel)]="character.class"
+      [(ngModel)]="character().class"
       (selectionChange)="onClassSelection($event.value)"
-      [disabled]="isCreatingNewCharacter"
+      [disabled]="isCreatingNewCharacter()"
     >
-      <mat-option *ngFor="let c of classes" [value]="c">{{ c }}</mat-option>
+      <mat-option *ngFor="let c of classes()" [value]="c">{{ c }}</mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -91,15 +91,15 @@
     <input
       matInput
       type="number"
-      [(ngModel)]="character.level"
+      [(ngModel)]="character().level"
       min="1"
       max="20"
       placeholder="Enter Level"
       (change)="onLevelChange()"
       (blur)="onLevelChange()"
-      [disabled]="isCreatingNewCharacter"
+      [disabled]="isCreatingNewCharacter()"
       i18n-placeholder
-      [attr.aria-label]="'character level for ' + character.name"
+      [attr.aria-label]="'character level for ' + character().name"
       i18n-aria-label
     />
   </mat-form-field>

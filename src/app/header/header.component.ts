@@ -1,10 +1,10 @@
 import {
   Component,
-  Input,
   Output,
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  input
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,16 +36,16 @@ import { Character } from '../character.model';
 })
 export class HeaderComponent implements OnChanges {
   // Character identity & selection
-  @Input() selectedCharacter: string | null = null;
-  @Input() savedCharacterNames: string[] = [];
-  @Input() isCreatingNewCharacter = false;
+  readonly selectedCharacter = input<string | null>(null);
+  readonly savedCharacterNames = input<string[]>([]);
+  readonly isCreatingNewCharacter = input(false);
 
   // Class/Level inputs
-  @Input() character!: Character;
-  @Input() classes: string[] = [];
+  readonly character = input.required<Character>();
+  readonly classes = input<string[]>([]);
 
   // Long rest full heal toggle
-  @Input() fullHeal = false;
+  readonly fullHeal = input(false);
 
   // Outputs
   @Output() characterSelected = new EventEmitter<string>();
@@ -61,10 +61,10 @@ export class HeaderComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedCharacter']) {
-      this.internalSelectedCharacter = this.selectedCharacter;
+      this.internalSelectedCharacter = this.selectedCharacter();
     }
     if (changes['fullHeal']) {
-      this.internalFullHeal = this.fullHeal;
+      this.internalFullHeal = this.fullHeal();
     }
   }
 
@@ -97,6 +97,6 @@ export class HeaderComponent implements OnChanges {
 
   onLevelChange() {
     // Emit current level (already bound into character.level)
-    this.levelChanged.emit(this.character.level);
+    this.levelChanged.emit(this.character().level);
   }
 }

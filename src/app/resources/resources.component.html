@@ -1,6 +1,6 @@
 <mat-card-content>
   <div class="resources">
-    @for (record of character.resources; track record.id) {
+    @for (record of character().resources; track record.id) {
     <mat-form-field subscriptSizing="dynamic" class="resource-name">
       <div class="resource-name">
         <input
@@ -9,11 +9,11 @@
           [(ngModel)]="record.name"
           placeholder="Resource Name"
           [readonly]="editingResourceNameId !== record.id"
-          [disabled]="isCreatingNewCharacter"
+          [disabled]="isCreatingNewCharacter()"
           (blur)="onNameBlur()"
           i18n-placeholder
           [attr.aria-label]="
-            'resource name ' + record.id + ' for ' + character.name
+            'resource name ' + record.id + ' for ' + character().name
           "
           i18n-aria-label
         />
@@ -21,7 +21,7 @@
           mat-icon-button
           type="button"
           (click)="startEditingResourceName(record.id)"
-          [disabled]="isCreatingNewCharacter"
+          [disabled]="isCreatingNewCharacter()"
           [attr.aria-label]="'edit resource name for ' + record.name"
           i18n-aria-label
         >
@@ -29,7 +29,7 @@
         </button>
       </div>
     </mat-form-field>
-    } @for (record of character.resources; track record.id) {
+    } @for (record of character().resources; track record.id) {
     <mat-form-field>
       <input
         matInput
@@ -38,7 +38,7 @@
         [(ngModel)]="record.value"
         class="classData-input"
         (change)="onValueChange()"
-        [disabled]="isCreatingNewCharacter"
+        [disabled]="isCreatingNewCharacter()"
         [attr.aria-label]="'resource value for ' + record.name"
         i18n-aria-label
       />

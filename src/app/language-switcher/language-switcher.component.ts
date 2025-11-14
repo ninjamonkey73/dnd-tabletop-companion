@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { OnInit } from '@angular/core';
 
@@ -9,9 +9,14 @@ import { OnInit } from '@angular/core';
   styleUrl: './language-switcher.component.css',
 })
 export class LanguageSwitcherComponent implements OnInit {
+  private location = inject(Location);
+
   currentLocale: 'en' | 'es' = 'en';
 
-  constructor(private location: Location) {}
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   ngOnInit() {
     if (window.location.pathname.includes('/es/')) {

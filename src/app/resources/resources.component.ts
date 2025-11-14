@@ -1,4 +1,4 @@
-import { Component, Input, output } from '@angular/core';
+import { Component, output, input } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,8 +26,8 @@ import { MatCardContent } from '@angular/material/card';
   styleUrls: ['./resources.component.css'],
 })
 export class ResourcesComponent {
-  @Input() character!: Character;
-  @Input() isCreatingNewCharacter = false;
+  readonly character = input.required<Character>();
+  readonly isCreatingNewCharacter = input(false);
   readonly characterChange = output<Character>();
 
   // Track which resource name is being edited
@@ -43,10 +43,10 @@ export class ResourcesComponent {
 
   onNameBlur() {
     this.stopEditingResourceName();
-    this.characterChange.emit(this.character);
+    this.characterChange.emit(this.character());
   }
 
   onValueChange() {
-    this.characterChange.emit(this.character);
+    this.characterChange.emit(this.character());
   }
 }

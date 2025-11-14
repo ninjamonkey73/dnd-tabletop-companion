@@ -1,10 +1,10 @@
 import {
   Component,
-  Input,
   Output,
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  input
 } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -33,10 +33,10 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./hp.component.css'],
 })
 export class HpComponent implements OnChanges {
-  @Input() character!: Character;
-  @Input() isCreatingNewCharacter = false;
-  @Input() percentHP = 0;
-  @Input() deathSaveMessage: string | null = null;
+  readonly character = input.required<Character>();
+  readonly isCreatingNewCharacter = input(false);
+  readonly percentHP = input(0);
+  readonly deathSaveMessage = input<string | null>(null);
 
   @Output() characterChange = new EventEmitter<Character>();
   @Output() hurt = new EventEmitter<number>(); // damage amount
@@ -56,7 +56,7 @@ export class HpComponent implements OnChanges {
 
   finishEditMaxHP() {
     this.isEditingMaxHP = false;
-    this.characterChange.emit(this.character);
+    this.characterChange.emit(this.character());
     this.maxHpEditFinished.emit();
   }
 
@@ -65,7 +65,7 @@ export class HpComponent implements OnChanges {
   }
 
   onTempHpEnter() {
-    this.characterChange.emit(this.character);
+    this.characterChange.emit(this.character());
   }
 
   applyHurt() {

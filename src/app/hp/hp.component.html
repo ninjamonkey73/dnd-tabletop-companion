@@ -1,13 +1,13 @@
-<div class="hp-section" [class.disabled]="isCreatingNewCharacter">
+<div class="hp-section" [class.disabled]="isCreatingNewCharacter()">
   <div class="card-title" i18n>Hit Points</div>
 
-  @if (deathSaveMessage || character.currentHP === 0) {
+  @if (deathSaveMessage() || character().currentHP === 0) {
   <div class="status-key">
-    @if (deathSaveMessage) {
-    <div class="death-message" i18n>{{ deathSaveMessage }}</div>
-    } @else if (character.currentHP === 0 && character.stable) {
+    @if (deathSaveMessage()) {
+    <div class="death-message" i18n>{{ deathSaveMessage() }}</div>
+    } @else if (character().currentHP === 0 && character().stable) {
     <span class="status-chip stable-chip" i18n>You are stable</span>
-    } @else if (character.currentHP === 0 && !character.stable) {
+    } @else if (character().currentHP === 0 && !character().stable) {
     <span class="status-chip incapacitated-chip" i18n
       >You are incapacitated</span
     >
@@ -25,10 +25,10 @@
           mat-fab
           extended
           (click)="isEditingMaxHP ? finishEditMaxHP() : startEditMaxHP()"
-          [disabled]="isCreatingNewCharacter"
+          [disabled]="isCreatingNewCharacter()"
           matTooltip="Edit Max HP"
           i18n-matTooltip
-          [attr.aria-label]="'edit max HP for ' + character.name"
+          [attr.aria-label]="'edit max HP for ' + character().name"
           i18n-aria-label
         >
           <mat-icon>edit</mat-icon>
@@ -40,16 +40,16 @@
 
     <div class="hpRow">
       <div class="currentHP">
-        {{ character.currentHP }}
-        @if (deathSaveMessage) {
+        {{ character().currentHP }}
+        @if (deathSaveMessage()) {
         <span class="incapacitated-icon"
           ><span i18n="Letter for dead">D</span></span
         >
-        } @else if (character.currentHP === 0 && character.stable) {
+        } @else if (character().currentHP === 0 && character().stable) {
         <span class="stable-icon"
           ><span i18n="Letter for stable health">S</span></span
         >
-        } @else if (character.currentHP === 0 && !character.stable) {
+        } @else if (character().currentHP === 0 && !character().stable) {
         <span class="incapacitated-icon"
           ><span i18n="Letter for incapacitated">I</span></span
         >
@@ -61,39 +61,39 @@
           <input
             matInput
             type="number"
-            [(ngModel)]="character.maxHP"
+            [(ngModel)]="character().maxHP"
             class="hp-input"
             placeholder="Enter Max HP"
             (keydown.enter)="onEnterMaxHP()"
-            [disabled]="isCreatingNewCharacter"
+            [disabled]="isCreatingNewCharacter()"
             i18n-placeholder
-            [attr.aria-label]="'max HP for ' + character.name"
+            [attr.aria-label]="'max HP for ' + character().name"
             i18n-aria-label
           />
         </ng-container>
-        <ng-template #displayMaxHP>{{ character.maxHP }}</ng-template>
+        <ng-template #displayMaxHP>{{ character().maxHP }}</ng-template>
       </div>
 
       <div>
         <input
           matInput
           type="number"
-          [(ngModel)]="character.tempHP"
+          [(ngModel)]="character().tempHP"
           class="tempHP-input"
           placeholder="Enter Temp HP"
           (keydown.enter)="onTempHpEnter()"
-          [disabled]="isCreatingNewCharacter"
+          [disabled]="isCreatingNewCharacter()"
           i18n-placeholder
-          [attr.aria-label]="'temp HP for ' + character.name"
+          [attr.aria-label]="'temp HP for ' + character().name"
           i18n-aria-label
         />
       </div>
 
-      <div>{{ percentHP }}%</div>
+      <div>{{ percentHP() }}%</div>
     </div>
   </div>
 
-  <div class="hp-controls" [class.disabled]="isCreatingNewCharacter">
+  <div class="hp-controls" [class.disabled]="isCreatingNewCharacter()">
     <mat-form-field appearance="fill" class="HPInput">
       <input
         matInput
@@ -101,7 +101,7 @@
         type="number"
         [(ngModel)]="changeVal"
         class="hp-input"
-        [disabled]="isCreatingNewCharacter"
+        [disabled]="isCreatingNewCharacter()"
         i18n-placeholder
       />
     </mat-form-field>
@@ -112,10 +112,10 @@
         extended
         class="hurt-button"
         (click)="applyHurt()"
-        [disabled]="isCreatingNewCharacter"
+        [disabled]="isCreatingNewCharacter()"
         matTooltip="Apply Damage"
         i18n-matTooltip
-        [attr.aria-label]="'apply damage to ' + character.name"
+        [attr.aria-label]="'apply damage to ' + character().name"
         i18n-aria-label
         i18n
       >
@@ -127,10 +127,10 @@
         extended
         class="heal-button"
         (click)="applyHeal()"
-        [disabled]="isCreatingNewCharacter"
+        [disabled]="isCreatingNewCharacter()"
         matTooltip="Heal Character"
         i18n-matTooltip
-        [attr.aria-label]="'heal ' + character.name"
+        [attr.aria-label]="'heal ' + character().name"
         i18n-aria-label
         i18n
       >

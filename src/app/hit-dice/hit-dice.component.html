@@ -6,12 +6,12 @@
       matInput
       type="number"
       min="0"
-      [max]="character.level"
-      [(ngModel)]="character.hitDie"
+      [max]="character().level"
+      [(ngModel)]="character().hitDie"
       class="classData-input"
       (ngModelChange)="onHitDieChange()"
-      [disabled]="isCreatingNewCharacter"
-      [attr.aria-label]="'hit dice for ' + character.name"
+      [disabled]="isCreatingNewCharacter()"
+      [attr.aria-label]="'hit dice for ' + character().name"
       i18n-aria-label
     />
   </mat-form-field>

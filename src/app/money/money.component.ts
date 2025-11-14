@@ -1,4 +1,4 @@
-import { Component, Input, output } from '@angular/core';
+import { Component, output, input } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,8 +26,8 @@ import { MatCardContent } from '@angular/material/card';
   styleUrls: ['./money.component.css'],
 })
 export class MoneyComponent {
-  @Input() character!: Character;
-  @Input() isCreatingNewCharacter = false;
+  readonly character = input.required<Character>();
+  readonly isCreatingNewCharacter = input(false);
   // Parent will listen and call updateChar() to persist
   readonly characterChange = output<Character>();
 
@@ -49,7 +49,7 @@ export class MoneyComponent {
     ) {
       return;
     }
-    const current = this.character[type] || 0;
+    const current = this.character()[type] || 0;
     const newValue = current + amount;
     if (newValue < 0) {
       alert(
@@ -57,9 +57,9 @@ export class MoneyComponent {
       );
       return;
     }
-    this.character[type] = newValue;
+    this.character()[type] = newValue;
     // Emit updated character so parent can save
-    this.characterChange.emit(this.character);
+    this.characterChange.emit(this.character());
     // Reset delta
     this.moneyDelta = 0;
   }

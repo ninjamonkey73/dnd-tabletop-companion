@@ -1,4 +1,4 @@
-import { Component, Input, output } from '@angular/core';
+import { Component, output, input } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -13,11 +13,11 @@ import { MatInput } from '@angular/material/input';
   styleUrls: ['./ki-points.component.css'],
 })
 export class KiPointsComponent {
-  @Input() character!: Character;
-  @Input() isCreatingNewCharacter = false;
+  readonly character = input.required<Character>();
+  readonly isCreatingNewCharacter = input(false);
   readonly characterChange = output<Character>();
 
   onChange() {
-    this.characterChange.emit(this.character);
+    this.characterChange.emit(this.character());
   }
 }
