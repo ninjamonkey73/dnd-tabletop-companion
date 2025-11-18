@@ -8,7 +8,7 @@
       matTooltip="Short Rest"
       i18n-matTooltip
       i18n
-    >
+      >
       <mat-icon>snooze</mat-icon>
       SR
     </button>
@@ -21,10 +21,12 @@
         [(ngModel)]="internalSelectedCharacter"
         (selectionChange)="onCharacterSelection($event.value)"
         [disabled]="isCreatingNewCharacter()"
-      >
-        <mat-option *ngFor="let name of savedCharacterNames()" [value]="name">
-          {{ name }}
-        </mat-option>
+        >
+        @for (name of savedCharacterNames(); track name) {
+          <mat-option [value]="name">
+            {{ name }}
+          </mat-option>
+        }
         <mat-option i18n value="new">New Character</mat-option>
       </mat-select>
     </mat-form-field>
@@ -40,7 +42,7 @@
       (click)="onDeleteClicked()"
       [attr.aria-label]="'delete character ' + internalSelectedCharacter"
       i18n-aria-label
-    >
+      >
       <mat-icon i18n-matTooltip matTooltip="Delete Character">delete</mat-icon>
     </button>
   </div>
@@ -54,53 +56,59 @@
         i18n-aria-label
         i18n
         >LR Heals</mat-slide-toggle
-      >
+        >
+      </div>
     </div>
-  </div>
 
-  <div class="button-container">
-    <button
-      mat-fab
-      extended
-      class="rest-button"
-      (click)="emitLongRest()"
-      matTooltip="Long Rest"
-      i18n-matTooltip
-      i18n
-    >
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="emitLongRest()"
+        matTooltip="Long Rest"
+        i18n-matTooltip
+        i18n
+        >
       <mat-icon class="longRest">bedtime</mat-icon>
       LR
     </button>
+    </div>
   </div>
-</div>
 
-<div class="row class-level-row">
-  <mat-form-field class="class-select" appearance="fill">
-    <mat-label i18n>Character Class</mat-label>
-    <mat-select
-      [(ngModel)]="character().class"
-      (selectionChange)="onClassSelection($event.value)"
-      [disabled]="isCreatingNewCharacter()"
-    >
-      <mat-option *ngFor="let c of classes()" [value]="c">{{ c }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="row class-level-row">
+    <mat-form-field
+      class="class-select"
+      appearance="fill"
+      subscriptSizing="dynamic"
+      >
+      <mat-label i18n>Character Class</mat-label>
+      <mat-select
+        [(ngModel)]="character().class"
+        (selectionChange)="onClassSelection($event.value)"
+        [disabled]="isCreatingNewCharacter()"
+        >
+        @for (c of classes(); track c) {
+          <mat-option [value]="c">{{ c }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field class="classLevel">
-    <mat-label i18n>Character Level</mat-label>
-    <input
-      matInput
-      type="number"
-      [(ngModel)]="character().level"
-      min="1"
-      max="20"
-      placeholder="Enter Level"
-      (change)="onLevelChange()"
-      (blur)="onLevelChange()"
-      [disabled]="isCreatingNewCharacter()"
-      i18n-placeholder
-      [attr.aria-label]="'character level for ' + character().name"
-      i18n-aria-label
-    />
-  </mat-form-field>
-</div>
+    <mat-form-field class="classLevel" subscriptSizing="dynamic">
+      <mat-label i18n>Character Level</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="character().level"
+        min="1"
+        max="20"
+        placeholder="Enter Level"
+        (change)="onLevelChange()"
+        (blur)="onLevelChange()"
+        [disabled]="isCreatingNewCharacter()"
+        i18n-placeholder
+        [attr.aria-label]="'character level for ' + character().name"
+        i18n-aria-label
+        />
+      </mat-form-field>
+    </div>

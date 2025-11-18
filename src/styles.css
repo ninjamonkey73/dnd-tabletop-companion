@@ -7,7 +7,11 @@ body {
 }
 body {
   margin: 0;
-  font-family: "Goudy Bookletter 1911", serif;
+  font-family: "EB Garamond", "Source Serif 4", "Goudy Bookletter 1911", Georgia,
+    serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Shared header + class/level styling */

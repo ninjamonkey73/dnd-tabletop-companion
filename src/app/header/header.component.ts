@@ -6,7 +6,7 @@ import {
   SimpleChanges,
   input
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,7 +21,6 @@ import { Character } from '../character.model';
   selector: 'app-header',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -29,8 +28,8 @@ import { Character } from '../character.model';
     MatIconModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    MatInputModule,
-  ],
+    MatInputModule
+],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })

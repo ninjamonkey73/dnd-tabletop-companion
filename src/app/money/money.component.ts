@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardContent } from '@angular/material/card';
 
@@ -13,15 +13,14 @@ import { MatCardContent } from '@angular/material/card';
   selector: 'app-money',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatInput,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatCardContent,
-  ],
+    MatCardContent
+],
   templateUrl: './money.component.html',
   styleUrls: ['./money.component.css'],
 })

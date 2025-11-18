@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardContent } from '@angular/material/card';
 
@@ -13,15 +13,14 @@ import { MatCardContent } from '@angular/material/card';
   selector: 'app-resources',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatInput,
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatCardContent,
-  ],
+    MatCardContent
+],
   templateUrl: './resources.component.html',
   styleUrls: ['./resources.component.css'],
 })

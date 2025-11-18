@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
@@ -33,7 +33,6 @@ import { DndApiService } from './dnd-api.service';
     FormsModule,
     MatSelectModule,
     MatButtonModule,
-    CommonModule,
     MatTooltipModule,
     LanguageSwitcherComponent,
     DeathSavesComponent,
@@ -45,8 +44,8 @@ import { DndApiService } from './dnd-api.service';
     MoneyComponent,
     ResourcesComponent,
     HpComponent,
-    HeaderComponent,
-  ],
+    HeaderComponent
+],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
