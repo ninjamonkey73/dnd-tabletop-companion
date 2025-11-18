@@ -50,9 +50,9 @@ export const defaultCharacter: Character = {
   rageRemaining: 0,
   wildShapeRemaining: 0,
   resources: [
-    { id: 1, name: $localize`Resource 1`, value: 0 },
-    { id: 2, name: $localize`Resource 2`, value: 0 },
-    { id: 3, name: $localize`Resource 3`, value: 0 },
-    { id: 4, name: $localize`Resource 4`, value: 0 },
+    { id: 1, name: $localize`:@@resource1:Resource 1`, value: 0 },
+    { id: 2, name: $localize`:@@resource2:Resource 2`, value: 0 },
+    { id: 3, name: $localize`:@@resource3:Resource 3`, value: 0 },
+    { id: 4, name: $localize`:@@resource4:Resource 4`, value: 0 },
   ],
 };

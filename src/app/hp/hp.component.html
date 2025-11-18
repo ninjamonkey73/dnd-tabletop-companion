@@ -4,7 +4,7 @@
   @if (deathSaveMessage() || character().currentHP === 0) {
   <div class="status-key">
     @if (deathSaveMessage()) {
-    <div class="death-message" i18n>{{ deathSaveMessage() }}</div>
+    <div class="death-message" aria-live="polite">{{ deathSaveMessage() }}</div>
     } @else if (character().currentHP === 0 && character().stable) {
     <span class="status-chip stable-chip" i18n>You are stable</span>
     } @else if (character().currentHP === 0 && !character().stable) {

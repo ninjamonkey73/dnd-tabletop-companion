@@ -55,123 +55,81 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4856710315587816720" datatype="html">
-        <source>HTTP error! status: <x id="PH" equiv-text="response.status"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">119</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1162606190200078955" datatype="html">
-        <source>API returned unexpected data.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">127</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5193665287828221697" datatype="html">
-        <source>Failed to fetch classes from API.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">131</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8711564480568660746" datatype="html">
-        <source>Failed to fetch classes from API:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">132</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8038830543279168658" datatype="html">
+      <trans-unit id="errCharacterNameEmpty" datatype="html">
         <source>Character name cannot be empty.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">392</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1827512876836285824" datatype="html">
-        <source>Character name is required to save data.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">225</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8455659528986391493" datatype="html">
-        <source>Level cannot be less than 1.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">243</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="207157212416046837" datatype="html">
-        <source>Level cannot be greater than 20.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">246</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1995543811567504158" datatype="html">
-        <source>Failed to fetch rage count</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">259</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5508996256563683634" datatype="html">
-        <source>Failed to fetch rage count:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">272</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4587077980608574737" datatype="html">
-        <source>Failed to check spellcasting for</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">322</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7328175834266423792" datatype="html">
-        <source>level</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">324</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2317283442482394151" datatype="html">
+      <trans-unit id="confirmDeleteCharacter" datatype="html">
         <source>Are you sure you want to delete the character &quot;<x id="PH" equiv-text="name"/>&quot;?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">400</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3259906443827646978" datatype="html">
+      <trans-unit id="errCharacterNameRequired" datatype="html">
+        <source>Character name is required to save data.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">266</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="errLevelTooLow" datatype="html">
+        <source>Level cannot be less than 1.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">288</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="errLevelTooHigh" datatype="html">
+        <source>Level cannot be greater than 20.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">291</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="errApiUnexpected" datatype="html">
+        <source>API returned unexpected data.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">442</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="errClassesFetch" datatype="html">
+        <source>Failed to fetch classes from API.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">446</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource1" datatype="html">
         <source>Resource 1</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/character.model.ts</context>
           <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8264195725664387359" datatype="html">
+      <trans-unit id="resource2" datatype="html">
         <source>Resource 2</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/character.model.ts</context>
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="812507538074390610" datatype="html">
+      <trans-unit id="resource3" datatype="html">
         <source>Resource 3</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/character.model.ts</context>
           <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="9081533228672967543" datatype="html">
+      <trans-unit id="resource4" datatype="html">
         <source>Resource 4</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/character.model.ts</context>
@@ -199,7 +157,7 @@
           <context context-type="linenumber">5,6</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2300463029012428814" datatype="html">
+      <trans-unit id="msgYouAreDead" datatype="html">
         <source>You are dead!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/death-saves/death-saves.component.ts</context>
@@ -288,13 +246,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
           <context context-type="linenumber">2,4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ deathSaveMessage() }}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">7,8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8101758461730092639" datatype="html">
@@ -517,7 +468,7 @@
           <context context-type="linenumber">169,170</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="9107190622424640197" datatype="html">
+      <trans-unit id="errSubtractTooMuch" datatype="html">
         <source>You cannot subtract more than you have! (<x id="PH" equiv-text="current"/> available)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/money/money.component.ts</context>

@@ -35,7 +35,7 @@ export class DeathSavesComponent implements OnInit {
       this.deathSaveFailure = [false, false, false];
       this.deathSaveMessage = null;
     } else if (this.deathSaveFailure.every((val) => val)) {
-      this.deathSaveMessage = $localize`You are dead!`;
+      this.deathSaveMessage = $localize`:@@msgYouAreDead:You are dead!`;
     } else {
       this.deathSaveMessage = null;
       this.character.stable = false;

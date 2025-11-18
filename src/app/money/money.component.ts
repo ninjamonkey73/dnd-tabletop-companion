@@ -53,7 +53,7 @@ export class MoneyComponent {
     const newValue = current + amount;
     if (newValue < 0) {
       alert(
-        $localize`You cannot subtract more than you have! (${current} available)`
+        $localize`:@@errSubtractTooMuch:You cannot subtract more than you have! (${current} available)`
       );
       return;
     }

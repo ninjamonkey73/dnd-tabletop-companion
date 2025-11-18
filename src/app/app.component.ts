@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Character, defaultCharacter } from './character.model';
+import { Character } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
@@ -20,6 +20,8 @@ import { MoneyComponent } from './money/money.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { HpComponent } from './hp/hp.component';
 import { HeaderComponent } from './header/header.component';
+import { CharacterStore } from './character.store';
+import { DndApiService } from './dnd-api.service';
 
 @Component({
   selector: 'app-root',
@@ -48,18 +50,56 @@ import { HeaderComponent } from './header/header.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
-  percentHP = 0;
+  constructor(private store: CharacterStore, private api: DndApiService) {}
 
+  // Derived from store; template keeps using `character`.
+  get character(): Character {
+    return this.store.character();
+  }
+
+  get percentHP(): number {
+    return this.store.percentHP();
+  }
+
+  get fullHeal(): boolean {
+    return this.store.fullHeal();
+  }
+
+  showingMoney = true;
+  showingDeathSaves = true;
+  classHasBeenSet = false;
+  lastCharacterSelected = '';
+  classes: string[] = [];
+  classesError: string | null = null;
+  isLoadingClasses = false;
+  savedCharacterNames: string[] = [];
+  selectedCharacter: string | null = null;
+  isCreatingNewCharacter = false;
+  newCharacterName = '';
+  deathSaveMessage: string | null = null;
+
+  ngOnInit(): void {
+    this.loadSavedCharacterNames();
+    this.loadLastSelectedCharacter();
+    this.fetchClassesFromAPI();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.deathSavesComponent) {
+      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
+    }
+  }
+
+  // --- Header interactions ---
   onFullHealToggle(value: boolean) {
-    this.fullHeal = value;
-    this.saveHealToggle();
+    this.store.setFullHeal(value);
   }
 
   onHeaderLevelChanged(level: number) {
-    this.character.level = level;
+    this.store.patchCharacter({ level });
     this.updateCharLevel();
   }
 
@@ -67,84 +107,19 @@ export class AppComponent implements AfterViewInit {
     this.onClassSelection(cls);
   }
 
-  ngOnInit() {
-    this.loadSavedCharacterNames();
-    this.loadLastSelectedCharacter();
-    const savedFullHeal = localStorage.getItem('fullHeal');
-    if (savedFullHeal !== null) {
-      this.fullHeal = JSON.parse(savedFullHeal);
-    }
-    this.fetchClassesFromAPI();
-    this.updatePercentHP();
-  }
-
-  ngAfterViewInit() {
-    if (this.deathSavesComponent) {
-      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
-    }
-  }
-
-  showingMoney = true;
-  showingDeathSaves = true;
-  classHasBeenSet: boolean = false;
-
+  // --- Class selection & loading ---
   onClassSelection(selectedClass: string): void {
-    // Only do the first-time action if class was not set before
     if (!this.classHasBeenSet && selectedClass) {
       this.classHasBeenSet = true;
-      this.updateCharLevel();
+      this.store.patchCharacter({ class: selectedClass });
+      this.updateCharLevel(); // includes save + signal push
+    } else {
+      this.store.patchCharacter({ class: selectedClass });
     }
     this.updateChar();
   }
 
-  character: Character = { ...defaultCharacter };
-
-  lastCharacterSelected: string = '';
-
-  fullHeal = false;
-
-  classes: string[] = [];
-  classesError: string | null = null;
-  isLoadingClasses = false;
-  /**
-   * Fetches the list of classes from the D&D 5e API and sets the classes array.
-   * Handles loading and error state.
-   */
-  fetchClassesFromAPI(): void {
-    this.isLoadingClasses = true;
-    this.classesError = null;
-    fetch('https://www.dnd5eapi.co/api/2014/classes')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error($localize`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data && Array.isArray(data.results)) {
-          this.classes = data.results.map((c: any) => c.name);
-        } else {
-          this.classesError = $localize`API returned unexpected data.`;
-        }
-      })
-      .catch((err) => {
-        this.classesError = $localize`Failed to fetch classes from API.`;
-        console.error($localize`Failed to fetch classes from API:`, err);
-      })
-      .finally(() => {
-        this.isLoadingClasses = false;
-      });
-  }
-
-  levels: number[] = Array.from({ length: 20 }, (_, i) => i + 1); // Generate levels 1 through 20
-
-  savedCharacterNames: string[] = [];
-  selectedCharacter: string | null = null;
-  isCreatingNewCharacter = false;
-  newCharacterName = '';
-
   loadSavedCharacterNames(): void {
-    // Load all saved character names from localStorage, excluding "lastSelectedCharacter" and "fullHeal"
     this.savedCharacterNames = Object.keys(localStorage).filter((key) => {
       const character = localStorage.getItem(key);
       return (
@@ -152,378 +127,325 @@ export class AppComponent implements AfterViewInit {
         key !== 'fullHeal' &&
         character !== null &&
         character.trim() !== ''
-      ); // Exclude the keys
+      );
     });
   }
 
   onCharacterSelection(name: string): void {
     if (name === 'new') {
-      // If "New Character" is selected, show the input field for a new name
       this.isCreatingNewCharacter = true;
       this.newCharacterName = '';
       this.classHasBeenSet = false;
-    } else {
-      // Load the selected character's data
-      this.isCreatingNewCharacter = false;
-      const savedCharacter = localStorage.getItem(name);
-      if (savedCharacter) {
-        const loaded = JSON.parse(savedCharacter);
-        Object.assign(this.character, loaded);
-        if (!Array.isArray(this.character.spellSlots))
-          this.character.spellSlots = [];
-        if (!Array.isArray(this.character.spellSlotsRemaining))
-          this.character.spellSlotsRemaining = [];
-        this.selectedCharacter = name;
-        localStorage.setItem('lastSelectedCharacter', name);
-        this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
-        this.classHasBeenSet = !!this.character.class;
-        this.updatePercentHP();
-      }
+      this.selectedCharacter = 'new';
+      return;
+    }
+    this.isCreatingNewCharacter = false;
+    const saved = localStorage.getItem(name);
+    if (saved) {
+      const loaded = JSON.parse(saved);
+      // Normalize arrays
+      if (!Array.isArray(loaded.spellSlots)) loaded.spellSlots = [];
+      if (!Array.isArray(loaded.spellSlotsRemaining))
+        loaded.spellSlotsRemaining = [];
+      this.store.setCharacter(loaded);
+      this.selectedCharacter = name;
+      localStorage.setItem('lastSelectedCharacter', name);
+      this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
+      this.classHasBeenSet = !!loaded.class;
     }
   }
 
   loadLastSelectedCharacter(): void {
-    const lastCharacterName = localStorage.getItem('lastSelectedCharacter');
-    if (lastCharacterName) {
-      const savedCharacter = localStorage.getItem(lastCharacterName);
-      if (savedCharacter) {
-        const loaded = JSON.parse(savedCharacter);
-        Object.assign(this.character, loaded);
-        if (!Array.isArray(this.character.spellSlots))
-          this.character.spellSlots = [];
-        if (!Array.isArray(this.character.spellSlotsRemaining))
-          this.character.spellSlotsRemaining = [];
-        this.selectedCharacter = lastCharacterName;
-        this.updatePercentHP();
-      }
-    }
+    const name = localStorage.getItem('lastSelectedCharacter');
+    if (!name) return;
+    const saved = localStorage.getItem(name);
+    if (!saved) return;
+    const loaded = JSON.parse(saved);
+    if (!Array.isArray(loaded.spellSlots)) loaded.spellSlots = [];
+    if (!Array.isArray(loaded.spellSlotsRemaining))
+      loaded.spellSlotsRemaining = [];
+    this.store.setCharacter(loaded);
+    this.selectedCharacter = name;
+    this.classHasBeenSet = !!loaded.class;
   }
 
   createNewCharacter(): void {
-    if (this.newCharacterName.trim()) {
-      // Create a new character with the entered name
-      this.saveNewCharacter();
-      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
-      this.saveCharacterData();
-      this.isCreatingNewCharacter = false;
-      this.newCharacterName = '';
-      this.updatePercentHP();
-    } else {
-      console.error($localize`Character name cannot be empty.`);
+    if (!this.newCharacterName.trim()) {
+      console.error(
+        $localize`:@@errCharacterNameEmpty:Character name cannot be empty.`
+      );
+      return;
+    }
+    // Reuse saveNewCharacter (which sets store)
+    this.saveNewCharacter();
+    this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
+    this.saveCharacterData();
+    this.isCreatingNewCharacter = false;
+    this.newCharacterName = '';
+  }
+
+  saveNewCharacter(): void {
+    if (!this.newCharacterName.trim()) {
+      console.error(
+        $localize`:@@errCharacterNameEmpty:Character name cannot be empty.`
+      );
+      return;
+    }
+    const fresh = {
+      ...this.character,
+      name: this.newCharacterName.trim(),
+      currentHP: 0,
+      maxHP: 0,
+      kiPoints: 0,
+      class: '',
+      cp: 0,
+      sp: 0,
+      gp: 0,
+      pp: 0,
+      level: 1,
+      tempHP: 0,
+      deathSaveSuccess: [false, false, false],
+      deathSaveFailure: [false, false, false],
+      stable: false,
+      spellSlots: [],
+      spellSlotsRemaining: [],
+      hitDie: 0,
+      rage: 0,
+      rageRemaining: 0,
+      wildShapeRemaining: 0,
+      resources: this.character.resources, // keep existing resource labels
+    };
+    this.store.setCharacter(fresh);
+    this.selectedCharacter = fresh.name;
+    this.isCreatingNewCharacter = false;
+    this.newCharacterName = '';
+  }
+
+  deleteCharacter(name: string | null): void {
+    if (!name || name === 'new') return;
+    if (
+      confirm(
+        $localize`:@@confirmDeleteCharacter:Are you sure you want to delete the character "${name}"?`
+      )
+    ) {
+      localStorage.removeItem(name);
+      this.loadSavedCharacterNames();
+      this.selectedCharacter = null;
+      // Reset store to blank character (keep resources localized)
+      this.store.setCharacter({
+        ...this.character,
+        name: '',
+        currentHP: 0,
+        maxHP: 0,
+        kiPoints: 0,
+        class: '',
+        cp: 0,
+        sp: 0,
+        gp: 0,
+        pp: 0,
+        level: 1,
+        tempHP: 0,
+        deathSaveSuccess: [false, false, false],
+        deathSaveFailure: [false, false, false],
+        stable: false,
+        spellSlots: [],
+        spellSlotsRemaining: [],
+        hitDie: 0,
+        rage: 0,
+        rageRemaining: 0,
+        wildShapeRemaining: 0,
+      });
+      this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     }
   }
 
+  // --- Persistence ---
   saveCharacterData(): void {
-    if (this.character.name) {
-      if (this.deathSavesComponent) {
-        this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
-      }
-      localStorage.setItem(this.character.name, JSON.stringify(this.character));
-      this.loadSavedCharacterNames();
-      localStorage.setItem('lastSelectedCharacter', this.character.name);
-    } else {
-      console.error($localize`Character name is required to save data.`);
+    if (!this.character.name) {
+      console.error(
+        $localize`:@@errCharacterNameRequired:Character name is required to save data.`
+      );
+      return;
     }
+    this.deathSavesComponent?.syncDeathSavesToCharacter(this.character);
+    localStorage.setItem(this.character.name, JSON.stringify(this.character));
+    this.loadSavedCharacterNames();
+    localStorage.setItem('lastSelectedCharacter', this.character.name);
   }
 
   updateChar(): void {
     this.lastCharacterSelected = this.character.name;
     this.saveCharacterData();
-
-    if (this.deathSavesComponent) {
-      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
-    }
+    this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
   }
 
+  // --- Level / Class logic ---
   updateCharLevel(): void {
-    // Ensure level is between 1 and 20
     let errorMsg = '';
-    if (this.character.level < 1) {
-      this.character.level = 1;
-      errorMsg = $localize`Level cannot be less than 1.`;
-    } else if (this.character.level > 20) {
-      this.character.level = 20;
-      errorMsg = $localize`Level cannot be greater than 20.`;
+    let level = this.character.level;
+    if (level < 1) {
+      level = 1;
+      errorMsg = $localize`:@@errLevelTooLow:Level cannot be less than 1.`;
+    } else if (level > 20) {
+      level = 20;
+      errorMsg = $localize`:@@errLevelTooHigh:Level cannot be greater than 20.`;
     }
-    if (this.character.class === 'Monk' && this.character.level > 1) {
-      // Update kiPoints based on level
-      this.character.kiPoints = this.character.level;
+
+    // Patch level first
+    this.store.patchCharacter({ level });
+
+    // Class-specific adjustments
+    if (this.character.class === 'Monk' && level > 1) {
+      this.store.patchCharacter({ kiPoints: level });
     }
 
     if (this.character.class === 'Barbarian') {
-      // Fetch rage count from API and set it
-      const url = `https://www.dnd5eapi.co/api/2014/classes/barbarian/levels/${this.character.level}`;
-      fetch(url)
-        .then((response) => {
-          if (!response.ok)
-            throw new Error($localize`Failed to fetch rage count`);
-          return response.json();
-        })
-        .then((data) => {
-          if (
-            data.class_specific &&
-            typeof data.class_specific.rage_count === 'number'
-          ) {
-            this.character.rage = data.class_specific.rage_count;
-            this.character.rageRemaining = data.class_specific.rage_count;
+      this.api.getClassLevel('barbarian', level).subscribe({
+        next: (data) => {
+          const count = data.class_specific?.rage_count;
+          if (typeof count === 'number') {
+            this.store.patchCharacter({ rage: count, rageRemaining: count });
           }
-        })
-        .catch((err) => {
-          console.error($localize`Failed to fetch rage count:`, err);
-        });
-    }
-    if (this.character.class === 'Druid' && this.character.level > 1) {
-      this.character.wildShapeRemaining = 2;
+        },
+      });
     }
 
-    this.character.hitDie = this.character.level;
+    if (this.character.class === 'Druid' && level > 1) {
+      this.store.patchCharacter({ wildShapeRemaining: 2 });
+    }
 
-    // Check for spellcasting asynchronously
-    this.characterIsSpellcaster(
-      this.character.class,
-      this.character.level
-    ).then(() => {
-      this.updatePercentHP();
+    // Hit dice equals level
+    this.store.patchCharacter({ hitDie: level });
+
+    // Spellcasting check
+    this.api.isSpellcaster(this.character.class, level).subscribe(() => {
       this.lastCharacterSelected = this.character.name;
-      // Save the character data to localStorage
       this.saveCharacterData();
-      if (errorMsg) {
-        alert(errorMsg);
-      }
+      if (errorMsg) alert(errorMsg);
     });
-    return; // Prevent duplicate save below
   }
 
-  /**
-   * Checks if the given class/level combination has spellcasting by calling the D&D 5e API.
-   * If spellcasting is present, saves the spell slots to the character and returns true.
-   * Otherwise, clears spell slots and returns false.
-   */
-  async characterIsSpellcaster(
-    className: string,
-    level?: number
-  ): Promise<boolean> {
-    if (!className) return false;
-    const lvl = level ?? this.character.level;
-    const url = `https://www.dnd5eapi.co/api/2014/classes/${className.toLowerCase()}/levels/${lvl}`;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) return false;
-      const data = await response.json();
-      if (data.spellcasting) {
-        this.getSpellSlotsForLevel(data.spellcasting);
-        return true;
-      } else {
-        this.character.spellSlots = [];
-        return false;
-      }
-    } catch (e) {
-      console.error(
-        $localize`Failed to check spellcasting for`,
-        className,
-        $localize`level`,
-        lvl,
-        e
-      );
-      this.character.spellSlots = [];
-      return false;
-    }
-  }
-
-  /**
-   * Saves the spell slot values from the spellcasting object to the character's spellSlots array.
-   * @param spellcasting The spellcasting object from the API response.
-   */
   getSpellSlotsForLevel(spellcasting: any): void {
     if (!spellcasting) {
-      this.character.spellSlots = [];
-      this.character.spellSlotsRemaining = [];
+      this.store.patchCharacter({ spellSlots: [], spellSlotsRemaining: [] });
       return;
     }
-    // Extract all keys that match 'spell_slots_level_X' and sort by level
     const slots: number[] = [];
     for (let i = 1; i <= 9; i++) {
       const key = `spell_slots_level_${i}`;
-      if (spellcasting.hasOwnProperty(key)) {
-        slots.push(spellcasting[key]);
-      } else {
-        slots.push(0);
-      }
+      slots.push(
+        Object.prototype.hasOwnProperty.call(spellcasting, key)
+          ? spellcasting[key]
+          : 0
+      );
     }
-    this.character.spellSlots = slots;
-    this.syncSpellSlotsRemaining();
+    // Initialize remaining to same values if absent
+    this.store.patchCharacter({
+      spellSlots: slots,
+      spellSlotsRemaining: slots.slice(),
+    });
   }
 
-  /**
-   * Ensures spellSlotsRemaining is always an array of the same length as spellSlots,
-   * with each value defaulting to the corresponding spellSlots value if undefined.
-   */
-  private syncSpellSlotsRemaining(): void {
-    if (!this.character.spellSlots) {
-      this.character.spellSlots = [];
-    }
-    if (!this.character.spellSlotsRemaining) {
-      this.character.spellSlotsRemaining = [];
-    }
-    this.character.spellSlotsRemaining = this.character.spellSlots.map(
-      (slot, i) => {
-        // If already has a value for this slot, keep it, else default to max slots
-        return this.character.spellSlotsRemaining &&
-          typeof this.character.spellSlotsRemaining[i] === 'number'
-          ? this.character.spellSlotsRemaining[i]
-          : slot;
-      }
-    );
-  }
-
-  saveNewCharacter(): void {
-    if (this.newCharacterName.trim()) {
-      // Create a new character with the entered name
-      this.character = defaultCharacter;
-      this.character.name = this.newCharacterName.trim();
-
-      this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
-      this.saveCharacterData();
-      this.loadSavedCharacterNames();
-      this.selectedCharacter = this.character.name;
-      this.isCreatingNewCharacter = false;
-      this.newCharacterName = '';
-    } else {
-      console.error($localize`Character name cannot be empty.`);
-    }
-  }
-
-  deleteCharacter(name: string | null): void {
-    if (name && name !== 'new') {
-      if (
-        confirm(
-          $localize`Are you sure you want to delete the character "${name}"?`
-        )
-      ) {
-        localStorage.removeItem(name);
-        this.loadSavedCharacterNames();
-        this.selectedCharacter = null;
-        this.character = defaultCharacter;
-        this.deathSavesComponent.syncDeathSavesFromCharacter(this.character);
-      }
-    }
-  }
-
-  shortRest() {
+  // --- Rest actions ---
+  shortRest(): void {
     if (this.character.class === 'Monk') {
-      this.character.kiPoints =
-        this.character.level > 1 ? this.character.level : 0;
+      this.store.patchCharacter({
+        kiPoints: this.character.level > 1 ? this.character.level : 0,
+      });
     } else if (this.character.class === 'Druid') {
-      this.character.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
+      this.store.patchCharacter({
+        wildShapeRemaining: this.character.level > 1 ? 2 : 0,
+      });
     }
   }
 
-  longRest() {
+  longRest(): void {
+    const patches: Partial<Character> = {};
     if (this.character.class === 'Monk') {
-      this.character.kiPoints =
-        this.character.level > 1 ? this.character.level : 0;
+      patches.kiPoints = this.character.level > 1 ? this.character.level : 0;
     } else if (this.character.class === 'Druid') {
-      this.character.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
+      patches.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
     } else if (this.character.class === 'Barbarian') {
-      this.character.rageRemaining = this.character.rage;
+      patches.rageRemaining = this.character.rage;
     }
-    this.character.spellSlotsRemaining = this.character.spellSlots.map(
-      (slot) => slot
-    );
-    this.character.hitDie =
-      this.character.hitDie < this.character.level
-        ? this.character.hitDie + Math.floor(this.character.level / 2) >
-          this.character.level
-          ? this.character.level
-          : this.character.hitDie +
-            Math.floor(
-              (this.character.level < 2 ? 2 : this.character.level) / 2
-            )
-        : this.character.hitDie;
+
+    patches.spellSlotsRemaining = this.character.spellSlots.map((s) => s);
+
+    // Hit die recovery logic (retain original rules)
+    const hitDie = this.character.hitDie;
+    const level = this.character.level;
+    let newHitDie = hitDie;
+    if (hitDie < level) {
+      const gain = Math.floor((level < 2 ? 2 : level) / 2);
+      newHitDie = hitDie + gain > level ? level : hitDie + gain;
+    }
+    patches.hitDie = newHitDie;
+
     if (this.fullHeal) {
-      this.character.currentHP = this.character.maxHP;
+      patches.currentHP = this.character.maxHP;
     }
-    this.character.rageRemaining = this.character.rage;
-    this.character.tempHP = 0;
+    patches.rageRemaining = this.character.rage;
+    patches.tempHP = 0;
+    patches.stable = false;
+
+    this.store.patchCharacter(patches);
+
     if (this.deathSavesComponent) {
       this.deathSavesComponent.deathSaveSuccess = [false, false, false];
       this.deathSavesComponent.deathSaveFailure = [false, false, false];
       this.deathSavesComponent.deathSaveMessage = null;
       this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
     }
-    this.character.stable = false;
-    this.character.spellSlotsRemaining = this.character.spellSlots.map(
-      (slot) => slot
-    );
-    this.updatePercentHP();
+
     this.updateChar();
   }
 
   saveHealToggle(): void {
-    localStorage.setItem('fullHeal', JSON.stringify(this.fullHeal));
+    this.store.setFullHeal(this.fullHeal);
   }
 
-  deathSaveMessage: string | null = null;
-
+  // --- Child component events ---
   onHpCharacterChange(): void {
-    // Character mutated in child (maxHP/tempHP edits); recompute and save.
-    this.updatePercentHP();
-    this.updateChar();
+    // Child mutated local object reference; simply persist
+    this.saveCharacterData();
   }
 
   onHurt(damage: number): void {
-    if (!Number.isFinite(damage) || damage <= 0) return;
-
-    let remaining = damage;
-
-    // Temp HP absorption
-    if (this.character.tempHP > 0) {
-      const absorbed = Math.min(this.character.tempHP, remaining);
-      this.character.tempHP -= absorbed;
-      remaining -= absorbed;
-    }
-
-    // Apply to current HP
-    this.character.currentHP = Math.max(
-      0,
-      this.character.currentHP - remaining
-    );
-
-    this.updatePercentHP();
+    this.store.applyDamage(damage);
     this.saveCharacterData();
   }
 
   onHeal(amount: number): void {
-    if (!Number.isFinite(amount) || amount <= 0) return;
-
-    this.character.currentHP = Math.min(
-      this.character.maxHP,
-      this.character.currentHP + amount
-    );
-
-    // Reset death saves (originally in heal())
+    this.store.heal(amount);
     if (this.deathSavesComponent) {
       this.deathSavesComponent.deathSaveSuccess = [false, false, false];
       this.deathSavesComponent.deathSaveFailure = [false, false, false];
-      this.character.stable = false;
       this.deathSavesComponent.deathSaveMessage = null;
       this.deathSavesComponent.syncDeathSavesToCharacter(this.character);
     }
-
-    this.updatePercentHP();
     this.saveCharacterData();
   }
 
   onMaxHpEditFinished(): void {
-    // Just ensure save & percent update
-    this.updatePercentHP();
     this.saveCharacterData();
   }
 
-  updatePercentHP(): void {
-    this.percentHP =
-      this.character.currentHP === 0
-        ? 0
-        : Math.round((this.character.currentHP / this.character.maxHP) * 100);
+  fetchClassesFromAPI(): void {
+    this.isLoadingClasses = true;
+    this.classesError = null;
+    this.api.getClasses().subscribe({
+      next: (data) => {
+        this.classes = Array.isArray(data.results)
+          ? data.results.map((c) => c.name)
+          : [];
+        if (!this.classes.length) {
+          this.classesError = $localize`:@@errApiUnexpected:API returned unexpected data.`;
+        }
+      },
+      error: () => {
+        this.classesError = $localize`:@@errClassesFetch:Failed to fetch classes from API.`;
+      },
+      complete: () => (this.isLoadingClasses = false),
+    });
   }
 }
