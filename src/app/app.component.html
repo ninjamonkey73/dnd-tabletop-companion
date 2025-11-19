@@ -13,6 +13,9 @@
     (fullHealChange)="onFullHealToggle($event)"
     (classSelected)="onHeaderClassSelected($event)"
     (levelChanged)="onHeaderLevelChanged($event)"
+    (backupDownload)="onBackupDownload()"
+    (backupRestore)="onBackupRestore($event)"
+    (cloudPull)="onCloudPull()"
   ></app-header>
 
   @if (isCreatingNewCharacter) {

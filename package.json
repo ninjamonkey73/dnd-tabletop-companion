@@ -13,7 +13,8 @@
     "open": "ng serve --open",
     "extract-i18n": "ng extract-i18n --output-path=src/locale",
     "localize": "ng build --localize",
-    "fix-baseref-en": "npx replace-in-file \"<base href=\\\"/en-US/\\\"\" \"<base href=\\\"/dnd-tabletop-companion/\\\"\" dist/dnd-tabletop-companion/browser/en-US/index.html"
+    "fix-baseref-en": "npx replace-in-file \"<base href=\\\"/en-US/\\\"\" \"<base href=\\\"/dnd-tabletop-companion/\\\"\" dist/dnd-tabletop-companion/browser/en-US/index.html",
+    "style:check": "powershell -ExecutionPolicy Bypass -File scripts/check-templates.ps1"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +27,7 @@
     "@angular/platform-browser": "^20.3.12",
     "@angular/platform-browser-dynamic": "^20.3.12",
     "@angular/router": "^20.3.12",
+    "firebase": "^12.6.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

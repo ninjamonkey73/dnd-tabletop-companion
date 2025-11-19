@@ -1,5 +1,4 @@
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
-
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
@@ -22,6 +21,8 @@ import { HpComponent } from './hp/hp.component';
 import { HeaderComponent } from './header/header.component';
 import { CharacterStore } from './character.store';
 import { DndApiService } from './dnd-api.service';
+import { BackupService } from './backup.service';
+import { CloudSyncService } from './cloud-sync.service';
 
 @Component({
   selector: 'app-root',
@@ -44,15 +45,20 @@ import { DndApiService } from './dnd-api.service';
     MoneyComponent,
     ResourcesComponent,
     HpComponent,
-    HeaderComponent
-],
+    HeaderComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
-  constructor(private store: CharacterStore, private api: DndApiService) {}
+  constructor(
+    private store: CharacterStore,
+    private api: DndApiService,
+    private backup: BackupService,
+    private cloud: CloudSyncService
+  ) {}
 
   // Derived from store; template keeps using `character`.
   get character(): Character {
@@ -446,5 +452,44 @@ export class AppComponent implements AfterViewInit, OnInit {
       },
       complete: () => (this.isLoadingClasses = false),
     });
+  }
+
+  // --- Backup / Cloud handlers ---
+  onBackupDownload() {
+    const blob = this.backup.createBackup();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dnd-companion-backup-${new Date()
+      .toISOString()
+      .slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  onBackupRestore(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = reader.result as string;
+      const data = this.backup.parseBackup(text);
+      if (!data) {
+        alert($localize`:@@errInvalidBackup:Invalid backup file.`);
+        return;
+      }
+      this.backup.restoreBackup(data);
+      this.loadSavedCharacterNames();
+      const last = data.settings.lastSelectedCharacter;
+      if (last && data.characters[last]) {
+        this.onCharacterSelection(last);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  async onCloudPull() {
+    await this.cloud.pullAllCharacters();
+    await this.cloud.pullSettings();
+    this.loadSavedCharacterNames();
+    this.loadLastSelectedCharacter();
   }
 }

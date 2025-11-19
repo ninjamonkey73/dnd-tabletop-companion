@@ -14,6 +14,95 @@
     </button>
   </div>
 
+  @if (!isAuthed) {
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="login()"
+        matTooltip="Login (Google)"
+        i18n-matTooltip
+        i18n
+        >
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+    </div>
+  }
+  @if (isAuthed) {
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="logout()"
+        matTooltip="Logout"
+        i18n-matTooltip
+        i18n
+        >
+      <mat-icon>logout</mat-icon>
+      {{ authedUserEmail }}
+    </button>
+    </div>
+  }
+
+  @if (isAuthed) {
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="backupDownload.emit()"
+        matTooltip="Download Local Backup"
+        i18n-matTooltip
+        i18n
+        >
+      <mat-icon>download</mat-icon>
+      Backup
+    </button>
+    </div>
+  }
+  @if (isAuthed) {
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="fileInput.click()"
+        matTooltip="Restore Local Backup"
+        i18n-matTooltip
+        i18n
+        >
+      <mat-icon>upload</mat-icon>
+      Restore
+    </button>
+      <input
+        #fileInput
+        type="file"
+        accept="application/json"
+        style="display: none"
+        (change)="onBackupFileSelected($event)"
+        />
+    </div>
+  }
+  @if (isAuthed) {
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="cloudPull.emit()"
+        matTooltip="Pull Cloud Data"
+        i18n-matTooltip
+        i18n
+        >
+      <mat-icon>sync</mat-icon>
+      Sync Down
+    </button>
+    </div>
+  }
+
   <div class="char-select-container">
     <mat-form-field appearance="fill" class="charName">
       <mat-label i18n>Character Name</mat-label>
@@ -110,5 +199,5 @@
         [attr.aria-label]="'character level for ' + character().name"
         i18n-aria-label
         />
-      </mat-form-field>
-    </div>
+    </mat-form-field>
+  </div>

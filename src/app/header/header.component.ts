@@ -4,7 +4,8 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  input
+  input,
+  inject,
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { Character } from '../character.model';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-header',
@@ -28,8 +30,8 @@ import { Character } from '../character.model';
     MatIconModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    MatInputModule
-],
+    MatInputModule,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
@@ -54,9 +56,13 @@ export class HeaderComponent implements OnChanges {
   @Output() fullHealChange = new EventEmitter<boolean>();
   @Output() classSelected = new EventEmitter<string>();
   @Output() levelChanged = new EventEmitter<number>();
+  @Output() backupDownload = new EventEmitter<void>();
+  @Output() backupRestore = new EventEmitter<File>();
+  @Output() cloudPull = new EventEmitter<void>();
 
   internalSelectedCharacter: string | null = null;
   internalFullHeal = false;
+  private auth = inject(AuthService);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedCharacter']) {
@@ -97,5 +103,28 @@ export class HeaderComponent implements OnChanges {
   onLevelChange() {
     // Emit current level (already bound into character.level)
     this.levelChanged.emit(this.character().level);
+  }
+
+  // Auth helpers
+  get isAuthed() {
+    return this.auth.isAuthed();
+  }
+  get authedUserEmail(): string | null {
+    return this.auth.user()?.email ?? null;
+  }
+  async login() {
+    await this.auth.loginWithGoogle();
+  }
+  async logout() {
+    await this.auth.logout();
+  }
+
+  onBackupFileSelected(evt: Event) {
+    const inputEl = evt.target as HTMLInputElement;
+    const file = inputEl.files && inputEl.files[0];
+    if (file) {
+      this.backupRestore.emit(file);
+      inputEl.value = '';
+    }
   }
 }
