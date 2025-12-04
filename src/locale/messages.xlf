@@ -20,35 +20,35 @@
         <source> Save Character </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">30,31</context>
+          <context context-type="linenumber">35,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6815678271368518310" datatype="html">
         <source> Money </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">54,55</context>
+          <context context-type="linenumber">59,60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3737431157827318883" datatype="html">
         <source> Trackable Resources </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">63,64</context>
+          <context context-type="linenumber">68,69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="736621534510182715" datatype="html">
         <source> Death Saves </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">117,118</context>
+          <context context-type="linenumber">122,123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7914631302172987707" datatype="html">
         <source> Hit Dice </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">126,127</context>
+          <context context-type="linenumber">131,132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hit-dice/hit-dice.component.html</context>
@@ -59,53 +59,53 @@
         <source>Character name cannot be empty.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">239</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirmDeleteCharacter" datatype="html">
         <source>Are you sure you want to delete the character &quot;<x id="PH" equiv-text="name"/>&quot;?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">276</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errCharacterNameRequired" datatype="html">
         <source>Character name is required to save data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">266</context>
+          <context context-type="linenumber">321</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errLevelTooLow" datatype="html">
         <source>Level cannot be less than 1.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">343</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errLevelTooHigh" datatype="html">
         <source>Level cannot be greater than 20.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errApiUnexpected" datatype="html">
         <source>API returned unexpected data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">442</context>
+          <context context-type="linenumber">497</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errClassesFetch" datatype="html">
         <source>Failed to fetch classes from API.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">446</context>
+          <context context-type="linenumber">501</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource1" datatype="html">
@@ -164,81 +164,109 @@
           <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3658146095944422705" datatype="html">
-        <source>Short Rest</source>
+      <trans-unit id="895648943186787291" datatype="html">
+        <source>Login (Google)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">8,9</context>
+          <context context-type="linenumber">9,10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="9005368536990990320" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>snooze<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> SR </source>
+      <trans-unit id="4456512943500851117" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>login<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Login </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">12,14</context>
+          <context context-type="linenumber">13,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3797778920049399855" datatype="html">
+        <source>Logout</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2343658451034113491" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>logout<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;no-wrap&quot;&gt;"/>Log Out<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.component.html</context>
+          <context context-type="linenumber">28,31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5441630761928744431" datatype="html">
         <source>Character Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7505371262892780592" datatype="html">
         <source>New Character</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3361286106724929890" datatype="html">
         <source>Delete Character</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8769472258245002696" datatype="html">
         <source>LR Heals</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6055039490694920561" datatype="html">
         <source>Long Rest</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">67,68</context>
+          <context context-type="linenumber">87,88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6554371275235882590" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;longRest&quot;&gt;"/>bedtime<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> LR </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">91,93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3658146095944422705" datatype="html">
+        <source>Short Rest</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.component.html</context>
+          <context context-type="linenumber">101,102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9005368536990990320" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>snooze<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> SR </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.component.html</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7094467423595125310" datatype="html">
         <source>Character Class</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9165025244885104715" datatype="html">
         <source>Character Level</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">131</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7798545087884439766" datatype="html">
         <source>Enter Level</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">97,98</context>
+          <context context-type="linenumber">138,139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3489929291848385266" datatype="html">
@@ -301,7 +329,7 @@
         <source>D</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">46,48</context>
+          <context context-type="linenumber">46,47</context>
         </context-group>
         <note priority="1" from="description">Letter for dead</note>
       </trans-unit>
@@ -317,7 +345,7 @@
         <source>I</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">54,57</context>
+          <context context-type="linenumber">54,56</context>
         </context-group>
         <note priority="1" from="description">Letter for incapacitated</note>
       </trans-unit>
@@ -332,42 +360,42 @@
         <source>Enter Temp HP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">83,84</context>
+          <context context-type="linenumber">84,85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8932315332459943454" datatype="html">
         <source>HP to +/-</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">100,101</context>
+          <context context-type="linenumber">101,102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="829273492393190848" datatype="html">
         <source>Apply Damage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">116,117</context>
+          <context context-type="linenumber">117,118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1808363832871376701" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>remove<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Hurt </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">122,124</context>
+          <context context-type="linenumber">123,125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1944993042316878408" datatype="html">
         <source>Heal Character</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">131,132</context>
+          <context context-type="linenumber">132,133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9098810728073904750" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>add<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Heal </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hp/hp.component.html</context>
-          <context context-type="linenumber">137,139</context>
+          <context context-type="linenumber">138,140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8963958948382802578" datatype="html">
@@ -472,7 +500,7 @@
         <source>You cannot subtract more than you have! (<x id="PH" equiv-text="current"/> available)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/money/money.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1335264826504206980" datatype="html">
