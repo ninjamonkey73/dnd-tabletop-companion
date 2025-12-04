@@ -3,14 +3,16 @@ import { CharacterStore } from './character.store';
 import { AuthService } from './auth.service';
 import {
   doc,
-  setDoc,
+  deleteDoc,
   getDoc,
   getDocs,
-  collection,
+  setDoc,
   serverTimestamp,
+  collection,
 } from 'firebase/firestore';
 import { db } from './firebase.init';
 import { Character } from './character.model';
+import { SyncStatusService } from './sync-status.service';
 
 interface SettingsDoc {
   lastSelectedCharacter?: string;
@@ -21,26 +23,42 @@ interface SettingsDoc {
 @Injectable({ providedIn: 'root' })
 export class CloudSyncService {
   private writing = false;
+  private hasPulledForUid = new Set<string>(); // prevent repeated pulls per session
 
-  constructor(private store: CharacterStore, private auth: AuthService) {
-    // Reactively push character changes
+  constructor(
+    private store: CharacterStore,
+    private auth: AuthService,
+    private syncStatus: SyncStatusService
+  ) {
+    // Push character changes
     effect(() => {
       const user = this.auth.user();
       const character = this.store.character();
-      if (!user || !character.name) return;
-      if (this.writing) return;
+      if (!user || !character.name || this.writing) return;
       this.pushCharacter(user.uid, character).catch(() => {});
     });
 
-    // Reactively push settings
+    // Push settings
     effect(() => {
       const user = this.auth.user();
       const fullHeal = this.store.fullHeal();
+      if (!user || this.writing) return;
+      this.pushSettings(user.uid, { fullHeal }).catch(() => {});
+    });
+
+    // Auto-pull once after login
+    effect(() => {
+      const user = this.auth.user();
       if (!user) return;
-      if (this.writing) return;
-      this.pushSettings(user.uid, {
-        fullHeal,
-      }).catch(() => {});
+      const uid = user.uid;
+      if (this.hasPulledForUid.has(uid)) return;
+
+      Promise.all([this.pullSettings(), this.pullAllCharacters()])
+        .then(() => {
+          this.hasPulledForUid.add(uid);
+          this.syncStatus.emitPulled();
+        })
+        .catch(() => {});
     });
   }
 
@@ -106,5 +124,15 @@ export class CloudSyncService {
       },
       { merge: true }
     );
+  }
+
+  async deleteCharacter(name: string): Promise<void> {
+    const user = this.auth.user();
+    if (!user || !name) return;
+    await deleteDoc(doc(db, 'users', user.uid, 'characters', name));
+    if (localStorage.getItem('lastSelectedCharacter') === name) {
+      localStorage.removeItem('lastSelectedCharacter');
+      await this.pushSettings(user.uid, { lastSelectedCharacter: undefined });
+    }
   }
 }

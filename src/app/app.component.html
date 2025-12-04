@@ -13,9 +13,6 @@
     (fullHealChange)="onFullHealToggle($event)"
     (classSelected)="onHeaderClassSelected($event)"
     (levelChanged)="onHeaderLevelChanged($event)"
-    (backupDownload)="onBackupDownload()"
-    (backupRestore)="onBackupRestore($event)"
-    (cloudPull)="onCloudPull()"
   ></app-header>
 
   @if (isCreatingNewCharacter) {
@@ -29,7 +26,12 @@
         i18n-placeholder
       />
     </mat-form-field>
-    <button mat-raised-button color="primary" (click)="saveNewCharacter()" i18n>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="createNewCharacter()"
+      i18n
+    >
       Save Character
     </button>
   </div>

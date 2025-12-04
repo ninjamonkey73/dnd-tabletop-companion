@@ -35,45 +35,6 @@ body {
   gap: 8px;
 }
 
-.longRest {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.long-rest-toggle {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.delete-icon {
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.rest-button {
-  background: linear-gradient(to bottom, navy, lightblue);
-  font-size: 1.5rem;
-  border-radius: 10px;
-  border: 1px solid black;
-  color: white;
-  min-width: 90px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.charName {
-  width: 180px;
-}
-
 .class-select {
   flex: 0 0 auto;
   display: inline-flex;

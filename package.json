@@ -14,7 +14,7 @@
     "extract-i18n": "ng extract-i18n --output-path=src/locale",
     "localize": "ng build --localize",
     "fix-baseref-en": "npx replace-in-file \"<base href=\\\"/en-US/\\\"\" \"<base href=\\\"/dnd-tabletop-companion/\\\"\" dist/dnd-tabletop-companion/browser/en-US/index.html",
-    "style:check": "powershell -ExecutionPolicy Bypass -File scripts/check-templates.ps1"
+    "style:check": "powershell -ExecutionPolicy Bypass -File [check-templates.ps1](http://_vscodecontentref_/12)"
   },
   "private": true,
   "dependencies": {

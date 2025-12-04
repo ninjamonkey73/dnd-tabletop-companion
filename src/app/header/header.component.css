@@ -40,10 +40,20 @@
   border: 1px solid black;
   color: white;
   min-width: 90px;
-  padding: 0 20px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+}
+
+.rest-button .mat-icon {
+  margin-right: 0;
+}
+
+.rest-buttons {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 .charName {
@@ -53,4 +63,7 @@
 .class-level-row {
   gap: 16px;
   justify-content: center;
+}
+.no-wrap {
+  white-space: nowrap;
 }

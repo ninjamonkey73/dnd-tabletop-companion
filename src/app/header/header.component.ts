@@ -56,9 +56,6 @@ export class HeaderComponent implements OnChanges {
   @Output() fullHealChange = new EventEmitter<boolean>();
   @Output() classSelected = new EventEmitter<string>();
   @Output() levelChanged = new EventEmitter<number>();
-  @Output() backupDownload = new EventEmitter<void>();
-  @Output() backupRestore = new EventEmitter<File>();
-  @Output() cloudPull = new EventEmitter<void>();
 
   internalSelectedCharacter: string | null = null;
   internalFullHeal = false;
@@ -117,14 +114,5 @@ export class HeaderComponent implements OnChanges {
   }
   async logout() {
     await this.auth.logout();
-  }
-
-  onBackupFileSelected(evt: Event) {
-    const inputEl = evt.target as HTMLInputElement;
-    const file = inputEl.files && inputEl.files[0];
-    if (file) {
-      this.backupRestore.emit(file);
-      inputEl.value = '';
-    }
   }
 }

@@ -21,8 +21,9 @@ import { HpComponent } from './hp/hp.component';
 import { HeaderComponent } from './header/header.component';
 import { CharacterStore } from './character.store';
 import { DndApiService } from './dnd-api.service';
-import { BackupService } from './backup.service';
 import { CloudSyncService } from './cloud-sync.service';
+import { SyncStatusService } from './sync-status.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -53,12 +54,19 @@ import { CloudSyncService } from './cloud-sync.service';
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
+
   constructor(
     private store: CharacterStore,
     private api: DndApiService,
-    private backup: BackupService,
-    private cloud: CloudSyncService
-  ) {}
+    private cloud: CloudSyncService,
+    private syncStatus: SyncStatusService,
+    private authService: AuthService
+  ) {
+    this.syncStatus.pulled$.subscribe(() => {
+      this.loadSavedCharacterNames();
+      this.loadLastSelectedCharacter();
+    });
+  }
 
   // Derived from store; template keeps using `character`.
   get character(): Character {
@@ -90,6 +98,18 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.loadSavedCharacterNames();
     this.loadLastSelectedCharacter();
     this.fetchClassesFromAPI();
+
+    // If already authed at page access, pull immediately
+    // (You can inject AuthService to check; or rely on CloudSyncService’s login effect)
+    // Assuming you injected AuthService as `authService`:
+    if (this.authService.isAuthed()) {
+      this.cloud.pullSettings().then(() =>
+        this.cloud.pullAllCharacters().then(() => {
+          this.loadSavedCharacterNames();
+          this.loadLastSelectedCharacter();
+        })
+      );
+    }
   }
 
   ngAfterViewInit(): void {
@@ -124,16 +144,40 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.updateChar();
   }
 
+  private isCharacterEntry(value: unknown): boolean {
+    if (!value || typeof value !== 'object') return false;
+    const c = value as any;
+    return (
+      typeof c.name === 'string' &&
+      typeof c.currentHP === 'number' &&
+      typeof c.maxHP === 'number' &&
+      typeof c.level === 'number' &&
+      Array.isArray(c.deathSaveSuccess) &&
+      Array.isArray(c.deathSaveFailure)
+    );
+  }
+
   loadSavedCharacterNames(): void {
-    this.savedCharacterNames = Object.keys(localStorage).filter((key) => {
-      const character = localStorage.getItem(key);
-      return (
-        key !== 'lastSelectedCharacter' &&
-        key !== 'fullHeal' &&
-        character !== null &&
-        character.trim() !== ''
-      );
-    });
+    const exclude = new Set(['lastSelectedCharacter', 'fullHeal']);
+    const names: string[] = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || exclude.has(key)) continue;
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+
+      try {
+        const parsed = JSON.parse(raw);
+        if (this.isCharacterEntry(parsed) && key.trim() !== '') {
+          names.push(key);
+        }
+      } catch {
+        // ignore non-JSON entries
+      }
+    }
+
+    this.savedCharacterNames = names.sort();
   }
 
   onCharacterSelection(name: string): void {
@@ -226,42 +270,48 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.newCharacterName = '';
   }
 
-  deleteCharacter(name: string | null): void {
+  async deleteCharacter(name: string | null): Promise<void> {
     if (!name || name === 'new') return;
-    if (
-      confirm(
-        $localize`:@@confirmDeleteCharacter:Are you sure you want to delete the character "${name}"?`
-      )
-    ) {
-      localStorage.removeItem(name);
-      this.loadSavedCharacterNames();
-      this.selectedCharacter = null;
-      // Reset store to blank character (keep resources localized)
-      this.store.setCharacter({
-        ...this.character,
-        name: '',
-        currentHP: 0,
-        maxHP: 0,
-        kiPoints: 0,
-        class: '',
-        cp: 0,
-        sp: 0,
-        gp: 0,
-        pp: 0,
-        level: 1,
-        tempHP: 0,
-        deathSaveSuccess: [false, false, false],
-        deathSaveFailure: [false, false, false],
-        stable: false,
-        spellSlots: [],
-        spellSlotsRemaining: [],
-        hitDie: 0,
-        rage: 0,
-        rageRemaining: 0,
-        wildShapeRemaining: 0,
-      });
-      this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
+    const ok = confirm(
+      $localize`:@@confirmDeleteCharacter:Are you sure you want to delete the character "${name}"?`
+    );
+    if (!ok) return;
+
+    try {
+      await this.cloud.deleteCharacter(name);
+    } catch {}
+
+    localStorage.removeItem(name);
+    if (localStorage.getItem('lastSelectedCharacter') === name) {
+      localStorage.removeItem('lastSelectedCharacter');
     }
+    this.loadSavedCharacterNames();
+    this.selectedCharacter = null;
+
+    this.store.setCharacter({
+      ...this.character,
+      name: '',
+      currentHP: 0,
+      maxHP: 0,
+      kiPoints: 0,
+      class: '',
+      cp: 0,
+      sp: 0,
+      gp: 0,
+      pp: 0,
+      level: 1,
+      tempHP: 0,
+      deathSaveSuccess: [false, false, false],
+      deathSaveFailure: [false, false, false],
+      stable: false,
+      spellSlots: [],
+      spellSlotsRemaining: [],
+      hitDie: 0,
+      rage: 0,
+      rageRemaining: 0,
+      wildShapeRemaining: 0,
+    });
+    this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
   }
 
   // --- Persistence ---
@@ -452,44 +502,5 @@ export class AppComponent implements AfterViewInit, OnInit {
       },
       complete: () => (this.isLoadingClasses = false),
     });
-  }
-
-  // --- Backup / Cloud handlers ---
-  onBackupDownload() {
-    const blob = this.backup.createBackup();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `dnd-companion-backup-${new Date()
-      .toISOString()
-      .slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  onBackupRestore(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result as string;
-      const data = this.backup.parseBackup(text);
-      if (!data) {
-        alert($localize`:@@errInvalidBackup:Invalid backup file.`);
-        return;
-      }
-      this.backup.restoreBackup(data);
-      this.loadSavedCharacterNames();
-      const last = data.settings.lastSelectedCharacter;
-      if (last && data.characters[last]) {
-        this.onCharacterSelection(last);
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  async onCloudPull() {
-    await this.cloud.pullAllCharacters();
-    await this.cloud.pullSettings();
-    this.loadSavedCharacterNames();
-    this.loadLastSelectedCharacter();
   }
 }

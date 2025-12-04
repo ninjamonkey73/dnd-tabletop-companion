@@ -1,20 +1,34 @@
-import { initializeApp } from 'firebase/app';
-import {
-  initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager,
-} from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { firebaseConfig } from './firebase.config';
+let firebaseReadyPromise: Promise<void> | null = null;
 
-const app = initializeApp(firebaseConfig);
+export let auth: import('firebase/auth').Auth;
+export let googleProvider: import('firebase/auth').GoogleAuthProvider;
+export let db: import('firebase/firestore').Firestore;
 
-// Firestore with persistent local cache (new API replacing enableIndexedDbPersistence)
-export const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({
-    tabManager: persistentMultipleTabManager(),
-  }),
-});
+export function initFirebase(): Promise<void> {
+  if (firebaseReadyPromise) return firebaseReadyPromise;
 
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+  firebaseReadyPromise = (async () => {
+    const res = await fetch('/firebase-config.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to load Firebase config');
+    const firebaseConfig = await res.json();
+
+    const { initializeApp } = await import('firebase/app');
+    const { getAuth, GoogleAuthProvider } = await import('firebase/auth');
+    const {
+      initializeFirestore,
+      persistentLocalCache,
+      persistentMultipleTabManager,
+    } = await import('firebase/firestore');
+
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+    db = initializeFirestore(app, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager(),
+      }),
+    });
+  })();
+
+  return firebaseReadyPromise;
+}
