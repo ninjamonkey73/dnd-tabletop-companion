@@ -11,11 +11,11 @@ import {
   collection,
 } from 'firebase/firestore';
 import { db } from './firebase.init';
-import { Character } from './character.model';
+import { Character, defaultCharacter } from './character.model';
 import { SyncStatusService } from './sync-status.service';
 
 interface SettingsDoc {
-  lastSelectedCharacter?: string;
+  lastSelectedCharacter?: string | null;
   fullHeal?: boolean;
   updatedAt?: any;
 }
@@ -58,16 +58,27 @@ export class CloudSyncService {
       if (this.hasPulledForUid.has(uid)) return;
 
       this.pullSettings()
-        .then(() => {
+        .then(async (settings) => {
+          const last = settings?.lastSelectedCharacter;
+          if (last) {
+            const char = await this.getCharacter(last);
+            if (char) {
+              this.store.setCharacter(char);
+            }
+          }
           this.hasPulledForUid.add(uid);
           this.syncStatus.emitPulled();
           this.syncStatus.emitStatus({ type: 'pull', status: 'ok' });
         })
         .catch((err) => {
+          const isPermError =
+            typeof err?.code === 'string' && err.code === 'permission-denied';
           this.syncStatus.emitStatus({
             type: 'pull',
             status: 'error',
-            message: 'Failed to pull settings',
+            message: isPermError
+              ? 'Settings are not accessible. Check sign-in and Firestore rules.'
+              : 'Failed to pull settings',
             error: err,
           });
         });
@@ -95,7 +106,8 @@ export class CloudSyncService {
     const ref = doc(db, 'users', user.uid, 'characters', name);
     const snap = await getDoc(ref);
     if (!snap.exists()) return null;
-    return snap.data() as Character;
+    const data = snap.data() as Partial<Character>;
+    return { ...defaultCharacter, ...data } as Character;
   }
 
   async pullSettings(): Promise<SettingsDoc | null> {
@@ -140,7 +152,7 @@ export class CloudSyncService {
     const user = this.auth.user();
     if (!user) return;
     await this.pushSettings(user.uid, {
-      lastSelectedCharacter: name ?? undefined,
+      lastSelectedCharacter: name ?? null,
     });
   }
 
@@ -151,7 +163,7 @@ export class CloudSyncService {
     // If the deleted was last-selected, clear it remotely
     const settings = await this.pullSettings();
     if (settings?.lastSelectedCharacter === name) {
-      await this.pushSettings(user.uid, { lastSelectedCharacter: undefined });
+      await this.pushSettings(user.uid, { lastSelectedCharacter: null });
     }
   }
 
@@ -164,9 +176,39 @@ export class CloudSyncService {
   }
 
   private async performPushCharacter(uid: string, character: Character) {
+    const clean: Character = {
+      ...character,
+      spellSlots:
+        Array.isArray(character.spellSlots) ||
+        character.spellSlots === undefined
+          ? character.spellSlots
+          : [],
+      spellSlotsRemaining:
+        Array.isArray(character.spellSlotsRemaining) ||
+        character.spellSlotsRemaining === undefined
+          ? character.spellSlotsRemaining
+          : [],
+      level: Math.max(1, Math.min(20, Number(character.level) || 1)),
+      currentHP: Math.max(0, Number(character.currentHP) || 0),
+      maxHP: Math.max(0, Number(character.maxHP) || 0),
+      tempHP: Math.max(0, Number(character.tempHP) || 0),
+      cp: Math.max(0, Number(character.cp) || 0),
+      sp: Math.max(0, Number(character.sp) || 0),
+      gp: Math.max(0, Number(character.gp) || 0),
+      pp: Math.max(0, Number(character.pp) || 0),
+      class: typeof character.class === 'string' ? character.class : '',
+      resources: Array.isArray(character.resources)
+        ? character.resources.map((r: any) => ({
+            id: Number(r?.id) || 0,
+            name: typeof r?.name === 'string' ? r.name : '',
+            value: Math.max(0, Number(r?.value) || 0),
+          }))
+        : [],
+    };
+
     try {
       this.writing = true;
-      await this.pushCharacter(uid, character);
+      await this.pushCharacter(uid, clean);
       this.pushCharRetry = 0;
       this.syncStatus.emitStatus({ type: 'push', status: 'ok' });
     } catch (err) {

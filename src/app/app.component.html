@@ -42,6 +42,7 @@
     [isCreatingNewCharacter]="isCreatingNewCharacter"
     [percentHP]="percentHP"
     [deathSaveMessage]="deathSaveMessage"
+    [isCharacterLoaded]="isCharacterLoaded"
     (characterChange)="onHpCharacterChange()"
     (hurt)="onHurt($event)"
     (heal)="onHeal($event)"
@@ -74,13 +75,13 @@
     <app-money
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="updateChar()"
+      (characterChange)="onMoneyChange()"
     ></app-money>
     } @if (!showingMoney) {
     <app-resources
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="updateChar()"
+      (characterChange)="onResourcesChange()"
     ></app-resources>
     }
   </div>
@@ -89,25 +90,26 @@
   <app-ki-points
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="updateChar()"
+    (characterChange)="onKiPointsChange()"
   ></app-ki-points>
   } @if (character.class === 'Druid') {
   <app-wild-shape
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="updateChar()"
+    (characterChange)="onWildShapeChange()"
   ></app-wild-shape>
   } @if (character.spellSlots.length > 0) {
   <app-spell-slots
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="updateChar()"
+    (characterChange)="onSpellSlotsChange()"
+    (remainingChanged)="onSpellSlotRemainingChanged($event)"
   ></app-spell-slots>
   } @if (character.class === 'Barbarian') {
   <app-rage
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="updateChar()"
+    (characterChange)="onRageChange()"
   ></app-rage>
   }
 
@@ -137,13 +139,13 @@
     <app-death-saves
       [character]="character"
       (deathSaveMessageChange)="deathSaveMessage = $event"
-      (characterChange)="updateChar()"
+      (characterChange)="onDeathSavesChange()"
     ></app-death-saves>
     } @if (!showingDeathSaves) {
     <app-hit-dice
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="updateChar()"
+      (characterChange)="onHitDieChange()"
     ></app-hit-dice>
     }
   </div>

@@ -1,48 +1,51 @@
 <mat-card-content>
   <div class="resources">
-    @for (record of character().resources; track record.id) {
-    <mat-form-field subscriptSizing="dynamic" class="resource-name">
-      <div class="resource-name">
+    @for (record of character().resources; track $index) {
+    <div class="resource-row">
+      <mat-form-field subscriptSizing="dynamic" class="resource-name">
+        <div class="resource-name">
+          <input
+            matInput
+            #nameInput
+            type="text"
+            [(ngModel)]="record.name"
+            placeholder="Resource Name"
+            [readonly]="editingResourceNameId !== $index"
+            [disabled]="isCreatingNewCharacter()"
+            (blur)="onNameBlur()"
+            i18n-placeholder
+            [attr.aria-label]="
+              'resource name ' + record.id + ' for ' + character().name
+            "
+            i18n-aria-label
+          />
+          <button
+            mat-icon-button
+            type="button"
+            (click)="startEditingResourceName($index)"
+            [disabled]="isCreatingNewCharacter()"
+            [attr.aria-label]="'edit resource name for ' + record.name"
+            i18n-aria-label
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </mat-form-field>
+
+      <mat-form-field>
         <input
           matInput
-          type="text"
-          [(ngModel)]="record.name"
-          placeholder="Resource Name"
-          [readonly]="editingResourceNameId !== record.id"
+          type="number"
+          min="0"
+          [(ngModel)]="record.value"
+          class="classData-input"
+          (change)="onValueChange()"
           [disabled]="isCreatingNewCharacter()"
-          (blur)="onNameBlur()"
-          i18n-placeholder
-          [attr.aria-label]="
-            'resource name ' + record.id + ' for ' + character().name
-          "
+          [attr.aria-label]="'resource value for ' + record.name"
           i18n-aria-label
         />
-        <button
-          mat-icon-button
-          type="button"
-          (click)="startEditingResourceName(record.id)"
-          [disabled]="isCreatingNewCharacter()"
-          [attr.aria-label]="'edit resource name for ' + record.name"
-          i18n-aria-label
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-    </mat-form-field>
-    } @for (record of character().resources; track record.id) {
-    <mat-form-field>
-      <input
-        matInput
-        type="number"
-        min="0"
-        [(ngModel)]="record.value"
-        class="classData-input"
-        (change)="onValueChange()"
-        [disabled]="isCreatingNewCharacter()"
-        [attr.aria-label]="'resource value for ' + record.name"
-        i18n-aria-label
-      />
-    </mat-form-field>
+      </mat-form-field>
+    </div>
     }
   </div>
 </mat-card-content>

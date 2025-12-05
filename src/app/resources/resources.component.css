@@ -15,16 +15,47 @@
   width: 100%;
   max-width: 160px;
 }
+.resource-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* remove space between name and value */
+  width: 100%;
+}
+
+.resource-row mat-form-field {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* ensure Material doesn't add extra spacing */
+}
 .resource-name {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch; /* was center */
+  justify-content: flex-start; /* was center */
 }
 mat-form-field.resource-name {
-  height: 50px;
+  height: auto; /* let content define height */
 }
+
 @media (max-width: 700px) {
   .resources {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+:host ::ng-deep mat-form-field.resource-name .mat-mdc-form-field-infix {
+  padding-top: 2px !important;
+  padding-bottom: 0 !important;
+  min-height: 0 !important;
+}
+:host
+  ::ng-deep
+  mat-form-field.resource-name
+  .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+  height: 0 !important;
+}
+
+:host ::ng-deep mat-form-field.resource-name .mat-mdc-input-element {
+  line-height: 1.2 !important;
+  padding-left: 12px !important;
 }

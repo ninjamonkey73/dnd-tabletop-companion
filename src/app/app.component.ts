@@ -54,6 +54,8 @@ import { AuthService } from './auth.service';
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild(DeathSavesComponent)
   deathSavesComponent!: DeathSavesComponent;
+  private pendingSave = false;
+  private pendingSaveClearTimer: any = null;
 
   constructor(
     private store: CharacterStore,
@@ -62,13 +64,32 @@ export class AppComponent implements AfterViewInit, OnInit {
     private syncStatus: SyncStatusService,
     private authService: AuthService
   ) {
+    // Warn/block refresh if a save is pending
+    window.addEventListener('beforeunload', (e) => {
+      if (this.pendingSave) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
     this.syncStatus.pulled$.subscribe(() => {
       this.loadSavedCharacterNames();
       this.loadLastSelectedCharacter();
     });
     this.syncStatus.status$.subscribe((s) => {
-      if (s.status === 'error') {
-        // Replace this with a toast/snackbar in UI later
+      // Clear pending save deterministically on push completion
+      if (s.type === 'push') {
+        if (s.status === 'ok' || s.status === 'error') {
+          this.pendingSave = false;
+          if (this.pendingSaveClearTimer) {
+            clearTimeout(this.pendingSaveClearTimer);
+            this.pendingSaveClearTimer = null;
+          }
+        }
+        if (s.status === 'error') {
+          console.error(`[Sync ${s.type}] ${s.message ?? 'error'}`, s.error);
+        }
+      } else if (s.status === 'error') {
+        // Log other sync errors
         console.error(`[Sync ${s.type}] ${s.message ?? 'error'}`, s.error);
       }
     });
@@ -87,6 +108,12 @@ export class AppComponent implements AfterViewInit, OnInit {
     return this.store.fullHeal();
   }
 
+  // Indicates a character has been loaded into the store
+  get isCharacterLoaded(): boolean {
+    const c = this.store.character();
+    return !!c && typeof c.name === 'string' && c.name.trim().length > 0;
+  }
+
   showingMoney = true;
   showingDeathSaves = true;
   classHasBeenSet = false;
@@ -103,13 +130,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.loadSavedCharacterNames();
     this.fetchClassesFromAPI();
-
-    if (this.authService.isAuthed()) {
-      this.cloud.pullSettings().then(async () => {
-        await this.loadSavedCharacterNames();
-        await this.loadLastSelectedCharacter();
-      });
-    }
+    // Settings and lastSelectedCharacter are already loaded by APP_INITIALIZER when authed.
   }
 
   ngAfterViewInit(): void {
@@ -176,10 +197,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     if (!Array.isArray(loaded.spellSlotsRemaining))
       loaded.spellSlotsRemaining = [];
     this.store.setCharacter(loaded);
+    this.refreshDeathSaveMessageFromCharacter();
     this.selectedCharacter = name;
-    await this.cloud.setLastSelectedCharacter(name);
-    this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     this.classHasBeenSet = !!loaded.class;
+    this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
   }
 
   async loadLastSelectedCharacter(): Promise<void> {
@@ -201,6 +222,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       loaded.spellSlotsRemaining = [];
 
     this.store.setCharacter(loaded);
+    this.refreshDeathSaveMessageFromCharacter();
     this.selectedCharacter = name;
     this.classHasBeenSet = !!loaded.class;
   }
@@ -212,8 +234,18 @@ export class AppComponent implements AfterViewInit, OnInit {
       );
       return;
     }
+    // Mark save as pending to prevent accidental refresh during write
+    this.pendingSave = true;
     this.deathSavesComponent?.syncDeathSavesToCharacter(this.character);
     // CloudSyncService effect will push changes; no local storage or names refresh here
+    // Optimistically ensure the new name appears in the dropdown without reload
+    if (this.character.name) {
+      const names = new Set(this.savedCharacterNames);
+      names.add(this.character.name);
+      this.savedCharacterNames = Array.from(names).sort();
+      this.selectedCharacter = this.character.name;
+    }
+    // No timer-based clear; SyncStatusService will clear pendingSave on push completion
   }
 
   async createNewCharacter(): Promise<void> {
@@ -227,9 +259,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.saveNewCharacter();
     this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     // Persist selection and refresh names
-    await this.cloud.setLastSelectedCharacter(this.character.name);
-    await this.loadSavedCharacterNames();
-    this.selectedCharacter = this.character.name;
+    if (this.character.name) {
+      await this.cloud.setLastSelectedCharacter(this.character.name);
+      await this.loadSavedCharacterNames();
+      this.selectedCharacter = this.character.name;
+    }
     this.isCreatingNewCharacter = false;
     this.newCharacterName = '';
   }
@@ -269,6 +303,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.selectedCharacter = fresh.name;
     this.isCreatingNewCharacter = false;
     this.newCharacterName = '';
+    // Persist immediately so the cloud and UI reflect the new character
+    this.updateChar();
   }
 
   async deleteCharacter(name: string | null): Promise<void> {
@@ -349,8 +385,9 @@ export class AppComponent implements AfterViewInit, OnInit {
     // Hit dice equals level
     this.store.patchCharacter({ hitDie: level });
 
-    // Spellcasting check
-    this.api.isSpellcaster(this.character.class, level).subscribe(() => {
+    // Populate spell slots for spellcasting classes at this level
+    this.api.getClassLevel(this.character.class, level).subscribe((data) => {
+      this.getSpellSlotsForLevel(data.spellcasting);
       this.lastCharacterSelected = this.character.name;
       this.saveCharacterData();
       if (errorMsg) alert(errorMsg);
@@ -438,7 +475,10 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   // --- Child component events ---
   onHpCharacterChange(): void {
-    // Child mutated local object reference; simply persist
+    // The HpComponent mutated its local character reference; patch the store explicitly.
+    this.store.patchCharacter({
+      tempHP: this.character.tempHP,
+    });
     this.saveCharacterData();
   }
 
@@ -459,6 +499,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   onMaxHpEditFinished(): void {
+    // Persist maxHP edits as well.
+    this.store.patchCharacter({
+      maxHP: this.character.maxHP,
+    });
     this.saveCharacterData();
   }
 
@@ -488,10 +532,105 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     // Keep death saves UI in sync with the store
     this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
+    this.refreshDeathSaveMessageFromCharacter();
 
     // Optionally persist selection remotely (non-blocking)
     if (this.character.name) {
       this.cloud.setLastSelectedCharacter(this.character.name);
+    }
+  }
+
+  onHitDieChange(): void {
+    this.store.patchCharacter({
+      hitDie: this.character.hitDie,
+    });
+    this.saveCharacterData();
+  }
+
+  onDeathSavesChange(): void {
+    this.store.patchCharacter({
+      deathSaveSuccess: this.character.deathSaveSuccess,
+      deathSaveFailure: this.character.deathSaveFailure,
+      stable: this.character.stable,
+    });
+    this.saveCharacterData();
+    this.refreshDeathSaveMessageFromCharacter();
+  }
+
+  onMoneyChange(): void {
+    this.store.patchCharacter({
+      cp: this.character.cp,
+      sp: this.character.sp,
+      gp: this.character.gp,
+      pp: this.character.pp,
+    });
+    this.saveCharacterData();
+  }
+
+  onResourcesChange(): void {
+    this.store.patchCharacter({
+      resources: this.character.resources,
+    });
+    this.saveCharacterData();
+  }
+
+  onKiPointsChange(): void {
+    this.store.patchCharacter({ kiPoints: this.character.kiPoints });
+    this.saveCharacterData();
+  }
+
+  onRageChange(): void {
+    // Persist rageRemaining from child RageComponent
+    this.store.patchCharacter({ rageRemaining: this.character.rageRemaining });
+    this.saveCharacterData();
+  }
+
+  onSpellSlotsChange(): void {
+    // Mark save as pending immediately to guard against quick refresh
+    this.pendingSave = true;
+    this.store.patchCharacter({
+      spellSlotsRemaining: this.character.spellSlotsRemaining,
+    });
+    this.saveCharacterData();
+  }
+
+  onSpellSlotRemainingChanged(ev: { index: number; value: number }): void {
+    // Update only the targeted index to reduce churn
+    const next = Array.isArray(this.character.spellSlotsRemaining)
+      ? [...this.character.spellSlotsRemaining]
+      : [];
+    // Ensure array is long enough
+    if (ev.index >= 0) {
+      while (next.length <= ev.index) next.push(0);
+      // Clamp to the max available slots at that level, if present
+      const max =
+        Array.isArray(this.character.spellSlots) &&
+        this.character.spellSlots[ev.index] !== undefined
+          ? this.character.spellSlots[ev.index]
+          : Number.MAX_SAFE_INTEGER;
+      const val =
+        ev.value < 0 ? 0 : ev.value > max ? max : Math.floor(ev.value);
+      next[ev.index] = val;
+    }
+    this.pendingSave = true;
+    this.store.patchCharacter({ spellSlotsRemaining: next });
+    this.saveCharacterData();
+  }
+
+  onWildShapeChange(): void {
+    // Persist wildShapeRemaining from WildShapeComponent
+    this.store.patchCharacter({
+      wildShapeRemaining: this.character.wildShapeRemaining,
+    });
+    this.saveCharacterData();
+  }
+
+  private refreshDeathSaveMessageFromCharacter(): void {
+    const failures = this.character.deathSaveFailure || [false, false, false];
+    if (failures.every((v) => v)) {
+      this.deathSaveMessage = $localize`:@@msgYouAreDead:You are dead!`;
+    } else {
+      this.deathSaveMessage = null;
     }
   }
 }

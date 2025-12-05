@@ -1,4 +1,10 @@
-import { Component, output, input } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -12,12 +18,22 @@ import { MatInput } from '@angular/material/input';
   templateUrl: './rage.component.html',
   styleUrls: ['./rage.component.css'],
 })
-export class RageComponent {
+export class RageComponent implements OnChanges {
   readonly character = input.required<Character>();
   readonly isCreatingNewCharacter = input(false);
   readonly characterChange = output<Character>();
 
-  onChange() {
-    this.characterChange.emit(this.character());
+  rageRemaining = 0;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['character']?.currentValue) {
+      this.rageRemaining = this.character().rageRemaining || 0;
+    }
+  }
+
+  onRageChange() {
+    const c = this.character();
+    c.rageRemaining = this.rageRemaining;
+    this.characterChange.emit(c);
   }
 }

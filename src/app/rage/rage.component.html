@@ -9,9 +9,9 @@
       type="number"
       min="0"
       [max]="character().rage"
-      [(ngModel)]="character().rageRemaining"
+      [(ngModel)]="rageRemaining"
       class="classData-input"
-      (ngModelChange)="onChange()"
+      (ngModelChange)="onRageChange()"
       [disabled]="isCreatingNewCharacter()"
       [attr.aria-label]="'rages for ' + character().name"
       i18n-aria-label

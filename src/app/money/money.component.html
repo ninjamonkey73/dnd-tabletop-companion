@@ -16,27 +16,27 @@
 
     <div class="money-display-stack">
       <!-- Repeated pattern for each coin type -->
-      <div class="money-display-col">
-        <mat-form-field appearance="fill" class="coins">
-          <mat-label i18n>Copper</mat-label>
-          <input
-            matInput
-            [value]="character().cp"
-            class="cp-input"
-            readonly
-            tabindex="-1"
-            [disabled]="isCreatingNewCharacter()"
-          />
-        </mat-form-field>
+      @for (coin of coins; track coin.key) {
+      <div class="coin-box" [class.disabled]="isCreatingNewCharacter()">
+        <div class="coin-label">{{ coin.label }}</div>
+        <div
+          class="coin-value"
+          [attr.aria-label]="coin.aria + ' for ' + character().name"
+          i18n-aria-label
+        >
+          {{ getCoinValue(coin.key) }}
+        </div>
         <div class="money-buttons">
           <button
             mat-mini-button
             class="sub"
-            (click)="adjustMoney('cp', -moneyDelta)"
+            (click)="adjustMoney(coin.key, -moneyDelta)"
             [disabled]="isCreatingNewCharacter()"
-            matTooltip="Subtract Copper"
+            matTooltip="Subtract"
             i18n-matTooltip
-            [attr.aria-label]="'subtract copper from ' + character().name"
+            [attr.aria-label]="
+              'subtract ' + coin.aria + ' from ' + character().name
+            "
             i18n-aria-label
           >
             <mat-icon>remove</mat-icon>
@@ -44,137 +44,18 @@
           <button
             mat-mini-button
             class="add"
-            (click)="adjustMoney('cp', moneyDelta)"
+            (click)="adjustMoney(coin.key, moneyDelta)"
             [disabled]="isCreatingNewCharacter()"
-            matTooltip="Add Copper"
+            matTooltip="Add"
             i18n-matTooltip
-            [attr.aria-label]="'add copper to ' + character().name"
+            [attr.aria-label]="'add ' + coin.aria + ' to ' + character().name"
             i18n-aria-label
           >
             <mat-icon>add</mat-icon>
           </button>
         </div>
       </div>
-
-      <div class="money-display-col">
-        <mat-form-field appearance="fill" class="coins">
-          <mat-label i18n>Silver</mat-label>
-          <input
-            matInput
-            [value]="character().sp"
-            class="sp-input"
-            readonly
-            tabindex="-1"
-            [disabled]="isCreatingNewCharacter()"
-          />
-        </mat-form-field>
-        <div class="money-buttons">
-          <button
-            mat-mini-button
-            class="sub"
-            (click)="adjustMoney('sp', -moneyDelta)"
-            [disabled]="isCreatingNewCharacter()"
-            matTooltip="Subtract Silver"
-            i18n-matTooltip
-            [attr.aria-label]="'subtract silver from ' + character().name"
-            i18n-aria-label
-          >
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button
-            mat-mini-button
-            class="add"
-            (click)="adjustMoney('sp', moneyDelta)"
-            [disabled]="isCreatingNewCharacter()"
-            matTooltip="Add Silver"
-            i18n-matTooltip
-            [attr.aria-label]="'add silver to ' + character().name"
-            i18n-aria-label
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-      </div>
-
-      <div class="money-display-col">
-        <mat-form-field appearance="fill" class="coins">
-          <mat-label i18n>Gold</mat-label>
-          <input
-            matInput
-            [value]="character().gp"
-            class="gp-input"
-            readonly
-            tabindex="-1"
-            [disabled]="isCreatingNewCharacter()"
-          />
-        </mat-form-field>
-        <div class="money-buttons">
-          <button
-            mat-mini-button
-            class="sub"
-            (click)="adjustMoney('gp', -moneyDelta)"
-            [disabled]="isCreatingNewCharacter()"
-            matTooltip="Subtract Gold"
-            i18n-matTooltip
-            [attr.aria-label]="'subtract gold from ' + character().name"
-            i18n-aria-label
-          >
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button
-            mat-mini-button
-            class="add"
-            (click)="adjustMoney('gp', moneyDelta)"
-            [disabled]="isCreatingNewCharacter()"
-            matTooltip="Add Gold"
-            i18n-matTooltip
-            [attr.aria-label]="'add gold to ' + character().name"
-            i18n-aria-label
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-      </div>
-
-      <div class="money-display-col">
-        <mat-form-field appearance="fill" class="coins">
-          <mat-label i18n>Platinum</mat-label>
-          <input
-            matInput
-            [value]="character().pp"
-            class="pp-input"
-            readonly
-            tabindex="-1"
-            [disabled]="isCreatingNewCharacter()"
-          />
-        </mat-form-field>
-        <div class="money-buttons">
-          <button
-            mat-mini-button
-            class="sub"
-            (click)="adjustMoney('pp', -moneyDelta)"
-            [disabled]="isCreatingNewCharacter()"
-            matTooltip="Subtract Platinum"
-            i18n-matTooltip
-            [attr.aria-label]="'subtract platinum from ' + character().name"
-            i18n-aria-label
-          >
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button
-            mat-mini-button
-            class="add"
-            (click)="adjustMoney('pp', moneyDelta)"
-            [disabled]="isCreatingNewCharacter()"
-            matTooltip="Add Platinum"
-            i18n-matTooltip
-            [attr.aria-label]="'add platinum to ' + character().name"
-            i18n-aria-label
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-      </div>
+      }
     </div>
   </div>
 </mat-card-content>

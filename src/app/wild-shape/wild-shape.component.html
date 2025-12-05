@@ -7,9 +7,9 @@
       type="number"
       min="0"
       max="2"
-      [(ngModel)]="character().wildShapeRemaining"
+      [(ngModel)]="wildShapeRemaining"
       class="classData-input"
-      (ngModelChange)="onChange()"
+      (ngModelChange)="onWildShapeChange()"
       [disabled]="isCreatingNewCharacter()"
       [attr.aria-label]="'wild shapes for ' + character().name"
       i18n-aria-label

@@ -1,5 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { Character } from '../character.model';
 
@@ -9,19 +16,27 @@ import { Character } from '../character.model';
   styleUrl: './death-saves.component.css',
   imports: [MatIcon],
 })
-export class DeathSavesComponent implements OnInit {
+export class DeathSavesComponent implements OnInit, OnChanges {
   @Input() character!: Character;
   @Output() deathSaveMessageChange = new EventEmitter<string | null>();
   @Output() characterChange = new EventEmitter<Character>(); // Emit character changes
-
-  ngOnInit(): void {
-    this.syncDeathSavesFromCharacter(this.character);
-  }
 
   deathSaveMessage: string | null = null;
   deathSaveMessageTimeout: any = null;
   deathSaveSuccess: boolean[] = [false, false, false];
   deathSaveFailure: boolean[] = [false, false, false];
+
+  ngOnInit(): void {
+    this.syncDeathSavesFromCharacter(this.character);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['character']?.currentValue) {
+      this.syncDeathSavesFromCharacter(
+        changes['character'].currentValue as Character
+      );
+    }
+  }
 
   toggleDeathSave(type: 'success' | 'failure', index: number): void {
     if (type === 'success') {

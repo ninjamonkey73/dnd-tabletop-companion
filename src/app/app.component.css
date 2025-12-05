@@ -1,11 +1,8 @@
-button.mat-icon-button {
-  border: 2px solid #bdbdbd;
-  border-radius: 50%;
-  background: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-shadow: none;
-}
-
 mat-form-field {
   flex: 1;
+}
+
+/* Make body buttons shorter (applies to mat-stroked-button) */
+:host ::ng-deep .body-buttons .mat-mdc-outlined-button {
+  padding: 0 10px;
 }

@@ -24,22 +24,55 @@
   align-items: flex-end;
   flex-wrap: wrap;
 }
-.money-display-col {
+
+/* Box-style coin widget */
+.coin-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  width: 80px;
+  border: 1px solid black;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px 8px; /* no top padding */
+  overflow: hidden; /* lets the label’s rounded corners meet the box */
 }
+
+.coin-label {
+  width: 100%;
+  color: #000;
+  background: #f2f2f2;
+  border-bottom: 1px solid #ccc;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 6px 10px;
+}
+
+.coin-value {
+  color: #000;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  background: #fff;
+  border-radius: 6px;
+  width: 100%;
+}
+
+/* If the old .coins form-field remains in template, hide it */
+.coins {
+  display: none;
+}
+
+/* Keep your existing button styling */
 .money-buttons {
   display: flex;
   flex-direction: row;
   gap: 4px;
   justify-content: center;
-}
-.coins {
-  width: 100px;
-  min-width: 100px;
-  max-width: 120px;
 }
 .sub,
 .add {

@@ -2,6 +2,7 @@ import {
   ApplicationConfig,
   provideZoneChangeDetection,
   APP_INITIALIZER,
+  ErrorHandler,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -10,6 +11,12 @@ import { routes } from './app.routes';
 import { CloudSyncService } from './cloud-sync.service';
 import { CharacterStore } from './character.store';
 import { AuthService } from './auth.service';
+
+class ConsoleErrorHandler implements ErrorHandler {
+  handleError(error: unknown) {
+    console.error('[Global Error]', error);
+  }
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +35,7 @@ export const appConfig: ApplicationConfig = {
           if (!auth.isAuthed()) return;
 
           const settings = await cloud.pullSettings();
+
           if (typeof settings?.fullHeal === 'boolean') {
             store.setFullHeal(settings.fullHeal);
           }
@@ -47,5 +55,6 @@ export const appConfig: ApplicationConfig = {
       deps: [CloudSyncService, CharacterStore, AuthService],
       multi: true,
     },
+    { provide: ErrorHandler, useClass: ConsoleErrorHandler },
   ],
 };

@@ -4,7 +4,7 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  input
+  input,
 } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,6 @@ import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
 
 @Component({
   selector: 'app-hp',
@@ -26,8 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInput,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
-],
+    MatTooltipModule,
+  ],
   templateUrl: './hp.component.html',
   styleUrls: ['./hp.component.css'],
 })
@@ -36,6 +35,7 @@ export class HpComponent implements OnChanges {
   readonly isCreatingNewCharacter = input(false);
   readonly percentHP = input(0);
   readonly deathSaveMessage = input<string | null>(null);
+  readonly isCharacterLoaded = input(false);
 
   @Output() characterChange = new EventEmitter<Character>();
   @Output() hurt = new EventEmitter<number>(); // damage amount
@@ -64,6 +64,10 @@ export class HpComponent implements OnChanges {
   }
 
   onTempHpEnter() {
+    this.characterChange.emit(this.character());
+  }
+
+  onTempHpChange() {
     this.characterChange.emit(this.character());
   }
 

@@ -1,4 +1,10 @@
-import { Component, output, input } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,47 +25,66 @@ import { MatCardContent } from '@angular/material/card';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatCardContent
-],
+    MatCardContent,
+  ],
   templateUrl: './money.component.html',
   styleUrls: ['./money.component.css'],
 })
-export class MoneyComponent {
+export class MoneyComponent implements OnChanges {
   readonly character = input.required<Character>();
   readonly isCreatingNewCharacter = input(false);
   // Parent will listen and call updateChar() to persist
   readonly characterChange = output<Character>();
 
-  // Local field for +/- amount
-  moneyDelta: number = 0;
+  cp = 0;
+  sp = 0;
+  gp = 0;
+  pp = 0;
 
-  selectMoneyInput(event: FocusEvent): void {
-    const input = event.target as HTMLInputElement | null;
-    if (input && typeof input.select === 'function') {
-      input.select();
+  moneyDelta = 0;
+
+  coins = [
+    { key: 'cp' as const, label: $localize`Copper`, aria: 'copper' },
+    { key: 'sp' as const, label: $localize`Silver`, aria: 'silver' },
+    { key: 'gp' as const, label: $localize`Gold`, aria: 'gold' },
+    { key: 'pp' as const, label: $localize`Platinum`, aria: 'platinum' },
+  ];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['character']?.currentValue) {
+      const c = this.character();
+      this.cp = c.cp || 0;
+      this.sp = c.sp || 0;
+      this.gp = c.gp || 0;
+      this.pp = c.pp || 0;
     }
   }
 
-  adjustMoney(type: 'cp' | 'sp' | 'gp' | 'pp', amount: number): void {
-    if (
-      !['cp', 'sp', 'gp', 'pp'].includes(type) ||
-      !Number.isFinite(amount) ||
-      amount === 0
-    ) {
-      return;
-    }
-    const current = this.character()[type] || 0;
-    const newValue = current + amount;
-    if (newValue < 0) {
-      alert(
-        $localize`:@@errSubtractTooMuch:You cannot subtract more than you have! (${current} available)`
-      );
-      return;
-    }
-    this.character()[type] = newValue;
-    // Emit updated character so parent can save
-    this.characterChange.emit(this.character());
-    // Reset delta
+  onMoneyChange() {
+    const c = this.character();
+    c.cp = this.cp;
+    c.sp = this.sp;
+    c.gp = this.gp;
+    c.pp = this.pp;
+    this.characterChange.emit(c);
+  }
+
+  selectMoneyInput(event: FocusEvent) {
+    const target = event.target as HTMLInputElement | null;
+    target?.select();
+  }
+
+  adjustMoney(coin: 'cp' | 'sp' | 'gp' | 'pp', delta: number) {
+    const c = this.character();
+    const current = (c[coin] ?? 0) as number;
+    const next = Math.max(0, current + delta);
+    c[coin] = next as any;
     this.moneyDelta = 0;
+    this.characterChange.emit(c);
+  }
+
+  getCoinValue(key: 'cp' | 'sp' | 'gp' | 'pp') {
+    const c = this.character();
+    return (c[key] ?? 0) as number;
   }
 }
