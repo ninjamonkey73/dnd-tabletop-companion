@@ -15,6 +15,16 @@ body {
 }
 
 /* Shared header + class/level styling */
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 20px;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -60,4 +70,17 @@ body {
 
 mat-form-field.classData-input {
   width: 90px;
+}
+
+.body-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 0px 0 8px 0;
+  gap: 8px;
+}
+
+.body-buttons button {
+  font-size: 1rem !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }

@@ -1,8 +1,7 @@
 .death-save-row {
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch; /* stretch children to full width */
   border: 1px solid black;
   border-radius: 8px;
   background: #fff;
@@ -10,25 +9,55 @@
   margin: 0 auto 16px auto;
   overflow: hidden;
   box-shadow: none;
-  padding: 0;
+  padding: 0 0 12px; /* remove top padding so gray touches top */
+  line-height: 1.4;
+}
+
+.card-title {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 4px 0 0;
+  margin: 0 0 8px;
+  background: transparent;
+  border: none;
 }
 
 .death-save-labels {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  gap: 48px;
-  width: 240px;
-  margin-bottom: 4px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  align-items: center;
+  justify-content: space-between; /* space the two labels */
+  width: 100%;
+  margin: 0;
+  background: #f0f0f0;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ccc;
+  border-top: 0;
+  border-radius: 0;
+  box-sizing: border-box;
+  font-weight: bold;
+  color: black;
+  font-size: 16px; /* match HP header */
+  font-family: "Goudy Bookletter 1911", serif; /* match HP header */
+  line-height: 1.4; /* optional for consistency */
 }
+
+.death-save-labels span {
+  flex: 1; /* equal widths */
+  text-align: center; /* center each label */
+  letter-spacing: 0.25px;
+}
+
 .death-save-buttons {
   display: flex;
   flex-direction: row;
   gap: 32px;
+  justify-content: center; /* center the groups */
+  padding-left: 6px; /* slight nudge to the right */
+  padding-top: 12px;
 }
+
 .death-save-group {
   display: flex;
   flex-direction: row;

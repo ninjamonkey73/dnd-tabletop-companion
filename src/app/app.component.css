@@ -1,7 +1,3 @@
-/* Removed header-specific styles now moved to global styles.css:
-.top, .char-select-container, .longRest, .long-rest-toggle, .delete-icon, .rest-button,
-.charName, .class-select, .classLevel
-Retained layout + shared pieces still used here. */
 button.mat-icon-button {
   border: 2px solid #bdbdbd;
   border-radius: 50%;
@@ -10,53 +6,6 @@ button.mat-icon-button {
   box-shadow: none;
 }
 
-.layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  padding-top: 20px;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 8px;
-  justify-content: center;
-}
-
-.form-row {
-  /* no longer used, can delete later */
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
 mat-form-field {
   flex: 1;
-}
-
-.newChar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  width: 30%;
-}
-
-.body-buttons {
-  display: flex;
-  justify-content: center;
-  margin: 0px 0 8px 0;
-  gap: 8px;
-}
-
-.body-buttons button {
-  font-size: 1rem !important;
-  font-weight: 600;
-  letter-spacing: 0.5px;
 }

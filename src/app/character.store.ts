@@ -20,23 +20,7 @@ export class CharacterStore {
 
   // Debounced persistence
   private saveTimeout: any;
-  constructor() {
-    // Load fullHeal toggle if present
-    const savedFullHeal = localStorage.getItem('fullHeal');
-    if (savedFullHeal !== null) {
-      this._fullHeal.set(JSON.parse(savedFullHeal));
-    }
-
-    effect(() => {
-      const c = this._character();
-      if (!c.name) return;
-      clearTimeout(this.saveTimeout);
-      this.saveTimeout = setTimeout(() => {
-        localStorage.setItem(c.name, JSON.stringify(c));
-        localStorage.setItem('lastSelectedCharacter', c.name);
-      }, 250);
-    });
-  }
+  constructor() {}
 
   setCharacter(char: Character) {
     // Force new object reference to trigger signal update
@@ -49,7 +33,6 @@ export class CharacterStore {
 
   setFullHeal(v: boolean) {
     this._fullHeal.set(v);
-    localStorage.setItem('fullHeal', JSON.stringify(v));
   }
 
   applyDamage(amount: number) {

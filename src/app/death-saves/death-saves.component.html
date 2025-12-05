@@ -1,9 +1,11 @@
+<div class="card-title" i18n>Death Saves</div>
+
 <div class="death-save-row">
-  <div class="card-title" i18n>Death Saves</div>
   <div class="death-save-labels">
     <span i18n>Successes</span>
     <span i18n>Failures</span>
   </div>
+
   <div class="death-save-buttons">
     <div class="death-save-group">
       @for (s of [0, 1, 2]; track s) {
@@ -20,6 +22,7 @@
       </button>
       }
     </div>
+
     <div class="death-save-group">
       @for (f of [0, 1, 2]; track f) {
       <button
