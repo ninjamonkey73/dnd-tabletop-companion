@@ -15,22 +15,21 @@
     </mat-form-field>
 
     <div class="money-display-stack">
-      <!-- Repeated pattern for each coin type -->
       @for (coin of coins; track coin.key) {
-      <div class="coin-box" [class.disabled]="isCreatingNewCharacter()">
-        <div class="coin-label">{{ coin.label }}</div>
+      <div class="stat-box" [class.disabled]="isCreatingNewCharacter()">
+        <div class="stat-label">{{ coin.label }}</div>
         <div
-          class="coin-value"
+          class="stat-value"
           [attr.aria-label]="coin.aria + ' for ' + character().name"
           i18n-aria-label
         >
           {{ getCoinValue(coin.key) }}
         </div>
-        <div class="money-buttons">
+        <div class="stat-buttons">
           <button
             mat-mini-button
             class="sub"
-            (click)="adjustMoney(coin.key, -moneyDelta)"
+            (click)="adjustMoney(coin.key, -(moneyDelta || 1))"
             [disabled]="isCreatingNewCharacter()"
             matTooltip="Subtract"
             i18n-matTooltip
@@ -44,7 +43,7 @@
           <button
             mat-mini-button
             class="add"
-            (click)="adjustMoney(coin.key, moneyDelta)"
+            (click)="adjustMoney(coin.key, moneyDelta || 1)"
             [disabled]="isCreatingNewCharacter()"
             matTooltip="Add"
             i18n-matTooltip

@@ -2,31 +2,30 @@
   <mat-card-title class="card-title" style="font-size: x-large" i18n
     >Spell Slots</mat-card-title
   >
-  <br />
   <div class="spellSlots">
-    @for (slot of character().spellSlots; track $index) { @if (slot > 0) {
-    <mat-form-field appearance="fill" class="classData-input">
-      <mat-label i18n>Level {{ $index + 1 }}</mat-label>
-      <input
-        matInput
-        type="number"
-        min="0"
-        [max]="slot"
-        [(ngModel)]="remaining[$index]"
-        class="classData-input"
-        (ngModelChange)="onRemainingImmediateCommit($index, $event)"
-        (blur)="onRemainingCommit($index)"
-        (keydown.enter)="onRemainingCommit($index)"
-        [disabled]="isCreatingNewCharacter()"
-        [attr.aria-label]="
-          'spell slots remaining for level ' +
-          ($index + 1) +
-          ' for ' +
-          character().name
-        "
-        i18n-aria-label
-      />
-    </mat-form-field>
+    @for (slot of slots; track $index) { @if (slot > 0) {
+    <div class="stat-box" [class.disabled]="isCreatingNewCharacter()">
+      <div class="stat-label" i18n>Level {{ $index + 1 }}</div>
+      <div class="stat-value">{{ remaining[$index] }}</div>
+      <div class="stat-buttons">
+        <button
+          mat-mini-button
+          class="sub"
+          (click)="decSlot($index)"
+          [disabled]="isCreatingNewCharacter()"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button
+          mat-mini-button
+          class="add"
+          (click)="incSlot($index)"
+          [disabled]="isCreatingNewCharacter()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
     } }
   </div>
 </div>

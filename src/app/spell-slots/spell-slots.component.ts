@@ -9,12 +9,19 @@ import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-spell-slots',
   standalone: true,
-  imports: [FormsModule, MatCardModule, MatFormFieldModule, MatInput],
+  imports: [
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './spell-slots.component.html',
   styleUrls: ['./spell-slots.component.css'],
 })
@@ -103,5 +110,16 @@ export class SpellSlotsComponent implements OnChanges {
 
   trackByIndex(i: number) {
     return i;
+  }
+
+  incSlot(index: number) {
+    const max = this.slots[index] ?? 0;
+    const val = Math.min((this.remaining[index] ?? 0) + 1, max);
+    this.onRemainingImmediateCommit(index, val);
+  }
+
+  decSlot(index: number) {
+    const val = Math.max((this.remaining[index] ?? 0) - 1, 0);
+    this.onRemainingImmediateCommit(index, val);
   }
 }

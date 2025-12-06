@@ -1,18 +1,24 @@
 <div mat-card>
-  <mat-card-title class="card-title" i18n>Ki Points</mat-card-title>
-  <br />
-  <mat-form-field appearance="fill" class="classData-input">
-    <input
-      matInput
-      type="number"
-      min="0"
-      [max]="character().level"
-      [(ngModel)]="character().kiPoints"
-      class="classData-input"
-      (ngModelChange)="onChange()"
-      [disabled]="isCreatingNewCharacter()"
-      [attr.aria-label]="'ki points for ' + character().name"
-      i18n-aria-label
-    />
-  </mat-form-field>
+  <div class="stat-box" [class.disabled]="isCreatingNewCharacter()">
+    <div class="stat-label" i18n>Ki Points</div>
+    <div class="stat-value">{{ character().kiPoints || 0 }}</div>
+    <div class="stat-buttons">
+      <button
+        mat-mini-button
+        class="sub"
+        (click)="decKi()"
+        [disabled]="isCreatingNewCharacter()"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button
+        mat-mini-button
+        class="add"
+        (click)="incKi()"
+        [disabled]="isCreatingNewCharacter()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>

@@ -84,3 +84,67 @@ mat-form-field.classData-input {
   font-weight: 600;
   letter-spacing: 0.5px;
 }
+
+/* Shared stat box styles (extracted from coin-box) */
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  align-self: center;
+  border: 1px solid black;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px 8px; /* no top padding so header hugs top */
+  overflow: hidden;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.stat-label {
+  width: 100%;
+  color: #000;
+  background: #f2f2f2;
+  border-bottom: 1px solid #ccc;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 6px 10px;
+}
+.stat-value {
+  color: #000;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  background: #fff;
+  border-radius: 6px;
+  width: 100%;
+}
+.stat-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
+}
+.sub,
+.add {
+  font-size: 1.3rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 36px;
+  height: 36px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sub {
+  background: linear-gradient(to bottom, #8b0000, #ff6347);
+}
+.add {
+  background: linear-gradient(to bottom, #006400, #32cd32);
+}

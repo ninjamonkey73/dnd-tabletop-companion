@@ -9,12 +9,12 @@ import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-rage',
   standalone: true,
-  imports: [FormsModule, MatCardModule, MatFormFieldModule, MatInput],
+  imports: [FormsModule, MatCardModule, MatFormFieldModule, MatIcon],
   templateUrl: './rage.component.html',
   styleUrls: ['./rage.component.css'],
 })
@@ -35,5 +35,19 @@ export class RageComponent implements OnChanges {
     const c = this.character();
     c.rageRemaining = this.rageRemaining;
     this.characterChange.emit(c);
+  }
+
+  incRage() {
+    if (this.rageRemaining < this.character().rage) {
+      this.rageRemaining++;
+      this.onRageChange();
+    }
+  }
+
+  decRage() {
+    if (this.rageRemaining > 0) {
+      this.rageRemaining--;
+      this.onRageChange();
+    }
   }
 }

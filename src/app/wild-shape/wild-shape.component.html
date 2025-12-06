@@ -1,18 +1,24 @@
 <div mat-card>
-  <mat-card-title class="card-title" i18n>Wild Shape</mat-card-title>
-  <br />
-  <mat-form-field appearance="fill" class="classData-input">
-    <input
-      matInput
-      type="number"
-      min="0"
-      max="2"
-      [(ngModel)]="wildShapeRemaining"
-      class="classData-input"
-      (ngModelChange)="onWildShapeChange()"
-      [disabled]="isCreatingNewCharacter()"
-      [attr.aria-label]="'wild shapes for ' + character().name"
-      i18n-aria-label
-    />
-  </mat-form-field>
+  <div class="stat-box" [class.disabled]="isCreatingNewCharacter()">
+    <div class="stat-label" i18n>Wild Shape</div>
+    <div class="stat-value">{{ wildShapeRemaining }}</div>
+    <div class="stat-buttons">
+      <button
+        mat-mini-button
+        class="sub"
+        (click)="decWildShape()"
+        [disabled]="isCreatingNewCharacter()"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button
+        mat-mini-button
+        class="add"
+        (click)="incWildShape()"
+        [disabled]="isCreatingNewCharacter()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
