@@ -205,6 +205,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.classHasBeenSet = !!loaded.class;
     this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     this.ensureSelectedStatSection();
+    await this.persistSelectedCharacter();
   }
 
   async loadLastSelectedCharacter(): Promise<void> {
@@ -265,7 +266,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     // Persist selection and refresh names
     if (this.character.name) {
-      await this.cloud.setLastSelectedCharacter(this.character.name);
+      await this.persistSelectedCharacter();
       await this.loadSavedCharacterNames();
       this.selectedCharacter = this.character.name;
     }
@@ -530,7 +531,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
-  updateChar(): void {
+  async updateChar(): Promise<void> {
     // Persist current character via CloudSyncService effect
     this.lastCharacterSelected = this.character.name;
     this.saveCharacterData();
@@ -539,10 +540,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     this.refreshDeathSaveMessageFromCharacter();
 
-    // Optionally persist selection remotely (non-blocking)
-    if (this.character.name) {
-      this.cloud.setLastSelectedCharacter(this.character.name);
-    }
+    // Persist selection deterministically
+    await this.persistSelectedCharacter();
     this.ensureSelectedStatSection();
   }
 
@@ -678,6 +677,17 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.deathSaveMessage = $localize`:@@msgYouAreDead:You are dead!`;
     } else {
       this.deathSaveMessage = null;
+    }
+  }
+
+  private async persistSelectedCharacter(): Promise<void> {
+    try {
+      const name = this.character.name;
+      if (name && typeof name === 'string' && name.trim().length > 0) {
+        await this.cloud.setLastSelectedCharacter(name);
+      }
+    } catch (e) {
+      console.error('Failed to persist lastSelectedCharacter', e);
     }
   }
 }
