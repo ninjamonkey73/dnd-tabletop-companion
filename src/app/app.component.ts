@@ -116,6 +116,9 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   showingMoney = true;
   showingDeathSaves = true;
+  // Toggle for stat sections (ki/rage/wild/spell slots)
+  selectedStatSection: 'ki' | 'rage' | 'wild' | 'slots' | null = null;
+
   classHasBeenSet = false;
   lastCharacterSelected = '';
   classes: string[] = [];
@@ -201,6 +204,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.selectedCharacter = name;
     this.classHasBeenSet = !!loaded.class;
     this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
+    this.ensureSelectedStatSection();
   }
 
   async loadLastSelectedCharacter(): Promise<void> {
@@ -225,6 +229,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.refreshDeathSaveMessageFromCharacter();
     this.selectedCharacter = name;
     this.classHasBeenSet = !!loaded.class;
+    this.ensureSelectedStatSection();
   }
 
   saveCharacterData(): void {
@@ -538,6 +543,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     if (this.character.name) {
       this.cloud.setLastSelectedCharacter(this.character.name);
     }
+    this.ensureSelectedStatSection();
   }
 
   onHitDieChange(): void {
@@ -623,6 +629,47 @@ export class AppComponent implements AfterViewInit, OnInit {
       wildShapeRemaining: this.character.wildShapeRemaining,
     });
     this.saveCharacterData();
+  }
+
+  // --- Stat Sections availability & selection ---
+  hasKi(): boolean {
+    return this.character.class === 'Monk';
+  }
+  hasRage(): boolean {
+    return this.character.class === 'Barbarian';
+  }
+  hasWild(): boolean {
+    return this.character.class === 'Druid';
+  }
+  hasSlots(): boolean {
+    return (
+      Array.isArray(this.character.spellSlots) &&
+      this.character.spellSlots.some((s) => s > 0)
+    );
+  }
+  availableStatSections(): Array<'ki' | 'rage' | 'wild' | 'slots'> {
+    const arr: Array<'ki' | 'rage' | 'wild' | 'slots'> = [];
+    if (this.hasKi()) arr.push('ki');
+    if (this.hasRage()) arr.push('rage');
+    if (this.hasWild()) arr.push('wild');
+    if (this.hasSlots()) arr.push('slots');
+    return arr;
+  }
+  ensureSelectedStatSection(): void {
+    const available = this.availableStatSections();
+    if (!available.length) {
+      this.selectedStatSection = null;
+      return;
+    }
+    if (
+      !this.selectedStatSection ||
+      !available.includes(this.selectedStatSection)
+    ) {
+      this.selectedStatSection = available[0];
+    }
+  }
+  setSelectedStatSection(section: 'ki' | 'rage' | 'wild' | 'slots'): void {
+    this.selectedStatSection = section;
   }
 
   private refreshDeathSaveMessageFromCharacter(): void {

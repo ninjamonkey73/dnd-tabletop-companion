@@ -86,26 +86,74 @@
     }
   </div>
 
-  @if (character.class === 'Monk') {
+  <!-- Stat section toggle: show when 2+ sections available -->
+  @if (availableStatSections().length > 1) {
+  <div class="body-buttons">
+    @if (hasKi()) {
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="selectedStatSection === 'ki'"
+      (click)="setSelectedStatSection('ki')"
+      i18n
+    >
+      Ki Points
+    </button>
+    } @if (hasRage()) {
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="selectedStatSection === 'rage'"
+      (click)="setSelectedStatSection('rage')"
+      i18n
+    >
+      Rage
+    </button>
+    } @if (hasWild()) {
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="selectedStatSection === 'wild'"
+      (click)="setSelectedStatSection('wild')"
+      i18n
+    >
+      Wild Shape
+    </button>
+    } @if (hasSlots()) {
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="selectedStatSection === 'slots'"
+      (click)="setSelectedStatSection('slots')"
+      i18n
+    >
+      Spell Slots
+    </button>
+    }
+  </div>
+  }
+
+  <!-- Render selected stat section only -->
+  @if (selectedStatSection === 'ki') {
   <app-ki-points
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
     (characterChange)="onKiPointsChange()"
   ></app-ki-points>
-  } @if (character.class === 'Druid') {
+  } @if (selectedStatSection === 'wild') {
   <app-wild-shape
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
     (characterChange)="onWildShapeChange()"
   ></app-wild-shape>
-  } @if (character.spellSlots.length > 0) {
+  } @if (selectedStatSection === 'slots') {
   <app-spell-slots
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
     (characterChange)="onSpellSlotsChange()"
     (remainingChanged)="onSpellSlotRemainingChanged($event)"
   ></app-spell-slots>
-  } @if (character.class === 'Barbarian') {
+  } @if (selectedStatSection === 'rage') {
   <app-rage
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
