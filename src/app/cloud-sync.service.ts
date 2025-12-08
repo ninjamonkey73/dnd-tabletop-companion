@@ -47,7 +47,10 @@ export class CloudSyncService {
       const user = this.auth.user();
       const fullHeal = this.store.fullHeal();
       if (!user) return;
-      this.schedulePushSettings(user.uid, { fullHeal });
+      const uid = user.uid;
+      // Avoid overwriting remote settings with local defaults before first pull
+      if (!this.hasPulledForUid.has(uid)) return;
+      this.schedulePushSettings(uid, { fullHeal });
     });
 
     // Auto-pull once after login
@@ -75,6 +78,7 @@ export class CloudSyncService {
           this.hasPulledForUid.add(uid);
           this.syncStatus.emitPulled();
           this.syncStatus.emitStatus({ type: 'pull', status: 'ok' });
+          // Now that pull completed, subsequent fullHeal changes will persist
         })
         .catch((err) => {
           const isPermError =

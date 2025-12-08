@@ -46,7 +46,7 @@ export class HeaderComponent implements OnChanges {
   readonly classes = input<string[]>([]);
 
   // Long rest full heal toggle
-  readonly fullHeal = input(false);
+  readonly fullHeal = input(true);
 
   // Outputs
   @Output() characterSelected = new EventEmitter<string>();
@@ -58,7 +58,7 @@ export class HeaderComponent implements OnChanges {
   @Output() levelChanged = new EventEmitter<number>();
 
   internalSelectedCharacter: string | null = null;
-  internalFullHeal = false;
+  internalFullHeal = this.fullHeal(); // mirror input on init
   private auth = inject(AuthService);
 
   ngOnChanges(changes: SimpleChanges): void {

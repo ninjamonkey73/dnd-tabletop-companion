@@ -5,7 +5,7 @@ import { Character, defaultCharacter } from './character.model';
 export class CharacterStore {
   // Signals
   private _character = signal<Character>({ ...defaultCharacter });
-  private _fullHeal = signal<boolean>(false);
+  private _fullHeal = signal<boolean>(true);
 
   // Public accessors
   character = computed(() => this._character());
