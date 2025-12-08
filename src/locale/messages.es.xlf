@@ -23,7 +23,7 @@
         <target> Guardar Personaje </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">35,36</context>
+          <context context-type="linenumber">36,37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6815678271368518310" datatype="html">
@@ -42,12 +42,44 @@
           <context context-type="linenumber">69,70</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4286812177942323671" datatype="html">
+        <source> Ki Points </source>
+        <target> Puntos de Ki </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">100,101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7864398165949550150" datatype="html">
+        <source> Rage </source>
+        <target> Rabia </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">110,111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1643444998355785994" datatype="html">
+        <source> Wild Shape </source>
+        <target> Forma Salvaje </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">120,121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8105681206623009116" datatype="html">
+        <source> Spell Slots </source>
+        <target> Ranuras de Conjuros </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">130,131</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="736621534510182715" datatype="html">
         <source> Death Saves </source>
         <target> Salvaciones de Muerte </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">124,125</context>
+          <context context-type="linenumber">172,173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7914631302172987707" datatype="html">
@@ -55,7 +87,7 @@
         <target> Dados de Golpe </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">133,134</context>
+          <context context-type="linenumber">181,182</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/hit-dice/hit-dice.component.html</context>
@@ -67,7 +99,7 @@
         <target>Se requiere el nombre del personaje para guardar los datos.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">233</context>
+          <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errCharacterNameEmpty" datatype="html">
@@ -75,11 +107,11 @@
         <target>El nombre del personaje no puede estar vacío.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">276</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">274</context>
+          <context context-type="linenumber">301</context>
         </context-group>
       </trans-unit>
       <trans-unit id="confirmDeleteCharacter" datatype="html">
@@ -87,7 +119,7 @@
         <target>¿Estás seguro de que deseas eliminar al personaje &quot;<x id="PH" equiv-text="name"/>&quot;?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">341</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errLevelTooLow" datatype="html">
@@ -95,7 +127,7 @@
         <target>El nivel no puede ser menor que 1.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">356</context>
+          <context context-type="linenumber">383</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errLevelTooHigh" datatype="html">
@@ -103,7 +135,7 @@
         <target>El nivel no puede ser mayor que 20.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">359</context>
+          <context context-type="linenumber">386</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errApiUnexpected" datatype="html">
@@ -111,7 +143,7 @@
         <target>La API devolvió datos inesperados.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">518</context>
+          <context context-type="linenumber">563</context>
         </context-group>
       </trans-unit>
       <trans-unit id="errClassesFetch" datatype="html">
@@ -119,7 +151,7 @@
         <target>Error al obtener las clases de la API.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">522</context>
+          <context context-type="linenumber">567</context>
         </context-group>
       </trans-unit>
       <trans-unit id="msgYouAreDead" datatype="html">
@@ -127,7 +159,7 @@
         <target>¡Estás muerto!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">631</context>
+          <context context-type="linenumber">716</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/death-saves/death-saves.component.ts</context>
@@ -203,7 +235,7 @@
         <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon&gt;"/>login<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Iniciar sesión </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">13,15</context>
+          <context context-type="linenumber">13,16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3797778920049399855" datatype="html">
@@ -462,7 +494,7 @@
         <target>Puntos de Ki</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ki-points/ki-points.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3,4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7596370843610200711" datatype="html">
@@ -478,7 +510,7 @@
         <target>Restar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/money/money.component.html</context>
-          <context context-type="linenumber">35,36</context>
+          <context context-type="linenumber">34,35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3249513483374643425" datatype="html">
@@ -486,7 +518,7 @@
         <target>Añadir</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/money/money.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8070430854256560045" datatype="html">
@@ -526,7 +558,7 @@
         <target>Rabia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/rage/rage.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">3,4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6813396031694137692" datatype="html">
@@ -550,7 +582,7 @@
         <target>Nivel <x id="INTERPOLATION" equiv-text="{{ $index + 1 }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/spell-slots/spell-slots.component.html</context>
-          <context context-type="linenumber">9,10</context>
+          <context context-type="linenumber">8,9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4322898453753074677" datatype="html">
@@ -558,7 +590,7 @@
         <target>Forma Salvaje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/wild-shape/wild-shape.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3,4</context>
         </context-group>
       </trans-unit>
     </body>
