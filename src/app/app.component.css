@@ -6,3 +6,7 @@ mat-form-field {
 :host ::ng-deep .body-buttons .mat-mdc-outlined-button {
   padding: 0 10px;
 }
+
+.save-button {
+  margin-left: 20px;
+}

@@ -62,7 +62,13 @@ export class CloudSyncService {
           const last = settings?.lastSelectedCharacter;
           if (last) {
             const char = await this.getCharacter(last);
-            if (char) {
+            // Do not override an already-loaded character in the store
+            const current = this.store.character();
+            const hasCurrent =
+              !!current &&
+              typeof current.name === 'string' &&
+              current.name.trim().length > 0;
+            if (char && !hasCurrent) {
               this.store.setCharacter(char);
             }
           }

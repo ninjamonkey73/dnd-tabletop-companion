@@ -125,6 +125,8 @@ export class AppComponent implements AfterViewInit, OnInit {
   classesError: string | null = null;
   isLoadingClasses = false;
   savedCharacterNames: string[] = [];
+  // Map UI class name -> API index/slug (both likely lowercase 2014 slugs)
+  private classIndexByName: Record<string, string> = {};
   selectedCharacter: string | null = null;
   isCreatingNewCharacter = false;
   newCharacterName = '';
@@ -209,6 +211,14 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   async loadLastSelectedCharacter(): Promise<void> {
+    // If a character is already loaded in memory, do not override it
+    if (
+      this.isCharacterLoaded &&
+      this.selectedCharacter &&
+      this.selectedCharacter !== 'new'
+    ) {
+      return;
+    }
     const settings = await this.cloud.pullSettings();
 
     // Apply fullHeal even if there is no lastSelectedCharacter
@@ -233,7 +243,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.ensureSelectedStatSection();
   }
 
-  saveCharacterData(): void {
+  async saveCharacterData(): Promise<void> {
     if (!this.character.name) {
       console.error(
         $localize`:@@errCharacterNameRequired:Character name is required to save data.`
@@ -246,10 +256,16 @@ export class AppComponent implements AfterViewInit, OnInit {
     // CloudSyncService effect will push changes; no local storage or names refresh here
     // Optimistically ensure the new name appears in the dropdown without reload
     if (this.character.name) {
+      // Optimistic add so the dropdown includes it immediately
       const names = new Set(this.savedCharacterNames);
       names.add(this.character.name);
       this.savedCharacterNames = Array.from(names).sort();
       this.selectedCharacter = this.character.name;
+
+      await this.persistSelectedCharacter();
+
+      // Optional: schedule a background refresh to reconcile with Firestore
+      setTimeout(() => this.loadSavedCharacterNames(), 1000);
     }
     // No timer-based clear; SyncStatusService will clear pendingSave on push completion
   }
@@ -272,6 +288,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
     this.isCreatingNewCharacter = false;
     this.newCharacterName = '';
+
+    // Actively switch to and load the new character to refresh all derived state
+    if (this.character.name) {
+      await this.onCharacterSelection(this.character.name);
+    }
   }
 
   saveNewCharacter(): void {
@@ -392,12 +413,21 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.store.patchCharacter({ hitDie: level });
 
     // Populate spell slots for spellcasting classes at this level
-    this.api.getClassLevel(this.character.class, level).subscribe((data) => {
-      this.getSpellSlotsForLevel(data.spellcasting);
-      this.lastCharacterSelected = this.character.name;
-      this.saveCharacterData();
-      if (errorMsg) alert(errorMsg);
-    });
+    const clsName = (this.character.class || '').toLowerCase().trim();
+    if (!clsName) {
+      // No class selected; clear any slots
+      this.getSpellSlotsForLevel(null);
+    } else {
+      // Prefer API-declared index/slug; fall back to name lowercased
+      const clsSlug = this.classIndexByName[clsName] || clsName;
+      this.api.getClassLevel(clsSlug, level).subscribe((data) => {
+        this.getSpellSlotsForLevel(data.spellcasting);
+        this.ensureSelectedStatSection(); // auto-select 'slots' if it's the only available section
+        this.lastCharacterSelected = this.character.name;
+        this.saveCharacterData();
+        if (errorMsg) alert(errorMsg);
+      });
+    }
   }
 
   getSpellSlotsForLevel(spellcasting: any): void {
@@ -517,9 +547,18 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.classesError = null;
     this.api.getClasses().subscribe({
       next: (data) => {
-        this.classes = Array.isArray(data.results)
-          ? data.results.map((c) => c.name)
-          : [];
+        const results = Array.isArray(data.results) ? data.results : [];
+        // Populate display names
+        this.classes = results.map((c) => c.name);
+        // Build a lookup of name -> index (slug), normalized to lowercase keys
+        this.classIndexByName = results.reduce<Record<string, string>>(
+          (acc, c) => {
+            const key = (c.name || '').toLowerCase().trim();
+            if (key) acc[key] = (c.index || '').toLowerCase().trim();
+            return acc;
+          },
+          {}
+        );
         if (!this.classes.length) {
           this.classesError = $localize`:@@errApiUnexpected:API returned unexpected data.`;
         }
