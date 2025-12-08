@@ -4,7 +4,7 @@
   border: 1px solid black;
   border-radius: 8px;
   width: 450px;
-  margin: 0 auto 16px auto;
+  margin: 0 auto 12px auto;
   background: #fff;
   overflow: hidden;
 }
@@ -15,7 +15,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: 4px 12px;
 }
 
 .hp-header {
@@ -112,12 +112,6 @@
   align-items: center;
 }
 
-div,
-input,
-.hp-input {
-  font-family: "Goudy Bookletter 1911", serif;
-}
-
 .edit {
   font-size: 1.5rem;
   border-radius: 10px;
@@ -194,24 +188,6 @@ input,
   justify-content: center;
   gap: 16px;
   margin-top: 8px;
-}
-
-.hp-controls-flex {
-  /* keep if used in template */
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.hp-controls-flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
 }
 
 .hp-button-stack {
