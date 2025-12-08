@@ -1,25 +1,27 @@
 .spellSlots {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* Always show five columns for levels 1–5 per row */
+  grid-template-columns: repeat(5, minmax(110px, 1fr));
   gap: 8px;
   width: 100%;
-  max-width: 480px;
+  max-width: 720px; /* enough width to comfortably fit 5 boxes */
   margin-left: auto;
   margin-right: auto;
-  justify-items: center;
+  justify-items: stretch; /* let children fill each grid cell */
   align-items: center;
 }
 
+/* Fill grid cells so columns are honored */
 .spellSlots > * {
-  min-width: 90px;
   box-sizing: border-box;
   width: 100%;
-  max-width: 120px;
+  max-width: none;
 }
 
 @media (max-width: 700px) {
   .spellSlots {
-    grid-template-columns: repeat(2, 1fr);
+    /* On narrow screens, reduce columns but keep horizontal layout */
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
   }
 }
 
