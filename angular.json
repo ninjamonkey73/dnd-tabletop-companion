@@ -18,6 +18,7 @@
             "browser": "src/main.ts",
             "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
+            "baseHref": "/",
             "assets": [
               {
                 "glob": "**/*",
@@ -40,7 +41,8 @@
                   "maximumError": "5mb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/dnd-tabletop-companion/"
             },
             "development": {
               "optimization": false,
