@@ -8,7 +8,9 @@ export function initFirebase(): Promise<void> {
   if (firebaseReadyPromise) return firebaseReadyPromise;
 
   firebaseReadyPromise = (async () => {
-    const res = await fetch('/firebase-config.json', { cache: 'no-store' });
+    // Resolve against current base href so it works under subpaths
+    const cfgUrl = new URL('firebase-config.json', document.baseURI).toString();
+    const res = await fetch(cfgUrl, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to load Firebase config');
     const firebaseConfig = await res.json();
 
