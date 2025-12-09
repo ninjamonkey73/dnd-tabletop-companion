@@ -5,6 +5,7 @@ node_modules/.cache/
 
 # Compiled output
 /dist
+/local-www
 /tmp
 /out-tsc
 /bazel-out
