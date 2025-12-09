@@ -18,12 +18,10 @@
   @if (isCreatingNewCharacter) {
   <div class="newChar">
     <mat-form-field appearance="fill">
-      <mat-label i18n>New Character Name</mat-label>
+      <mat-label>New Character Name</mat-label>
       <input
-        matInput
         [(ngModel)]="newCharacterName"
         placeholder="Enter new character name"
-        i18n-placeholder
       />
     </mat-form-field>
     <button
@@ -31,7 +29,6 @@
       mat-raised-button
       color="primary"
       (click)="createNewCharacter()"
-      i18n
     >
       Save Character
     </button>
@@ -55,7 +52,6 @@
       color="primary"
       [disabled]="showingMoney"
       (click)="showingMoney = true"
-      i18n
     >
       Money
     </button>
@@ -64,7 +60,6 @@
       color="primary"
       [disabled]="!showingMoney"
       (click)="showingMoney = false"
-      i18n
     >
       Trackable Resources
     </button>
@@ -95,7 +90,6 @@
       color="primary"
       [disabled]="selectedStatSection === 'ki'"
       (click)="setSelectedStatSection('ki')"
-      i18n
     >
       Ki Points
     </button>
@@ -105,7 +99,6 @@
       color="primary"
       [disabled]="selectedStatSection === 'rage'"
       (click)="setSelectedStatSection('rage')"
-      i18n
     >
       Rage
     </button>
@@ -115,7 +108,6 @@
       color="primary"
       [disabled]="selectedStatSection === 'wild'"
       (click)="setSelectedStatSection('wild')"
-      i18n
     >
       Wild Shape
     </button>
@@ -125,7 +117,6 @@
       color="primary"
       [disabled]="selectedStatSection === 'slots'"
       (click)="setSelectedStatSection('slots')"
-      i18n
     >
       Spell Slots
     </button>
@@ -167,7 +158,6 @@
       color="primary"
       [disabled]="showingDeathSaves"
       (click)="showingDeathSaves = true"
-      i18n
     >
       Death Saves
     </button>
@@ -176,7 +166,6 @@
       color="primary"
       [disabled]="!showingDeathSaves"
       (click)="showingDeathSaves = false"
-      i18n
     >
       Hit Dice
     </button>
@@ -197,6 +186,4 @@
     ></app-hit-dice>
     }
   </div>
-
-  <app-language-switcher></app-language-switcher>
 </div>

@@ -1,7 +1,7 @@
 <mat-card-content>
   <div class="money-flex">
     <mat-form-field appearance="fill" class="money-input">
-      <mat-label i18n>Coin +/-</mat-label>
+      <mat-label>Coin +/-</mat-label>
       <input
         matInput
         type="number"
@@ -10,7 +10,6 @@
         (focus)="selectMoneyInput($event)"
         [disabled]="isCreatingNewCharacter()"
         [attr.aria-label]="'coin delta for ' + character().name"
-        i18n-aria-label
       />
     </mat-form-field>
 
@@ -21,7 +20,6 @@
         <div
           class="stat-value"
           [attr.aria-label]="coin.aria + ' for ' + character().name"
-          i18n-aria-label
         >
           {{ getCoinValue(coin.key) }}
         </div>
@@ -32,11 +30,9 @@
             (click)="adjustMoney(coin.key, -(moneyDelta || 1))"
             [disabled]="isCreatingNewCharacter()"
             matTooltip="Subtract"
-            i18n-matTooltip
             [attr.aria-label]="
               'subtract ' + coin.aria + ' from ' + character().name
             "
-            i18n-aria-label
           >
             <mat-icon>remove</mat-icon>
           </button>
@@ -46,9 +42,7 @@
             (click)="adjustMoney(coin.key, moneyDelta || 1)"
             [disabled]="isCreatingNewCharacter()"
             matTooltip="Add"
-            i18n-matTooltip
             [attr.aria-label]="'add ' + coin.aria + ' to ' + character().name"
-            i18n-aria-label
           >
             <mat-icon>add</mat-icon>
           </button>

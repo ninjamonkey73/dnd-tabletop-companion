@@ -44,10 +44,10 @@ export class MoneyComponent implements OnChanges {
   moneyDelta = 0;
 
   coins = [
-    { key: 'cp' as const, label: $localize`Copper`, aria: 'copper' },
-    { key: 'sp' as const, label: $localize`Silver`, aria: 'silver' },
-    { key: 'gp' as const, label: $localize`Gold`, aria: 'gold' },
-    { key: 'pp' as const, label: $localize`Platinum`, aria: 'platinum' },
+    { key: 'cp' as const, label: `Copper`, aria: 'copper' },
+    { key: 'sp' as const, label: `Silver`, aria: 'silver' },
+    { key: 'gp' as const, label: `Gold`, aria: 'gold' },
+    { key: 'pp' as const, label: `Platinum`, aria: 'platinum' },
   ];
 
   ngOnChanges(changes: SimpleChanges): void {

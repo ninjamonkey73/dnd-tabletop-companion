@@ -13,11 +13,9 @@
             [readonly]="editingResourceNameId !== $index"
             [disabled]="isCreatingNewCharacter()"
             (blur)="onNameBlur()"
-            i18n-placeholder
             [attr.aria-label]="
               'resource name ' + record.id + ' for ' + character().name
             "
-            i18n-aria-label
           />
           <button
             mat-icon-button
@@ -25,7 +23,6 @@
             (click)="startEditingResourceName($index)"
             [disabled]="isCreatingNewCharacter()"
             [attr.aria-label]="'edit resource name for ' + record.name"
-            i18n-aria-label
           >
             <mat-icon>edit</mat-icon>
           </button>
@@ -42,7 +39,6 @@
           (change)="onValueChange()"
           [disabled]="isCreatingNewCharacter()"
           [attr.aria-label]="'resource value for ' + record.name"
-          i18n-aria-label
         />
       </mat-form-field>
     </div>

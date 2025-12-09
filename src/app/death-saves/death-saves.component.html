@@ -1,9 +1,9 @@
-<div class="card-title" i18n>Death Saves</div>
+<div class="card-title">Death Saves</div>
 
 <div class="death-save-row">
   <div class="death-save-labels">
-    <span i18n>Successes</span>
-    <span i18n>Failures</span>
+    <span>Successes</span>
+    <span>Failures</span>
   </div>
 
   <div class="death-save-buttons">
@@ -14,7 +14,6 @@
         mat-icon-button
         (click)="toggleDeathSave('success', s)"
         [attr.aria-label]="'toggle death save success ' + s"
-        i18n-aria-label
       >
         <mat-icon [class]="deathSaveSuccess[s] ? 'checked' : 'unchecked'">
           {{ deathSaveSuccess[s] ? "check_circle" : "radio_button_unchecked" }}
@@ -31,7 +30,6 @@
         [class.active-failure]="deathSaveFailure[f]"
         (click)="toggleDeathSave('failure', f)"
         [attr.aria-label]="'toggle death save failure ' + f"
-        i18n-aria-label
       >
         <mat-icon [class]="deathSaveFailure[f] ? 'checked' : 'unchecked'">
           {{ deathSaveFailure[f] ? "cancel" : "radio_button_unchecked" }}

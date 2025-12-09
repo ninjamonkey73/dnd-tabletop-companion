@@ -1,11 +1,11 @@
 <div mat-card>
-  <mat-card-title class="card-title" style="font-size: x-large" i18n
+  <mat-card-title class="card-title" style="font-size: x-large"
     >Spell Slots</mat-card-title
   >
   <div class="spellSlots">
     @for (slot of slots; track $index) { @if (slot > 0) {
     <div class="stat-box" [class.disabled]="isCreatingNewCharacter()">
-      <div class="stat-label" i18n>Level {{ $index + 1 }}</div>
+      <div class="stat-label">Level {{ $index + 1 }}</div>
       <div class="stat-value">{{ remaining[$index] }}</div>
       <div class="stat-buttons">
         <button

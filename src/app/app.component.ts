@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Character } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
 import { HitDiceComponent } from './hit-dice/hit-dice.component';
 import { RageComponent } from './rage/rage.component';
@@ -36,7 +35,6 @@ import { AuthService } from './auth.service';
     MatSelectModule,
     MatButtonModule,
     MatTooltipModule,
-    LanguageSwitcherComponent,
     DeathSavesComponent,
     HitDiceComponent,
     RageComponent,
@@ -245,9 +243,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async saveCharacterData(): Promise<void> {
     if (!this.character.name) {
-      console.error(
-        $localize`:@@errCharacterNameRequired:Character name is required to save data.`
-      );
+      console.error('Character name is required to save data.');
       return;
     }
     // Mark save as pending to prevent accidental refresh during write
@@ -272,9 +268,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async createNewCharacter(): Promise<void> {
     if (!this.newCharacterName.trim()) {
-      console.error(
-        $localize`:@@errCharacterNameEmpty:Character name cannot be empty.`
-      );
+      console.error('Character name cannot be empty.');
       return;
     }
     // Reuse saveNewCharacter (which sets store)
@@ -297,9 +291,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   saveNewCharacter(): void {
     if (!this.newCharacterName.trim()) {
-      console.error(
-        $localize`:@@errCharacterNameEmpty:Character name cannot be empty.`
-      );
+      console.error('Character name cannot be empty.');
       return;
     }
     const fresh = {
@@ -336,11 +328,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async deleteCharacter(name: string | null): Promise<void> {
     if (!name || name === 'new') return;
-    if (
-      confirm(
-        $localize`:@@confirmDeleteCharacter:Are you sure you want to delete the character "${name}"?`
-      )
-    ) {
+    if (confirm(`Are you sure you want to delete the character "${name}"?`)) {
       try {
         await this.cloud.deleteCharacter(name);
       } catch {}
@@ -380,10 +368,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     let level = this.character.level;
     if (level < 1) {
       level = 1;
-      errorMsg = $localize`:@@errLevelTooLow:Level cannot be less than 1.`;
+      errorMsg = 'Level cannot be less than 1.';
     } else if (level > 20) {
       level = 20;
-      errorMsg = $localize`:@@errLevelTooHigh:Level cannot be greater than 20.`;
+      errorMsg = 'Level cannot be greater than 20.';
     }
 
     // Patch level first
@@ -560,11 +548,11 @@ export class AppComponent implements AfterViewInit, OnInit {
           {}
         );
         if (!this.classes.length) {
-          this.classesError = $localize`:@@errApiUnexpected:API returned unexpected data.`;
+          this.classesError = 'API returned unexpected data.';
         }
       },
       error: () => {
-        this.classesError = $localize`:@@errClassesFetch:Failed to fetch classes from API.`;
+        this.classesError = 'Failed to fetch classes from API.';
       },
       complete: () => (this.isLoadingClasses = false),
     });
@@ -713,7 +701,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   private refreshDeathSaveMessageFromCharacter(): void {
     const failures = this.character.deathSaveFailure || [false, false, false];
     if (failures.every((v) => v)) {
-      this.deathSaveMessage = $localize`:@@msgYouAreDead:You are dead!`;
+      this.deathSaveMessage = 'You are dead!';
     } else {
       this.deathSaveMessage = null;
     }
