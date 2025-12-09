@@ -208,6 +208,19 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async loadSavedCharacterNames(): Promise<void> {
     this.savedCharacterNames = await this.cloud.listCharacterNames();
+
+    // If names exist, cancel auto "new" mode used for empty accounts
+    if (
+      this.savedCharacterNames.length > 0 &&
+      this.isCreatingNewCharacter &&
+      this.selectedCharacter === 'new'
+    ) {
+      this.isCreatingNewCharacter = false;
+      this.newCharacterName = '';
+      // Keep current selection if one is already loaded; otherwise
+      // `loadLastSelectedCharacter()` (called after this) will load the last.
+    }
+
     // If nothing exists after login/pull, default to new character mode
     if (!this.isCharacterLoaded && this.savedCharacterNames.length === 0) {
       this.isCreatingNewCharacter = true;
