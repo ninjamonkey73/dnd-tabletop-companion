@@ -7,6 +7,16 @@ mat-form-field {
   padding: 0 10px;
 }
 
-.save-button {
+.save-button,
+.cancel-button {
   margin-left: 20px;
+}
+
+mat-button-toggle-group {
+  margin-bottom: 10px;
+}
+
+.money-row.disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }

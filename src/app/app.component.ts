@@ -5,7 +5,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { Character } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
@@ -23,6 +23,8 @@ import { DndApiService } from './dnd-api.service';
 import { CloudSyncService } from './cloud-sync.service';
 import { SyncStatusService } from './sync-status.service';
 import { AuthService } from './auth.service';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { computed, signal } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +47,7 @@ import { AuthService } from './auth.service';
     ResourcesComponent,
     HpComponent,
     HeaderComponent,
+    MatButtonToggleModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -130,6 +133,28 @@ export class AppComponent implements AfterViewInit, OnInit {
   newCharacterName = '';
   deathSaveMessage: string | null = null;
 
+  readonly selectedStatSectionSig = signal<
+    'ki' | 'rage' | 'wild' | 'slots' | null
+  >(this.selectedStatSection);
+
+  readonly hasKiSig = computed(() => this.character.class === 'Monk');
+  readonly hasRageSig = computed(() => this.character.class === 'Barbarian');
+  readonly hasWildSig = computed(() => this.character.class === 'Druid');
+  readonly hasSlotsSig = computed(
+    () =>
+      Array.isArray(this.character.spellSlots) &&
+      this.character.spellSlots.some((s) => s > 0)
+  );
+
+  readonly availableStatSectionsSig = computed(() => {
+    const arr: Array<'ki' | 'rage' | 'wild' | 'slots'> = [];
+    if (this.hasKiSig()) arr.push('ki');
+    if (this.hasRageSig()) arr.push('rage');
+    if (this.hasWildSig()) arr.push('wild');
+    if (this.hasSlotsSig()) arr.push('slots');
+    return arr;
+  });
+
   ngOnInit(): void {
     this.loadSavedCharacterNames();
     this.fetchClassesFromAPI();
@@ -183,6 +208,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async loadSavedCharacterNames(): Promise<void> {
     this.savedCharacterNames = await this.cloud.listCharacterNames();
+    // If nothing exists after login/pull, default to new character mode
+    if (!this.isCharacterLoaded && this.savedCharacterNames.length === 0) {
+      this.isCreatingNewCharacter = true;
+      this.selectedCharacter = 'new';
+      this.newCharacterName = '';
+    }
   }
 
   async onCharacterSelection(name: string): Promise<void> {
@@ -225,7 +256,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     const name = settings?.lastSelectedCharacter || null;
-    if (!name) return;
+    if (!name) {
+      // If there is no last selected and no saved names, enter creation mode
+      if (!this.isCharacterLoaded && this.savedCharacterNames.length === 0) {
+        this.isCreatingNewCharacter = true;
+        this.selectedCharacter = 'new';
+        this.newCharacterName = '';
+      }
+      return;
+    }
 
     const loaded = await this.cloud.getCharacter(name);
     if (!loaded) return;
@@ -264,6 +303,12 @@ export class AppComponent implements AfterViewInit, OnInit {
       setTimeout(() => this.loadSavedCharacterNames(), 1000);
     }
     // No timer-based clear; SyncStatusService will clear pendingSave on push completion
+  }
+
+  cancelNewCharacter(): void {
+    this.isCreatingNewCharacter = false;
+    this.newCharacterName = '';
+    this.selectedCharacter = this.character.name || null;
   }
 
   async createNewCharacter(): Promise<void> {
@@ -497,15 +542,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.store.setFullHeal(this.fullHeal);
   }
 
-  // --- Child component events ---
-  onHpCharacterChange(): void {
-    // The HpComponent mutated its local character reference; patch the store explicitly.
-    this.store.patchCharacter({
-      tempHP: this.character.tempHP,
-    });
-    this.saveCharacterData();
-  }
-
   onHurt(damage: number): void {
     this.store.applyDamage(damage);
     this.saveCharacterData();
@@ -570,51 +606,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     // Persist selection deterministically
     await this.persistSelectedCharacter();
     this.ensureSelectedStatSection();
-  }
-
-  onHitDieChange(): void {
-    this.store.patchCharacter({
-      hitDie: this.character.hitDie,
-    });
-    this.saveCharacterData();
-  }
-
-  onDeathSavesChange(): void {
-    this.store.patchCharacter({
-      deathSaveSuccess: this.character.deathSaveSuccess,
-      deathSaveFailure: this.character.deathSaveFailure,
-      stable: this.character.stable,
-    });
-    this.saveCharacterData();
-    this.refreshDeathSaveMessageFromCharacter();
-  }
-
-  onMoneyChange(): void {
-    this.store.patchCharacter({
-      cp: this.character.cp,
-      sp: this.character.sp,
-      gp: this.character.gp,
-      pp: this.character.pp,
-    });
-    this.saveCharacterData();
-  }
-
-  onResourcesChange(): void {
-    this.store.patchCharacter({
-      resources: this.character.resources,
-    });
-    this.saveCharacterData();
-  }
-
-  onKiPointsChange(): void {
-    this.store.patchCharacter({ kiPoints: this.character.kiPoints });
-    this.saveCharacterData();
-  }
-
-  onRageChange(): void {
-    // Persist rageRemaining from child RageComponent
-    this.store.patchCharacter({ rageRemaining: this.character.rageRemaining });
-    this.saveCharacterData();
   }
 
   onSpellSlotsChange(): void {
@@ -682,16 +673,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     return arr;
   }
   ensureSelectedStatSection(): void {
-    const available = this.availableStatSections();
+    const available = this.availableStatSectionsSig();
     if (!available.length) {
       this.selectedStatSection = null;
+      this.selectedStatSectionSig.set(null);
       return;
     }
     if (
       !this.selectedStatSection ||
       !available.includes(this.selectedStatSection)
     ) {
-      this.selectedStatSection = available[0];
+      const next = available[0];
+      this.selectedStatSection = next;
+      this.selectedStatSectionSig.set(next);
     }
   }
   setSelectedStatSection(section: 'ki' | 'rage' | 'wild' | 'slots'): void {
@@ -716,5 +710,18 @@ export class AppComponent implements AfterViewInit, OnInit {
     } catch (e) {
       console.error('Failed to persist lastSelectedCharacter', e);
     }
+  }
+
+  onSectionToggle(val: 'money' | 'resources') {
+    this.showingMoney = val === 'money';
+  }
+
+  onDeathHitToggle(val: 'death' | 'hit') {
+    this.showingDeathSaves = val === 'death';
+  }
+
+  onChildCharacterChange(): void {
+    this.pendingSave = true;
+    this.saveCharacterData();
   }
 }

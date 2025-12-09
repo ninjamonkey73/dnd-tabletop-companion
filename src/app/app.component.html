@@ -20,8 +20,11 @@
     <mat-form-field appearance="fill">
       <mat-label>New Character Name</mat-label>
       <input
+        matInput
+        name="newCharacterName"
+        type="text"
         [(ngModel)]="newCharacterName"
-        placeholder="Enter new character name"
+        autocomplete="off"
       />
     </mat-form-field>
     <button
@@ -32,6 +35,14 @@
     >
       Save Character
     </button>
+    <button
+      class="cancel-button"
+      mat-raised-button
+      color="primary"
+      (click)="cancelNewCharacter()"
+    >
+      Cancel
+    </button>
   </div>
   }
 
@@ -41,84 +52,54 @@
     [percentHP]="percentHP"
     [deathSaveMessage]="deathSaveMessage"
     [isCharacterLoaded]="isCharacterLoaded"
-    (characterChange)="onHpCharacterChange()"
+    (characterChange)="onChildCharacterChange()"
     (hurt)="onHurt($event)"
     (heal)="onHeal($event)"
     (maxHpEditFinished)="onMaxHpEditFinished()"
   ></app-hp>
-  <div class="body-buttons">
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="showingMoney"
-      (click)="showingMoney = true"
-    >
-      Money
-    </button>
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="!showingMoney"
-      (click)="showingMoney = false"
-    >
-      Trackable Resources
-    </button>
-  </div>
+  <mat-button-toggle-group
+    [value]="showingMoney ? 'money' : 'resources'"
+    (change)="onSectionToggle($event.value)"
+  >
+    <mat-button-toggle value="money">Money</mat-button-toggle>
+    <mat-button-toggle value="resources">Trackable Resources</mat-button-toggle>
+  </mat-button-toggle-group>
 
-  <div class="row money-row" [class.disabled]="isCreatingNewCharacter">
+  <div class="row money-row" [attr.aria-disabled]="isCreatingNewCharacter">
     @if (showingMoney) {
     <app-money
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onMoneyChange()"
+      (characterChange)="onChildCharacterChange()"
     ></app-money>
     } @if (!showingMoney) {
     <app-resources
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onResourcesChange()"
+      (characterChange)="onChildCharacterChange()"
     ></app-resources>
     }
   </div>
 
   <!-- Stat section toggle: show when 2+ sections available -->
-  @if (availableStatSections().length > 1) {
+  @if (availableStatSectionsSig().length > 1) {
   <div class="body-buttons">
-    @if (hasKi()) {
+    @for (sec of availableStatSectionsSig(); track sec) {
     <button
       mat-stroked-button
       color="primary"
-      [disabled]="selectedStatSection === 'ki'"
-      (click)="setSelectedStatSection('ki')"
+      [disabled]="selectedStatSection === sec"
+      (click)="setSelectedStatSection(sec)"
     >
-      Ki Points
-    </button>
-    } @if (hasRage()) {
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="selectedStatSection === 'rage'"
-      (click)="setSelectedStatSection('rage')"
-    >
-      Rage
-    </button>
-    } @if (hasWild()) {
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="selectedStatSection === 'wild'"
-      (click)="setSelectedStatSection('wild')"
-    >
-      Wild Shape
-    </button>
-    } @if (hasSlots()) {
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="selectedStatSection === 'slots'"
-      (click)="setSelectedStatSection('slots')"
-    >
-      Spell Slots
+      {{
+        sec === "ki"
+          ? "Ki Points"
+          : sec === "rage"
+          ? "Rage"
+          : sec === "wild"
+          ? "Wild Shape"
+          : "Spell Slots"
+      }}
     </button>
     }
   </div>
@@ -129,60 +110,49 @@
   <app-ki-points
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onKiPointsChange()"
+    (characterChange)="onChildCharacterChange()"
   ></app-ki-points>
   } @if (selectedStatSection === 'wild') {
   <app-wild-shape
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onWildShapeChange()"
+    (characterChange)="onChildCharacterChange()"
   ></app-wild-shape>
   } @if (selectedStatSection === 'slots') {
   <app-spell-slots
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onSpellSlotsChange()"
+    (characterChange)="onChildCharacterChange()"
     (remainingChanged)="onSpellSlotRemainingChanged($event)"
   ></app-spell-slots>
   } @if (selectedStatSection === 'rage') {
   <app-rage
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onRageChange()"
+    (characterChange)="onChildCharacterChange()"
   ></app-rage>
   }
 
-  <div class="body-buttons">
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="showingDeathSaves"
-      (click)="showingDeathSaves = true"
-    >
-      Death Saves
-    </button>
-    <button
-      mat-stroked-button
-      color="primary"
-      [disabled]="!showingDeathSaves"
-      (click)="showingDeathSaves = false"
-    >
-      Hit Dice
-    </button>
-  </div>
+  <mat-button-toggle-group
+    [value]="showingDeathSaves ? 'death' : 'hit'"
+    (change)="onDeathHitToggle($event.value)"
+  >
+    <mat-button-toggle value="death">Death Saves</mat-button-toggle>
+    <mat-button-toggle value="hit">Hit Dice</mat-button-toggle>
+  </mat-button-toggle-group>
 
   <div>
     @if (showingDeathSaves) {
     <app-death-saves
       [character]="character"
       (deathSaveMessageChange)="deathSaveMessage = $event"
-      (characterChange)="onDeathSavesChange()"
+      (characterChange)="onChildCharacterChange()"
     ></app-death-saves>
     } @if (!showingDeathSaves) {
     <app-hit-dice
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onHitDieChange()"
+      (characterChange)="onChildCharacterChange()"
     ></app-hit-dice>
     }
   </div>

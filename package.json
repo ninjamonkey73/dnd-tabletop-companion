@@ -14,7 +14,8 @@
     "deploy": "npm run build:prod && npm run add-404 && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
     "open": "ng serve --open",
     "add-404": "copy dist\\dnd-tabletop-companion\\browser\\index.html dist\\dnd-tabletop-companion\\browser\\404.html",
-    "style:check": "powershell -ExecutionPolicy Bypass -File [check-templates.ps1](http://_vscodecontentref_/12)"
+    "style:check": "powershell -ExecutionPolicy Bypass -File [check-templates.ps1](http://_vscodecontentref_/12)",
+    "find:unused-css": "powershell.exe -ExecutionPolicy Bypass -File ./scripts/find-unused-css.ps1"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +41,7 @@
     "cpy": "^11.1.0",
     "jsdom": "^27.3.0",
     "rimraf": "^6.0.1",
+    "ts-prune": "^0.10.3",
     "typescript": "~5.9.3",
     "vitest": "^3.2.4"
   }

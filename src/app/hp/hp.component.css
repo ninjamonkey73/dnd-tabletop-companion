@@ -61,6 +61,8 @@
 .hp-input {
   width: 80px;
   font-size: 1.25rem;
+  font-family: "EB Garamond", "Source Serif 4", "Goudy Bookletter 1911", Georgia,
+    serif;
 }
 
 .hurt-button {
