@@ -23,14 +23,11 @@ npm run deploy
 ```
 
 ```bash
-ng build --configuration production --localize
-npx replace-in-file '<base href="/en-US/">' '<base href="/dnd-tabletop-companion/en-US/">' dist/dnd-tabletop-companion/browser/en-US/index.html
+npm run build:prod
+npm run add-404
 git checkout gh-pages
 npx rimraf ./browser
-npx cpy-cli "dist/dnd-tabletop-companion/browser/**" .
-## move en-US folder to main
-move .\en-US\* .\
-rmdir .\en-US
+npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" .
 git add .
 git commit -m 'Deploy'
 git push origin gh-pages
@@ -78,6 +75,20 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Rollback to last stable deployment
+
+```bash
+# Update your local references
+git fetch origin
+
+# Switch to the gh-pages branch
+git checkout gh-pages
+
+# Reset the branch to the desired commit- replace hash
+git reset --hard a8fc50e30a7d4f6d23dbd4f32cd166474f103622
+git push origin gh-pages --force
+```
 
 ## Additional Resources
 
