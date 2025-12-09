@@ -15,7 +15,13 @@ export function initFirebase(): Promise<void> {
     const firebaseConfig = await res.json();
 
     const { initializeApp } = await import('firebase/app');
-    const { getAuth, GoogleAuthProvider } = await import('firebase/auth');
+    const {
+      getAuth,
+      GoogleAuthProvider,
+      getRedirectResult,
+      setPersistence,
+      browserLocalPersistence,
+    } = await import('firebase/auth');
     const {
       initializeFirestore,
       persistentLocalCache,
@@ -25,11 +31,21 @@ export function initFirebase(): Promise<void> {
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     googleProvider = new GoogleAuthProvider();
+    await setPersistence(auth, browserLocalPersistence);
     db = initializeFirestore(app, {
       localCache: persistentLocalCache({
         tabManager: persistentMultipleTabManager(),
       }),
     });
+
+    // Complete redirect-based login if applicable (mobile-friendly flow)
+    try {
+      const result = await getRedirectResult(auth);
+      // If needed, you could expose the result via a callback or a shared signal.
+      // For now, auth state listener elsewhere will pick up the user.
+    } catch {
+      // Swallow redirect completion errors; auth state listener will remain consistent.
+    }
   })();
 
   return firebaseReadyPromise;
