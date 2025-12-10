@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { RageComponent } from './rage.component';
 
 describe('RageComponent', () => {
@@ -8,9 +8,8 @@ describe('RageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RageComponent]
-    })
-    .compileComponents();
+      imports: [RageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RageComponent);
     component = fixture.componentInstance;

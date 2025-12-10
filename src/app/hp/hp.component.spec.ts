@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HpComponent } from './hp.component';
 
 describe('HpComponent', () => {
@@ -8,9 +8,8 @@ describe('HpComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HpComponent]
-    })
-    .compileComponents();
+      imports: [HpComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HpComponent);
     component = fixture.componentInstance;

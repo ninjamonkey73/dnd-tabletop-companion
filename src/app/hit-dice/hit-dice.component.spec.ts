@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HitDiceComponent } from './hit-dice.component';
 
 describe('HitDiceComponent', () => {
@@ -8,9 +8,8 @@ describe('HitDiceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HitDiceComponent]
-    })
-    .compileComponents();
+      imports: [HitDiceComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HitDiceComponent);
     component = fixture.componentInstance;

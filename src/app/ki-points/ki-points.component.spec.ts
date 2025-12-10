@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { KiPointsComponent } from './ki-points.component';
 
 describe('KiPointsComponent', () => {
@@ -8,9 +8,8 @@ describe('KiPointsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [KiPointsComponent]
-    })
-    .compileComponents();
+      imports: [KiPointsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(KiPointsComponent);
     component = fixture.componentInstance;

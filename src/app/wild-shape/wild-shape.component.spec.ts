@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { WildShapeComponent } from './wild-shape.component';
 
 describe('WildShapeComponent', () => {
@@ -8,9 +8,8 @@ describe('WildShapeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WildShapeComponent]
-    })
-    .compileComponents();
+      imports: [WildShapeComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WildShapeComponent);
     component = fixture.componentInstance;

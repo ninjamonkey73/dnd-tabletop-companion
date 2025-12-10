@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { DeathSavesComponent } from './death-saves.component';
 
 describe('DeathSavesComponent', () => {
@@ -8,9 +8,8 @@ describe('DeathSavesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeathSavesComponent]
-    })
-    .compileComponents();
+      imports: [DeathSavesComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DeathSavesComponent);
     component = fixture.componentInstance;

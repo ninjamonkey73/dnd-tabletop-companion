@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { MoneyComponent } from './money.component';
 
 describe('MoneyComponent', () => {
@@ -8,9 +8,8 @@ describe('MoneyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MoneyComponent]
-    })
-    .compileComponents();
+      imports: [MoneyComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MoneyComponent);
     component = fixture.componentInstance;
