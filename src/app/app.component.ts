@@ -420,6 +420,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         rageRemaining: 0,
         wildShapeRemaining: 0,
       });
+      this.selectedStatSection = null;
       this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
     }
   }

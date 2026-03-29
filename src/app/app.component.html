@@ -25,6 +25,7 @@
         type="text"
         [(ngModel)]="newCharacterName"
         autocomplete="off"
+        (keydown.enter)="createNewCharacter()"
       />
     </mat-form-field>
     <button
