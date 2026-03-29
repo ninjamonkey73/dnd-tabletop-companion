@@ -58,44 +58,18 @@
       <mat-icon matTooltip="Delete Character">delete</mat-icon>
     </button>
   </div>
-
+  
   <div class="longRest">
     <div class="long-rest-toggle">
       <mat-slide-toggle
         [(ngModel)]="internalFullHeal"
         (change)="onFullHealToggleChanged()"
         [attr.aria-label]="'long rest heals'"
-        >LR Heals</mat-slide-toggle
-      >
+      ></mat-slide-toggle>
+      <div class="toggle-label">LR Heals</div>
     </div>
   </div>
 
-  <div class="rest-buttons">
-    <div class="button-container">
-      <button
-        mat-fab
-        extended
-        class="rest-button"
-        (click)="emitLongRest()"
-        matTooltip="Long Rest"
-      >
-        <mat-icon class="longRest">bedtime</mat-icon>
-        LR
-      </button>
-    </div>
-    <div class="button-container">
-      <button
-        mat-fab
-        extended
-        class="rest-button"
-        (click)="emitShortRest()"
-        matTooltip="Short Rest"
-      >
-        <mat-icon>snooze</mat-icon>
-        SR
-      </button>
-    </div>
-  </div>
 </div>
 
 <div class="row class-level-row">
@@ -131,4 +105,31 @@
       [attr.aria-label]="'character level for ' + character().name"
     />
   </mat-form-field>
+
+  <div class="rest-buttons">
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="emitLongRest()"
+        matTooltip="Long Rest"
+      >
+        <mat-icon class="longRest">bedtime</mat-icon>
+        LR
+      </button>
+    </div>
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="rest-button"
+        (click)="emitShortRest()"
+        matTooltip="Short Rest"
+      >
+        <mat-icon>snooze</mat-icon>
+        SR
+      </button>
+    </div>
+  </div>
 </div>

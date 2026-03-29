@@ -374,7 +374,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       rage: 0,
       rageRemaining: 0,
       wildShapeRemaining: 0,
-      resources: this.character.resources, // keep existing resource labels
+      resources: [], // clear resources for a new character
     };
     this.store.setCharacter(fresh);
     this.selectedCharacter = fresh.name;

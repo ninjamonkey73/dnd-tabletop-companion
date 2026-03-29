@@ -36,13 +36,48 @@ body {
 
 .top {
   gap: 16px;
-  width: 400px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .char-select-container {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Responsive header tweaks */
+@media (max-width: 480px) {
+  .top {
+    gap: 8px;
+    padding: 0 6px;
+  }
+  .charName {
+    width: 120px;
+  }
+  .class-select {
+    width: 120px;
+  }
+  .classLevel {
+    width: 100px;
+  }
+  .login-button,
+  .rest-button {
+    min-width: 72px;
+    font-size: 1rem;
+    padding: 4px 8px;
+  }
+  .rest-buttons {
+    flex-direction: row;
+    gap: 6px;
+  }
+  .row {
+    justify-content: space-between;
+  }
 }
 
 .class-select {
