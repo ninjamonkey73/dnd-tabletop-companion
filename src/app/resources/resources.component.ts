@@ -136,4 +136,9 @@ export class ResourcesComponent implements OnChanges {
   private nextId(): number {
     return this.nextResourceId++;
   }
+
+  onValueBlur(index: number): void {
+    // Save the value and exit edit mode
+    this.editingResourceNameId = null;
+  }
 }

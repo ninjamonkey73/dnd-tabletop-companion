@@ -4,25 +4,44 @@
     <div class="resource-row">
       <div class="stat-box resource-stat">
         <div class="stat-label">
-            <ng-container *ngIf="editingResourceNameId === $index; else showName">
-              <mat-form-field class="resource-name-inline">
-                <input
-                  matInput
-                  #nameInput
-                  type="text"
-                  maxlength="15"
-                  [(ngModel)]="record.name"
-                  placeholder="Resource"
-                  [disabled]="isCreatingNewCharacter()"
-                  (blur)="onNameBlur($index)"
-                  [attr.aria-label]="'resource name ' + record.id + ' for ' + character().name"
-                />
-              </mat-form-field>
-            </ng-container>
-            <ng-template #showName>{{ record.name || 'Resource' }}</ng-template>
+          @if (editingResourceNameId === $index) {
+            <mat-form-field class="resource-name-inline">
+              <input
+                matInput
+                #nameInput
+                type="text"
+                maxlength="15"
+                [(ngModel)]="record.name"
+                placeholder="Resource"
+                [disabled]="isCreatingNewCharacter()"
+                (blur)="onNameBlur($index)"
+                (keydown.enter)="onNameBlur($index)"
+                [attr.aria-label]="'resource name ' + record.id + ' for ' + character().name"
+              />
+            </mat-form-field>
+          } @else {
+            {{ record.name || 'Resource' }}
+          }
         </div>
-        <div class="stat-value" [attr.aria-label]="'resource value for ' + record.name">
-          {{ record.value }}
+        <div class="stat-value">
+          @if (editingResourceNameId === $index) {
+            <mat-form-field>
+              <input
+                matInput
+                type="number"
+                [(ngModel)]="record.value"
+                placeholder="Value"
+                [disabled]="isCreatingNewCharacter()"
+                (blur)="onValueBlur($index)"
+                (keydown.enter)="onValueBlur($index)"
+                [attr.aria-label]="'resource value ' + record.name"
+              />
+            </mat-form-field>
+          } @else {
+            <span [attr.aria-label]="'resource value for ' + record.name">
+              {{ record.value }}
+            </span>
+          }
         </div>
         <div class="stat-buttons">
           <button
@@ -47,25 +66,25 @@
           </button>
         </div>
         <div class="resource-actions">
-        <button
-          mat-icon-button
-          type="button"
-          (click)="startEditingResourceName($index)"
-          [disabled]="isCreatingNewCharacter()"
-          [attr.aria-label]="'edit resource name for ' + record.name"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          type="button"
-          (click)="removeResource($index)"
-          [disabled]="isCreatingNewCharacter()"
-          [attr.aria-label]="'remove resource ' + record.name"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+          <button
+            mat-icon-button
+            type="button"
+            (click)="startEditingResourceName($index)"
+            [disabled]="isCreatingNewCharacter()"
+            [attr.aria-label]="'edit resource name for ' + record.name"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            (click)="removeResource($index)"
+            [disabled]="isCreatingNewCharacter()"
+            [attr.aria-label]="'remove resource ' + record.name"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
     }
