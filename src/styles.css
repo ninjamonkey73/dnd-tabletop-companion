@@ -35,10 +35,9 @@ body {
 }
 
 .top {
-  gap: 16px;
+  gap: 12px;
   width: 100%;
   max-width: 100%;
-  padding: 0 8px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

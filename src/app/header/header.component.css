@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
   align-self: flex-start;
   margin-top: 0;
 }
@@ -59,13 +58,14 @@
   gap: 8px;
 }
 .charName {
-  width: 180px;
+  width: 150px;
 }
 /* Header-specific tweaks that are not global (keep minimal here if using global styles.css) */
 .class-level-row {
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
 }
+
 .no-wrap {
   white-space: nowrap;
 }
