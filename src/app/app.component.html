@@ -52,7 +52,7 @@
     [percentHP]="percentHP"
     [deathSaveMessage]="deathSaveMessage"
     [isCharacterLoaded]="isCharacterLoaded"
-    (characterChange)="onChildCharacterChange()"
+    (characterChange)="onChildCharacterChange($event)"
     (hurt)="onHurt($event)"
     (heal)="onHeal($event)"
     (maxHpEditFinished)="onMaxHpEditFinished()"
@@ -70,13 +70,13 @@
     <app-money
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange()"
+      (characterChange)="onChildCharacterChange($event)"
     ></app-money>
     } @if (!showingMoney) {
     <app-resources
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange()"
+      (characterChange)="onChildCharacterChange($event)"
     ></app-resources>
     }
   </div>
@@ -110,26 +110,26 @@
   <app-ki-points
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onChildCharacterChange()"
+    (characterChange)="onChildCharacterChange($event)"
   ></app-ki-points>
   } @if (selectedStatSection === 'wild') {
   <app-wild-shape
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onChildCharacterChange()"
+    (characterChange)="onChildCharacterChange($event)"
   ></app-wild-shape>
   } @if (selectedStatSection === 'slots') {
   <app-spell-slots
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onChildCharacterChange()"
+    (characterChange)="onChildCharacterChange($event)"
     (remainingChanged)="onSpellSlotRemainingChanged($event)"
   ></app-spell-slots>
   } @if (selectedStatSection === 'rage') {
   <app-rage
     [character]="character"
     [isCreatingNewCharacter]="isCreatingNewCharacter"
-    (characterChange)="onChildCharacterChange()"
+    (characterChange)="onChildCharacterChange($event)"
   ></app-rage>
   }
 
@@ -146,13 +146,13 @@
     <app-death-saves
       [character]="character"
       (deathSaveMessageChange)="deathSaveMessage = $event"
-      (characterChange)="onChildCharacterChange()"
+      (characterChange)="onChildCharacterChange($event)"
     ></app-death-saves>
     } @if (!showingDeathSaves) {
     <app-hit-dice
       [character]="character"
       [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange()"
+      (characterChange)="onChildCharacterChange($event)"
     ></app-hit-dice>
     }
   </div>

@@ -1,50 +1,95 @@
 .resources {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0 8px;
+  gap: 8px;
   width: 100%;
-  max-width: 700px;
+  max-width: 720px;
   margin-left: auto;
   margin-right: auto;
   justify-items: center;
-  align-items: center;
+  align-items: start;
 }
 .resources > * {
-  min-width: 90px;
+  min-width: 72px;
   box-sizing: border-box;
   width: 100%;
-  max-width: 160px;
+  max-width: 220px;
 }
 .resource-row {
   display: flex;
   flex-direction: column;
-  gap: 0; /* remove space between name and value */
+  gap: 6px;
   width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
 }
 
 .resource-row mat-form-field {
   width: 100%;
   box-sizing: border-box;
-  margin: 0; /* ensure Material doesn't add extra spacing */
+  margin: 0;
 }
 .resource-name {
-  display: flex;
-  align-items: stretch; /* was center */
-  justify-content: flex-start; /* was center */
+  display: block;
 }
 mat-form-field.resource-name {
-  height: auto; /* let content define height */
+  height: auto;
 }
 
-@media (max-width: 700px) {
+.resource-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.resource-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.resource-stat .stat-label {
+  font-weight: 600;
+}
+.resource-stat .stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+@media (max-width: 450px) {
+  .resources {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 300px) {
   .resources {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+@media (max-width: 200px) {
+  .resources {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .resource-row {
+    padding: 8px 6px;
+  }
+}
+
+.add-resource-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
 :host ::ng-deep mat-form-field.resource-name .mat-mdc-form-field-infix {
   padding-top: 2px !important;
-  padding-bottom: 0 !important;
+  padding-bottom: 2px !important;
   min-height: 0 !important;
 }
 :host
@@ -57,5 +102,6 @@ mat-form-field.resource-name {
 
 :host ::ng-deep mat-form-field.resource-name .mat-mdc-input-element {
   line-height: 1.2 !important;
-  padding-left: 12px !important;
+  padding-left: 2px !important;
+
 }

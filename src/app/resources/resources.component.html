@@ -1,47 +1,80 @@
 <mat-card-content>
   <div class="resources">
-    @for (record of character().resources; track $index) {
+    @for (record of localResources; track $index) {
     <div class="resource-row">
-      <mat-form-field subscriptSizing="dynamic" class="resource-name">
-        <div class="resource-name">
-          <input
-            matInput
-            #nameInput
-            type="text"
-            [(ngModel)]="record.name"
-            placeholder="Resource Name"
-            [readonly]="editingResourceNameId !== $index"
-            [disabled]="isCreatingNewCharacter()"
-            (blur)="onNameBlur()"
-            [attr.aria-label]="
-              'resource name ' + record.id + ' for ' + character().name
-            "
-          />
+      <div class="stat-box resource-stat">
+        <div class="stat-label">
+            <ng-container *ngIf="editingResourceNameId === $index; else showName">
+              <mat-form-field class="resource-name-inline">
+                <input
+                  matInput
+                  #nameInput
+                  type="text"
+                  maxlength="15"
+                  [(ngModel)]="record.name"
+                  placeholder="Resource"
+                  [disabled]="isCreatingNewCharacter()"
+                  (blur)="onNameBlur($index)"
+                  [attr.aria-label]="'resource name ' + record.id + ' for ' + character().name"
+                />
+              </mat-form-field>
+            </ng-container>
+            <ng-template #showName>{{ record.name || 'Resource' }}</ng-template>
+        </div>
+        <div class="stat-value" [attr.aria-label]="'resource value for ' + record.name">
+          {{ record.value }}
+        </div>
+        <div class="stat-buttons">
           <button
-            mat-icon-button
-            type="button"
-            (click)="startEditingResourceName($index)"
+            mat-mini-button
+            class="sub"
+            (click)="adjustResource($index, -1)"
             [disabled]="isCreatingNewCharacter()"
-            [attr.aria-label]="'edit resource name for ' + record.name"
+            matTooltip="Subtract"
+            [attr.aria-label]="'subtract from ' + record.name"
           >
-            <mat-icon>edit</mat-icon>
+            <mat-icon>remove</mat-icon>
+          </button>
+          <button
+            mat-mini-button
+            class="add"
+            (click)="adjustResource($index, 1)"
+            [disabled]="isCreatingNewCharacter()"
+            matTooltip="Add"
+            [attr.aria-label]="'add to ' + record.name"
+          >
+            <mat-icon>add</mat-icon>
           </button>
         </div>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input
-          matInput
-          type="number"
-          min="0"
-          [(ngModel)]="record.value"
-          class="classData-input"
-          (change)="onValueChange()"
+        <div class="resource-actions">
+        <button
+          mat-icon-button
+          type="button"
+          (click)="startEditingResourceName($index)"
           [disabled]="isCreatingNewCharacter()"
-          [attr.aria-label]="'resource value for ' + record.name"
-        />
-      </mat-form-field>
+          [attr.aria-label]="'edit resource name for ' + record.name"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          (click)="removeResource($index)"
+          [disabled]="isCreatingNewCharacter()"
+          [attr.aria-label]="'remove resource ' + record.name"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      </div>
     </div>
     }
+  </div>
+
+  <div class="add-resource-row">
+    <button mat-flat-button type="button" (click)="addResource()" [disabled]="isCreatingNewCharacter()">
+      <mat-icon>add</mat-icon>
+      Add Resource
+    </button>
   </div>
 </mat-card-content>

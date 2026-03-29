@@ -733,7 +733,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.showingDeathSaves = val === 'death';
   }
 
-  onChildCharacterChange(): void {
+  onChildCharacterChange(c?: Character): void {
+    // If a child emitted an updated Character object, apply it to the store
+    if (c && typeof c === 'object') {
+      this.store.setCharacter(c);
+    }
     this.pendingSave = true;
     this.saveCharacterData();
   }
