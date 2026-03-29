@@ -58,6 +58,7 @@ mat-form-field.resource-name {
 .resource-stat .stat-value {
   font-size: 1.2rem;
   font-weight: 700;
+  padding: 8px;
 }
 
 @media (max-width: 450px) {
