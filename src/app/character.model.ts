@@ -26,6 +26,7 @@ export interface Character {
   rageRemaining: number;
   wildShapeRemaining: number;
   resources: Resource[];
+  sneakAttack: number;
 }
 
 export const defaultCharacter: Character = {
@@ -55,4 +56,5 @@ export const defaultCharacter: Character = {
     { id: 3, name: `Resource 3`, value: 0 },
     { id: 4, name: `Resource 4`, value: 0 },
   ],
+  sneakAttack: 0,
 };

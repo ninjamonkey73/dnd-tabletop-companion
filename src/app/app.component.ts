@@ -14,6 +14,7 @@ import { RageComponent } from './rage/rage.component';
 import { KiPointsComponent } from './ki-points/ki-points.component';
 import { SpellSlotsComponent } from './spell-slots/spell-slots.component';
 import { WildShapeComponent } from './wild-shape/wild-shape.component';
+import { SneakAttackComponent } from './sneak-attack/sneak-attack.component';
 import { MoneyComponent } from './money/money.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { HpComponent } from './hp/hp.component';
@@ -43,6 +44,7 @@ import { computed, signal } from '@angular/core';
     KiPointsComponent,
     SpellSlotsComponent,
     WildShapeComponent,
+    SneakAttackComponent,
     MoneyComponent,
     ResourcesComponent,
     HpComponent,
@@ -118,7 +120,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   showingMoney = true;
   showingDeathSaves = true;
   // Toggle for stat sections (ki/rage/wild/spell slots)
-  selectedStatSection: 'ki' | 'rage' | 'wild' | 'slots' | null = null;
+  selectedStatSection: 'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack' | null = null;
 
   classHasBeenSet = false;
   lastCharacterSelected = '';
@@ -134,7 +136,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   deathSaveMessage: string | null = null;
 
   readonly selectedStatSectionSig = signal<
-    'ki' | 'rage' | 'wild' | 'slots' | null
+    'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack' | null
   >(this.selectedStatSection);
 
   readonly hasKiSig = computed(() => this.character.class === 'Monk');
@@ -145,13 +147,15 @@ export class AppComponent implements AfterViewInit, OnInit {
       Array.isArray(this.character.spellSlots) &&
       this.character.spellSlots.some((s) => s > 0)
   );
-
+  readonly hasSneakAttackSig = computed(() => this.character.class === 'Rogue');
+  
   readonly availableStatSectionsSig = computed(() => {
-    const arr: Array<'ki' | 'rage' | 'wild' | 'slots'> = [];
+    const arr: Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> = [];
     if (this.hasKiSig()) arr.push('ki');
     if (this.hasRageSig()) arr.push('rage');
     if (this.hasWildSig()) arr.push('wild');
     if (this.hasSlotsSig()) arr.push('slots');
+    if (this.hasSneakAttackSig()) arr.push('sneakAttack');
     return arr;
   });
 
@@ -677,12 +681,17 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.character.spellSlots.some((s) => s > 0)
     );
   }
-  availableStatSections(): Array<'ki' | 'rage' | 'wild' | 'slots'> {
-    const arr: Array<'ki' | 'rage' | 'wild' | 'slots'> = [];
+  hasSneakAttack(): boolean {
+    return this.character.class === 'Rogue';
+  }
+
+  availableStatSections(): Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> {
+    const arr: Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> = [];
     if (this.hasKi()) arr.push('ki');
     if (this.hasRage()) arr.push('rage');
     if (this.hasWild()) arr.push('wild');
     if (this.hasSlots()) arr.push('slots');
+    if (this.hasSneakAttack()) arr.push('sneakAttack');
     return arr;
   }
   ensureSelectedStatSection(): void {
@@ -701,7 +710,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.selectedStatSectionSig.set(next);
     }
   }
-  setSelectedStatSection(section: 'ki' | 'rage' | 'wild' | 'slots'): void {
+  setSelectedStatSection(section: 'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'): void {
     this.selectedStatSection = section;
   }
 

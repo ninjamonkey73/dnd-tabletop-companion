@@ -98,6 +98,8 @@
           ? "Rage"
           : sec === "wild"
           ? "Wild Shape"
+          : sec === "sneakAttack"
+          ? "Sneak Attack"
           : "Spell Slots"
       }}
     </button>
@@ -131,6 +133,11 @@
     [isCreatingNewCharacter]="isCreatingNewCharacter"
     (characterChange)="onChildCharacterChange($event)"
   ></app-rage>
+  } @if (selectedStatSection === 'sneakAttack') {
+  <app-sneak-attack
+    [character]="character"
+    [isCreatingNewCharacter]="isCreatingNewCharacter"
+  ></app-sneak-attack>
   }
 
   <mat-button-toggle-group
