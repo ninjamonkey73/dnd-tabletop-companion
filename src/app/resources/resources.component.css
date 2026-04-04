@@ -106,3 +106,15 @@ mat-form-field.resource-name {
   padding-left: 2px !important;
 
 }
+
+.add-resource {
+  background: linear-gradient(to bottom, navy, lightblue);
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  min-width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
