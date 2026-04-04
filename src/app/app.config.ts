@@ -1,8 +1,9 @@
 import {
   ApplicationConfig,
   provideZoneChangeDetection,
-  APP_INITIALIZER,
+  provideAppInitializer, // Modern replacement
   ErrorHandler,
+  inject,                // Use inject for cleaner dependency handling
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -23,38 +24,39 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withFetch()),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (
-        cloud: CloudSyncService,
-        store: CharacterStore,
-        auth: AuthService
-      ) => {
-        return async () => {
-          // Only pull settings if already authed at startup
-          if (!auth.isAuthed()) return;
+    
+    // Replacing the deprecated APP_INITIALIZER block
+    provideAppInitializer(async () => {
+      const auth = inject(AuthService);
+      const cloud = inject(CloudSyncService);
+      const store = inject(CharacterStore);
 
-          const settings = await cloud.pullSettings();
+      // 1. Ensure Firebase is fully initialized before checking auth status
+      // This prevents the "Invalid Action" race condition
+      if (!auth.isAuthed()) return;
 
-          if (typeof settings?.fullHeal === 'boolean') {
-            store.setFullHeal(settings.fullHeal);
-          }
+      // 2. Pull user settings for the D&D companion
+      const settings = await cloud.pullSettings();
 
-          const name = settings?.lastSelectedCharacter || null;
-          if (name) {
-            const loaded = await cloud.getCharacter(name);
-            if (loaded) {
-              if (!Array.isArray(loaded.spellSlots)) loaded.spellSlots = [];
-              if (!Array.isArray(loaded.spellSlotsRemaining))
-                loaded.spellSlotsRemaining = [];
-              store.setCharacter(loaded);
-            }
-          }
-        };
-      },
-      deps: [CloudSyncService, CharacterStore, AuthService],
-      multi: true,
-    },
+      if (typeof settings?.fullHeal === 'boolean') {
+        store.setFullHeal(settings.fullHeal);
+      }
+
+      // 3. Load the last active character automatically
+      const name = settings?.lastSelectedCharacter || null;
+      if (name) {
+        const loaded = await cloud.getCharacter(name);
+        if (loaded) {
+          // Safety checks for spell slot arrays
+          if (!Array.isArray(loaded.spellSlots)) loaded.spellSlots = [];
+          if (!Array.isArray(loaded.spellSlotsRemaining))
+            loaded.spellSlotsRemaining = [];
+          
+          store.setCharacter(loaded);
+        }
+      }
+    }),
+    
     { provide: ErrorHandler, useClass: ConsoleErrorHandler },
   ],
 };
