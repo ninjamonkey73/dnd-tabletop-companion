@@ -1,17 +1,24 @@
 <div mat-card>
-  <mat-card-title class="card-title">Hit Dice</mat-card-title>
-  <br />
-  <mat-form-field appearance="fill" class="classData-input">
-    <input
-      matInput
-      type="number"
-      min="0"
-      [max]="character().level"
-      [(ngModel)]="character().hitDie"
-      class="classData-input"
-      (ngModelChange)="onHitDieChange()"
-      [disabled]="isCreatingNewCharacter()"
-      [attr.aria-label]="'hit dice for ' + character().name"
-    />
-  </mat-form-field>
+  <div class="stat-box" [class.disabled]="isCreatingNewCharacter()">
+    <div class="stat-label">Hit Dice</div>
+    <div class="stat-value">{{ character().hitDie }}</div>
+    <div class="stat-buttons">
+      <button
+        mat-mini-button
+        class="sub"
+        (click)="decHitDie()"
+        [disabled]="isCreatingNewCharacter() || character().hitDie <= 0"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button
+        mat-mini-button
+        class="add"
+        (click)="incHitDie()"
+        [disabled]="isCreatingNewCharacter() || character().hitDie >= character().level"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
