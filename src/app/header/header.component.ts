@@ -115,4 +115,11 @@ export class HeaderComponent implements OnChanges {
   async logout() {
     await this.auth.logout();
   }
+
+  changeLevel(increment: number) {
+    const newLevel = this.character().level + increment;
+    if (newLevel < 1 || newLevel > 20) return;
+    this.character().level = newLevel;
+    this.onLevelChange();
+}
 }

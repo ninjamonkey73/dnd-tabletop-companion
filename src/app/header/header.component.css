@@ -81,3 +81,11 @@
   text-align: center;
   margin-top: 4px;
 }
+
+.level-input {
+  width: 80px;
+}
+
+.centered-input {
+  padding-top: 50%;
+}

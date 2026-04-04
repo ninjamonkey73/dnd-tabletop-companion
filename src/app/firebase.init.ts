@@ -8,7 +8,6 @@ export function initFirebase(): Promise<void> {
   if (firebaseReadyPromise) return firebaseReadyPromise;
 
   firebaseReadyPromise = (async () => {
-    // Resolve against current base href so it works under subpaths
     const cfgUrl = new URL('firebase-config.json', document.baseURI).toString();
     const res = await fetch(cfgUrl, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to load Firebase config');
@@ -18,7 +17,6 @@ export function initFirebase(): Promise<void> {
     const {
       getAuth,
       GoogleAuthProvider,
-      getRedirectResult,
       setPersistence,
       browserLocalPersistence,
     } = await import('firebase/auth');
@@ -31,21 +29,22 @@ export function initFirebase(): Promise<void> {
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     googleProvider = new GoogleAuthProvider();
+    
+    // This ensures the user stays logged in across refreshes
     await setPersistence(auth, browserLocalPersistence);
+
     db = initializeFirestore(app, {
       localCache: persistentLocalCache({
         tabManager: persistentMultipleTabManager(),
       }),
     });
 
-    // Complete redirect-based login if applicable (mobile-friendly flow)
-    try {
-      const result = await getRedirectResult(auth);
-      // If needed, you could expose the result via a callback or a shared signal.
-      // For now, auth state listener elsewhere will pick up the user.
-    } catch {
-      // Swallow redirect completion errors; auth state listener will remain consistent.
-    }
+    /**
+     * CHANGE: Removed getRedirectResult(auth).
+     * Since you use a popup, this call is unnecessary on every load 
+     * and is the primary trigger for the 403 'getProjectConfig' error 
+     * during the background domain handshake.
+     */
   })();
 
   return firebaseReadyPromise;

@@ -86,10 +86,10 @@
   </div>
 
   <div class="hp-controls" [class.disabled]="isCreatingNewCharacter()">
-    <mat-form-field appearance="fill" class="HPInput">
+    <mat-form-field appearance="outline" class="HPInput" floatLabel="always">
+      <mat-label>+/- HP</mat-label>
       <input
         matInput
-        placeholder="HP to +/-"
         type="number"
         [(ngModel)]="changeVal"
         class="hp-input"
