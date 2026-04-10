@@ -1,11 +1,11 @@
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { Character } from './character.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
@@ -32,7 +32,7 @@ import { computed, signal } from '@angular/core';
   imports: [
     MatCardModule,
     MatIconModule,
-    MatFormField,
+    MatFormFieldModule,
     MatInputModule,
     FormsModule,
     MatSelectModule,
