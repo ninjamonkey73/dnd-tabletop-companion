@@ -1,0 +1,14 @@
+.newChar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px;
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+.save-button, .cancel-button {
+  margin-top: 0;
+}

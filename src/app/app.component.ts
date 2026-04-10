@@ -1,4 +1,5 @@
-import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, DestroyRef, inject, computed, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,7 +26,9 @@ import { CloudSyncService } from './cloud-sync.service';
 import { SyncStatusService } from './sync-status.service';
 import { AuthService } from './auth.service';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { computed, signal } from '@angular/core';
+import { RestService } from './rest.service';
+import { CharacterProgressionService } from './character-progression.service';
+import { NewCharacterComponent } from './new-character/new-character.component';
 
 @Component({
   selector: 'app-root',
@@ -50,6 +53,7 @@ import { computed, signal } from '@angular/core';
     HpComponent,
     HeaderComponent,
     MatButtonToggleModule,
+    NewCharacterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -59,6 +63,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   deathSavesComponent!: DeathSavesComponent;
   private pendingSave = false;
   private pendingSaveClearTimer: any = null;
+
+  private restService = inject(RestService);
+  private progressionService = inject(CharacterProgressionService);
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private store: CharacterStore,
@@ -74,11 +82,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         e.returnValue = '';
       }
     });
-    this.syncStatus.pulled$.subscribe(() => {
+    this.syncStatus.pulled$.pipe(takeUntilDestroyed()).subscribe(() => {
       this.loadSavedCharacterNames();
       this.loadLastSelectedCharacter();
     });
-    this.syncStatus.status$.subscribe((s) => {
+    this.syncStatus.status$.pipe(takeUntilDestroyed()).subscribe((s) => {
       // Clear pending save deterministically on push completion
       if (s.type === 'push') {
         if (s.status === 'ok' || s.status === 'error') {
@@ -426,125 +434,22 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   // --- Level / Class logic ---
-  updateCharLevel(): void {
-    let errorMsg = '';
-    let level = this.character.level;
-    if (level < 1) {
-      level = 1;
-      errorMsg = 'Level cannot be less than 1.';
-    } else if (level > 20) {
-      level = 20;
-      errorMsg = 'Level cannot be greater than 20.';
-    }
-
-    // Patch level first
-    this.store.patchCharacter({ level });
-
-    // Class-specific adjustments
-    if (this.character.class === 'Monk' && level > 1) {
-      this.store.patchCharacter({ kiPoints: level });
-    }
-
-    if (this.character.class === 'Barbarian') {
-      this.api.getClassLevel('barbarian', level).subscribe({
-        next: (data) => {
-          const count = data.class_specific?.rage_count;
-          if (typeof count === 'number') {
-            this.store.patchCharacter({ rage: count, rageRemaining: count });
-          }
-        },
-      });
-    }
-
-    if (this.character.class === 'Druid' && level > 1) {
-      this.store.patchCharacter({ wildShapeRemaining: 2 });
-    }
-
-    // Hit dice equals level
-    this.store.patchCharacter({ hitDie: level });
-
-    // Populate spell slots for spellcasting classes at this level
-    const clsName = (this.character.class || '').toLowerCase().trim();
-    if (!clsName) {
-      // No class selected; clear any slots
-      this.getSpellSlotsForLevel(null);
-    } else {
-      // Prefer API-declared index/slug; fall back to name lowercased
-      const clsSlug = this.classIndexByName[clsName] || clsName;
-      this.api.getClassLevel(clsSlug, level).subscribe((data) => {
-        this.getSpellSlotsForLevel(data.spellcasting);
-        this.ensureSelectedStatSection(); // auto-select 'slots' if it's the only available section
-        this.lastCharacterSelected = this.character.name;
-        this.saveCharacterData();
-        if (errorMsg) alert(errorMsg);
-      });
-    }
-  }
-
-  getSpellSlotsForLevel(spellcasting: any): void {
-    if (!spellcasting) {
-      this.store.patchCharacter({ spellSlots: [], spellSlotsRemaining: [] });
-      return;
-    }
-    const slots: number[] = [];
-    for (let i = 1; i <= 9; i++) {
-      const key = `spell_slots_level_${i}`;
-      slots.push(
-        Object.prototype.hasOwnProperty.call(spellcasting, key)
-          ? spellcasting[key]
-          : 0
-      );
-    }
-    // Initialize remaining to same values if absent
-    this.store.patchCharacter({
-      spellSlots: slots,
-      spellSlotsRemaining: slots.slice(),
-    });
+  async updateCharLevel(): Promise<void> {
+    const errorMsg = await this.progressionService.updateCharLevel(this.classIndexByName);
+    
+    this.ensureSelectedStatSection(); // auto-select 'slots' if it's the only available section
+    this.lastCharacterSelected = this.character.name;
+    this.saveCharacterData();
+    if (errorMsg) alert(errorMsg);
   }
 
   // --- Rest actions ---
   shortRest(): void {
-    if (this.character.class === 'Monk') {
-      this.store.patchCharacter({
-        kiPoints: this.character.level > 1 ? this.character.level : 0,
-      });
-    } else if (this.character.class === 'Druid') {
-      this.store.patchCharacter({
-        wildShapeRemaining: this.character.level > 1 ? 2 : 0,
-      });
-    }
+    this.restService.shortRest();
   }
 
   longRest(): void {
-    const patches: Partial<Character> = {};
-    if (this.character.class === 'Monk') {
-      patches.kiPoints = this.character.level > 1 ? this.character.level : 0;
-    } else if (this.character.class === 'Druid') {
-      patches.wildShapeRemaining = this.character.level > 1 ? 2 : 0;
-    } else if (this.character.class === 'Barbarian') {
-      patches.rageRemaining = this.character.rage;
-    }
-
-    patches.spellSlotsRemaining = this.character.spellSlots.map((s) => s);
-
-    // Hit die recovery logic (retain original rules)
-    const hitDie = this.character.hitDie;
-    const level = this.character.level;
-    let newHitDie = hitDie;
-    if (hitDie < level) {
-      const gain = Math.floor((level < 2 ? 2 : level) / 2);
-      newHitDie = hitDie + gain > level ? level : hitDie + gain;
-    }
-    patches.hitDie = newHitDie;
-
-    if (this.fullHeal) {
-      patches.currentHP = this.character.maxHP;
-    }
-    patches.rageRemaining = this.character.rage;
-    patches.tempHP = 0;
-    patches.stable = false;
-
-    this.store.patchCharacter(patches);
+    this.restService.longRest();
 
     if (this.deathSavesComponent) {
       this.deathSavesComponent.deathSaveSuccess = [false, false, false];
@@ -587,7 +492,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   fetchClassesFromAPI(): void {
     this.isLoadingClasses = true;
     this.classesError = null;
-    this.api.getClasses().subscribe({
+    this.api.getClasses().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         const results = Array.isArray(data.results) ? data.results : [];
         // Populate display names
@@ -636,25 +541,16 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   onSpellSlotRemainingChanged(ev: { index: number; value: number }): void {
-    // Update only the targeted index to reduce churn
-    const next = Array.isArray(this.character.spellSlotsRemaining)
-      ? [...this.character.spellSlotsRemaining]
-      : [];
-    // Ensure array is long enough
-    if (ev.index >= 0) {
-      while (next.length <= ev.index) next.push(0);
-      // Clamp to the max available slots at that level, if present
-      const max =
-        Array.isArray(this.character.spellSlots) &&
-        this.character.spellSlots[ev.index] !== undefined
-          ? this.character.spellSlots[ev.index]
-          : Number.MAX_SAFE_INTEGER;
-      const val =
-        ev.value < 0 ? 0 : ev.value > max ? max : Math.floor(ev.value);
-      next[ev.index] = val;
-    }
+    // Update only the targeted index
+    const max =
+      Array.isArray(this.character.spellSlots) &&
+      this.character.spellSlots[ev.index] !== undefined
+        ? this.character.spellSlots[ev.index]
+        : Number.MAX_SAFE_INTEGER;
+        
+    this.store.updateSpellSlot(ev.index, ev.value, max);
+
     this.pendingSave = true;
-    this.store.patchCharacter({ spellSlotsRemaining: next });
     this.saveCharacterData();
   }
 

@@ -63,4 +63,13 @@ export class CharacterStore {
       };
     });
   }
+
+  updateSpellSlot(index: number, val: number, max: number) {
+    this._character.update((c) => {
+      const next = Array.isArray(c.spellSlotsRemaining) ? [...c.spellSlotsRemaining] : [];
+      while (next.length <= index) next.push(0);
+      next[index] = val < 0 ? 0 : val > max ? max : Math.floor(val);
+      return { ...c, spellSlotsRemaining: next };
+    });
+  }
 }

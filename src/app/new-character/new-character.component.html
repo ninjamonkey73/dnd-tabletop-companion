@@ -1,0 +1,30 @@
+<div class="newChar">
+  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+    <mat-label>New Character Name</mat-label>
+    <input
+      matInput
+      name="newCharacterName"
+      type="text"
+      [ngModel]="newCharacterName"
+      (ngModelChange)="newCharacterNameChange.emit($event)"
+      autocomplete="off"
+      (keydown.enter)="create.emit()"
+    />
+  </mat-form-field>
+  <button
+    class="save-button"
+    mat-raised-button
+    color="primary"
+    (click)="create.emit()"
+  >
+    Save Character
+  </button>
+  <button
+    class="cancel-button"
+    mat-raised-button
+    color="primary"
+    (click)="cancel.emit()"
+  >
+    Cancel
+  </button>
+</div>

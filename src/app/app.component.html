@@ -16,35 +16,11 @@
   ></app-header>
 
   @if (isCreatingNewCharacter) {
-  <div class="newChar">
-    <mat-form-field appearance="fill">
-      <mat-label>New Character Name</mat-label>
-      <input
-        matInput
-        name="newCharacterName"
-        type="text"
-        [(ngModel)]="newCharacterName"
-        autocomplete="off"
-        (keydown.enter)="createNewCharacter()"
-      />
-    </mat-form-field>
-    <button
-      class="save-button"
-      mat-raised-button
-      color="primary"
-      (click)="createNewCharacter()"
-    >
-      Save Character
-    </button>
-    <button
-      class="cancel-button"
-      mat-raised-button
-      color="primary"
-      (click)="cancelNewCharacter()"
-    >
-      Cancel
-    </button>
-  </div>
+  <app-new-character
+    [(newCharacterName)]="newCharacterName"
+    (create)="createNewCharacter()"
+    (cancel)="cancelNewCharacter()"
+  ></app-new-character>
   }
 
   <app-hp

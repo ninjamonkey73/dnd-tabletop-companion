@@ -5,7 +5,7 @@
       <div class="stat-box resource-stat">
         <div class="stat-label">
           @if (editingResourceNameId === $index) {
-            <mat-form-field class="resource-name-inline">
+            <mat-form-field class="resource-name-inline" subscriptSizing="dynamic">
               <input
                 matInput
                 #nameInput
@@ -25,7 +25,7 @@
         </div>
         <div class="stat-value">
           @if (editingResourceNameId === $index) {
-            <mat-form-field>
+            <mat-form-field subscriptSizing="dynamic">
               <input
                 matInput
                 type="number"
