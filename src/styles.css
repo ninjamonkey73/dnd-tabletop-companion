@@ -83,6 +83,7 @@ body {
   flex: 0 0 auto;
   display: inline-flex;
   width: 140px;
+  margin-top: 12px;
 }
 
 .classLevel {
@@ -180,4 +181,9 @@ mat-form-field.classData-input {
 }
 .add {
   background: linear-gradient(to bottom, #006400, #32cd32);
+}
+
+mat-form-field mat-label,
+mat-form-field .mdc-floating-label {
+  font-weight: 600 !important;
 }

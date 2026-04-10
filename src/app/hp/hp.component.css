@@ -151,7 +151,6 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 12px;
 }
 
 .hp-button-stack {
@@ -205,4 +204,14 @@
 
 .hp-section {
   width: 100%;
+}
+
+input.hp-input[type="number"]::-webkit-outer-spin-button,
+input.hp-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.hp-input[type="number"] {
+  -moz-appearance: textfield;
 }
