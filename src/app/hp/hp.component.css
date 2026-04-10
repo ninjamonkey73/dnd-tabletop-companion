@@ -28,6 +28,9 @@
 .hp-header > div {
   flex: 1 1 0;
   text-align: center;
+}
+
+.hp-header > div {
   font-size: 16px;
 }
 
@@ -48,15 +51,6 @@
   max-width: 140px;
 }
 
-.hp-button-stack {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 15px;
-}
-
 .tempHP-input,
 .hp-input {
   width: 80px;
@@ -65,8 +59,8 @@
     serif;
 }
 
-.hurt-button {
-  background: linear-gradient(to bottom, #8b0000, #ff6347);
+.hurt-button,
+.heal-button {
   font-size: 1.2rem;
   border-radius: 10px;
   border: 1px solid black;
@@ -77,41 +71,17 @@
   gap: 4px;
 }
 
+.hurt-button {
+  background: linear-gradient(to bottom, #8b0000, #ff6347);
+}
+
 .heal-button {
   background: linear-gradient(to bottom, #006400, #32cd32);
-  font-size: 1.2rem;
-  border-radius: 10px;
-  border: 1px solid black;
-  color: white;
-  min-width: 68px;
-  height: 36px;
-  padding: 0 15px;
-  gap: 4px;
 }
 
 .heal-button mat-icon,
 .hurt-button mat-icon {
   margin-right: 0;
-}
-
-.stable-icon,
-.incapacitated-icon {
-  width: 20px;
-  height: 20px;
-  color: #ffffff;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.currentHP {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
 }
 
 .edit {
@@ -137,10 +107,10 @@
   line-height: 1 !important;
 }
 
-.stable-icon {
+.stable-icon,
+.incapacitated-icon {
   width: 20px;
   height: 20px;
-  background-color: darkgreen;
   color: #ffffff;
   border-radius: 6px;
   display: flex;
@@ -153,20 +123,12 @@
   user-select: none;
 }
 
+.stable-icon {
+  background-color: darkgreen;
+}
+
 .incapacitated-icon {
-  width: 20px;
-  height: 20px;
   background-color: darkred;
-  color: #ffffff;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  font-size: 16px;
-  font-weight: 700;
-  user-select: none;
 }
 
 .currentHP {
@@ -189,7 +151,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 8px;
+  margin-bottom: 12px;
 }
 
 .hp-button-stack {
@@ -198,43 +160,37 @@
   gap: 8px;
   align-items: center;
   justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  padding-top: 6px;
 }
 
 /* Generic chip style for stable/incapacitated states */
-.status-chip {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-  white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.stable-chip {
-  background-color: darkgreen;
-  color: #fff;
-}
-
-.incapacitated-chip {
-  background-color: darkred;
-  color: #fff;
-}
-
+.status-chip,
 .death-message {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 14px;
   font-size: 0.85rem;
-  line-height: 1.2;
   font-weight: 600;
   letter-spacing: 0.5px;
+  line-height: 1.2;
   white-space: nowrap;
-  background-color: darkred;
-  color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  color: #fff;
+}
+
+.stable-chip {
+  background-color: darkgreen;
+}
+
+.incapacitated-chip {
+  background-color: darkred;
+}
+
+.death-message {
+  background-color: darkred;
   flex: 0 0 auto;
 }
 

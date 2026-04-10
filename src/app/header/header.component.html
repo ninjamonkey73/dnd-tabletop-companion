@@ -28,7 +28,7 @@
   }
 
 <div class="char-select-container">
-  <mat-form-field appearance="outline" class="charName">
+  <mat-form-field appearance="outline" class="charName" subscriptSizing="dynamic">
     <mat-label>Character Name</mat-label>
     <mat-select
       [(ngModel)]="internalSelectedCharacter"
@@ -88,7 +88,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="level-input">
+  <mat-form-field appearance="outline" class="level-input" subscriptSizing="dynamic">
   <mat-label>Level</mat-label>
   <input matInput type="number" min="1"
       max="20" class="centered-input" [(ngModel)]="character().level" />

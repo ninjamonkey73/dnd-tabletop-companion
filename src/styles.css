@@ -133,8 +133,7 @@ mat-form-field.classData-input {
   background: #fff;
   padding: 0 10px 8px; /* no top padding so header hugs top */
   overflow: hidden;
-  margin-top: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
 .stat-label {
   width: 100%;
