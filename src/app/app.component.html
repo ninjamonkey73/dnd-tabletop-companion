@@ -23,127 +23,138 @@
     ></app-new-character>
   }
 
-  <app-hp
-    [character]="character"
-    [isCreatingNewCharacter]="isCreatingNewCharacter"
-    [percentHP]="percentHP"
-    [deathSaveMessage]="deathSaveMessage"
-    [isCharacterLoaded]="isCharacterLoaded"
-    (characterChange)="onChildCharacterChange($event)"
-    (hurt)="onHurt($event)"
-    (heal)="onHeal($event)"
-    (maxHpEditFinished)="onMaxHpEditFinished()"
-  ></app-hp>
-  <mat-button-toggle-group
-    [value]="showingMoney ? 'money' : 'resources'"
-    (change)="onSectionToggle($event.value)"
-  >
-    <mat-button-toggle value="money">Money</mat-button-toggle>
-    <mat-button-toggle value="resources">Trackable Resources</mat-button-toggle>
-  </mat-button-toggle-group>
-
-  <div class="row money-row" [attr.aria-disabled]="isCreatingNewCharacter">
-    @if (showingMoney) {
-      <app-money
+  <div class="dashboard-grid">
+    <!-- Panel 1: Core Vitals -->
+    <div class="dashboard-panel">
+      <app-hp
         [character]="character"
         [isCreatingNewCharacter]="isCreatingNewCharacter"
+        [percentHP]="percentHP"
+        [deathSaveMessage]="deathSaveMessage"
+        [isCharacterLoaded]="isCharacterLoaded"
         (characterChange)="onChildCharacterChange($event)"
-      ></app-money>
-    }
-    @if (!showingMoney) {
-      <app-resources
-        [character]="character"
-        [isCreatingNewCharacter]="isCreatingNewCharacter"
-        (characterChange)="onChildCharacterChange($event)"
-      ></app-resources>
-    }
-  </div>
+        (hurt)="onHurt($event)"
+        (heal)="onHeal($event)"
+        (maxHpEditFinished)="onMaxHpEditFinished()"
+      ></app-hp>
 
-  <!-- Stat section toggle: show when 2+ sections available -->
-  @if (availableStatSectionsSig().length > 1) {
-    <div class="body-buttons">
-      @for (sec of availableStatSectionsSig(); track sec) {
-        <button
-          mat-stroked-button
-          color="primary"
-          [disabled]="selectedStatSection === sec"
-          (click)="setSelectedStatSection(sec)"
-        >
-          {{
-            sec === "ki"
-              ? "Ki Points"
-              : sec === "rage"
-                ? "Rage"
-                : sec === "wild"
-                  ? "Wild Shape"
-                  : sec === "sneakAttack"
-                    ? "Sneak Attack"
-                    : "Spell Slots"
-          }}
-        </button>
+      <mat-button-toggle-group
+        [value]="showingMoney ? 'money' : 'resources'"
+        (change)="onSectionToggle($event.value)"
+      >
+        <mat-button-toggle value="money">Money</mat-button-toggle>
+        <mat-button-toggle value="resources">Trackable Resources</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div class="row money-row full-width-panel" [attr.aria-disabled]="isCreatingNewCharacter">
+        @if (showingMoney) {
+          <app-money
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-money>
+        }
+        @if (!showingMoney) {
+          <app-resources
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-resources>
+        }
+      </div>
+    </div> <!-- End Panel 1 -->
+
+    <!-- Panel 2: Class Stats & Death Saves -->
+    <div class="dashboard-panel">
+
+      <!-- Stat section toggle -->
+      @if (availableStatSectionsSig().length > 1) {
+        <div class="body-buttons">
+          @for (sec of availableStatSectionsSig(); track sec) {
+            <button
+              mat-stroked-button
+              color="primary"
+              [disabled]="selectedStatSection === sec"
+              (click)="setSelectedStatSection(sec)"
+            >
+              {{
+                sec === "ki"
+                  ? "Ki Points"
+                  : sec === "rage"
+                    ? "Rage"
+                    : sec === "wild"
+                      ? "Wild Shape"
+                      : sec === "sneakAttack"
+                        ? "Sneak Attack"
+                        : "Spell Slots"
+              }}
+            </button>
+          }
+        </div>
       }
-    </div>
-  }
 
-  <!-- Render selected stat section only -->
-  @if (selectedStatSection === "ki") {
-    <app-ki-points
-      [character]="character"
-      [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange($event)"
-    ></app-ki-points>
-  }
-  @if (selectedStatSection === "wild") {
-    <app-wild-shape
-      [character]="character"
-      [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange($event)"
-    ></app-wild-shape>
-  }
-  @if (selectedStatSection === "slots") {
-    <app-spell-slots
-      [character]="character"
-      [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange($event)"
-      (remainingChanged)="onSpellSlotRemainingChanged($event)"
-    ></app-spell-slots>
-  }
-  @if (selectedStatSection === "rage") {
-    <app-rage
-      [character]="character"
-      [isCreatingNewCharacter]="isCreatingNewCharacter"
-      (characterChange)="onChildCharacterChange($event)"
-    ></app-rage>
-  }
-  @if (selectedStatSection === "sneakAttack") {
-    <app-sneak-attack
-      [character]="character"
-      [isCreatingNewCharacter]="isCreatingNewCharacter"
-    ></app-sneak-attack>
-  }
+      <div class="full-width-panel">
+        @if (selectedStatSection === "ki") {
+          <app-ki-points
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-ki-points>
+        }
+        @if (selectedStatSection === "wild") {
+          <app-wild-shape
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-wild-shape>
+        }
+        @if (selectedStatSection === "slots") {
+          <app-spell-slots
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+            (remainingChanged)="onSpellSlotRemainingChanged($event)"
+          ></app-spell-slots>
+        }
+        @if (selectedStatSection === "rage") {
+          <app-rage
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-rage>
+        }
+        @if (selectedStatSection === "sneakAttack") {
+          <app-sneak-attack
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+          ></app-sneak-attack>
+        }
+      </div>
 
-  <mat-button-toggle-group
-    [value]="showingDeathSaves ? 'death' : 'hit'"
-    (change)="onDeathHitToggle($event.value)"
-  >
-    <mat-button-toggle value="death">Death Saves</mat-button-toggle>
-    <mat-button-toggle value="hit">Hit Dice</mat-button-toggle>
-  </mat-button-toggle-group>
+      <mat-button-toggle-group
+        [value]="showingDeathSaves ? 'death' : 'hit'"
+        (change)="onDeathHitToggle($event.value)"
+      >
+        <mat-button-toggle value="death">Death Saves</mat-button-toggle>
+        <mat-button-toggle value="hit">Hit Dice</mat-button-toggle>
+      </mat-button-toggle-group>
 
-  <div>
-    @if (showingDeathSaves) {
-      <app-death-saves
-        [character]="character"
-        (deathSaveMessageChange)="deathSaveMessage = $event"
-        (characterChange)="onChildCharacterChange($event)"
-      ></app-death-saves>
-    }
-    @if (!showingDeathSaves) {
-      <app-hit-dice
-        [character]="character"
-        [isCreatingNewCharacter]="isCreatingNewCharacter"
-        (characterChange)="onChildCharacterChange($event)"
-      ></app-hit-dice>
-    }
+      <div class="full-width-panel">
+        @if (showingDeathSaves) {
+          <app-death-saves
+            [character]="character"
+            (deathSaveMessageChange)="deathSaveMessage = $event"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-death-saves>
+        }
+        @if (!showingDeathSaves) {
+          <app-hit-dice
+            [character]="character"
+            [isCreatingNewCharacter]="isCreatingNewCharacter"
+            (characterChange)="onChildCharacterChange($event)"
+          ></app-hit-dice>
+        }
+      </div>
+    </div> <!-- End Panel 2 -->
   </div>
 </div>

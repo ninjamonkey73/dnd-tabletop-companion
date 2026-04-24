@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   border: var(--border-main);
-  border-radius: 8px;
+  border-radius: 12px;
   width: 325px;
   margin: 0 auto 12px auto;
   background: var(--bg-surface);
@@ -22,7 +22,8 @@
 .hp-header {
   font-weight: bold;
   background: var(--bg-surface-alt);
-  border-bottom: var(--border-alt);
+  border-bottom: none;
+  padding: 8px 12px;
 }
 
 .hpRow > div,
@@ -70,6 +71,19 @@
   height: 36px;
   padding: 0 15px;
   gap: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.hurt-button:hover, .heal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  filter: brightness(1.1);
+}
+
+.hurt-button:active, .heal-button:active {
+  transform: translateY(1px);
 }
 
 .hurt-button {
@@ -99,7 +113,14 @@
   justify-content: center;
   background: var(--btn-bg-edit);
   align-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
+.edit:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.edit:active { transform: translateY(1px); }
 
 .edit mat-icon {
   margin: 0 !important;

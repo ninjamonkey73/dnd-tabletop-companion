@@ -31,6 +31,16 @@
   justify-content: center;
   gap: 4px;
   height: fit-content;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.rest-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  filter: brightness(1.1);
+}
+.rest-button:active {
+  transform: translateY(1px);
 }
 
 .login-button {
@@ -46,6 +56,16 @@
   justify-content: center;
   gap: 4px;
   height: fit-content;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  filter: brightness(1.1);
+}
+.login-button:active {
+  transform: translateY(1px);
 }
 
 .rest-button .mat-icon {

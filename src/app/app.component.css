@@ -25,3 +25,28 @@ mat-button-toggle-group {
   opacity: 0.6;
   pointer-events: none;
 }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: start;
+}
+
+.dashboard-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.full-width-panel {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

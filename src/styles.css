@@ -162,7 +162,7 @@ mat-form-field.classData-input {
   max-width: 100%;
   align-self: center;
   border: var(--border-main);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--bg-surface);
   padding: 0 10px 8px; /* no top padding so header hugs top */
   overflow: hidden;
@@ -172,13 +172,13 @@ mat-form-field.classData-input {
   width: 100%;
   color: var(--text-main);
   background: var(--bg-surface-alt);
-  border-bottom: var(--border-alt);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-bottom: none;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   font-weight: 600;
   font-size: 0.95rem;
   text-align: center;
-  padding: 6px 10px;
+  padding: 8px 10px;
 }
 .stat-value {
   color: var(--text-main);
@@ -207,6 +207,17 @@ mat-form-field.classData-input {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.sub:hover, .add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  filter: brightness(1.1);
+}
+.sub:active, .add:active {
+  transform: translateY(1px);
 }
 .sub {
   background: var(--btn-grad-red);

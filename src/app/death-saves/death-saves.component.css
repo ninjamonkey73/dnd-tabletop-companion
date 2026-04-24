@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: stretch; /* stretch children to full width */
   border: var(--border-main);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--bg-surface);
   width: 325px;
   margin: 0 auto 16px auto;
@@ -30,7 +30,7 @@
   margin: 0;
   background: var(--bg-surface-alt);
   padding: 8px 12px;
-  border-bottom: var(--border-alt);
+  border-bottom: none;
   border-top: 0;
   border-radius: 0;
   box-sizing: border-box;
