@@ -79,7 +79,7 @@
   margin-top: 12px;
 }
 .charName {
-  width: 180px;
+  width: 200px;
 }
 /* Header-specific tweaks that are not global (keep minimal here if using global styles.css) */
 .class-level-row {
@@ -105,7 +105,6 @@
 
 .level-input {
   width: 80px;
-  margin-top: 12px;
 }
 
 .centered-input {

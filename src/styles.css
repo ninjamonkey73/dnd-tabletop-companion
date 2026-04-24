@@ -17,39 +17,46 @@ body {
 }
 
 :root {
-  --bg-app: #f7f5f0;
-  --bg-surface: #ffffff;
-  --bg-surface-alt: #ecebe9;
-  --text-main: #2c2c2c;
-  --text-invert: #ffffff;
-  --border-main: 1px solid rgba(0, 0, 0, 0.15);
-  --border-alt: 1px solid rgba(0, 0, 0, 0.10);
+  /* Light Mode (Aged Paper & Brooding Ink) */
+  --bg-app: #e8e4d9;
+  --bg-surface: #f4f1ea;
+  --bg-surface-alt: #dfdacf;
+  --text-main: #1e1915;
+  --text-invert: #f4f1ea;
+  --border-main: 1px solid rgba(60, 50, 45, 0.2);
+  --border-alt: 1px solid rgba(60, 50, 45, 0.15);
   
-  --btn-grad-blue: #2e5c8a;
-  --btn-grad-red: #d9381e;
-  --btn-grad-green: #278a44;
-  --btn-bg-edit: #e2e8f0;
+  --btn-grad-blue: #2a3b5c; /* Navy ink */
+  --btn-grad-red: #801c1c;  /* Crimson */
+  --btn-grad-green: #2d5a36; /* Forest green */
+  --btn-bg-edit: #b3a895; /* Desaturated brass */
 
-  --icon-stable: #278a44;
-  --icon-incap: #d9381e;
+  --icon-stable: #2d5a36;
+  --icon-incap: #801c1c;
 }
 
 body.dark-theme {
-  --bg-app: #0f1115;
-  --bg-surface: #1a1d24;
-  --bg-surface-alt: #252833;
-  --text-main: #e2e8f0;
-  --text-invert: #0f1115; /* Dark ink for pastel buttons */
-  --border-main: 1px solid rgba(255, 255, 255, 0.08);
-  --border-alt: 1px solid rgba(255, 255, 255, 0.05);
+  /* Dark Mode (Smoky Tavern & Jewel Tones) */
+  --bg-app: #282422; /* Lightened smoky wood, avoiding pure dark */
+  --bg-surface: #36322f;
+  --bg-surface-alt: #433f3c;
+  --text-main: #eae6dd; /* Brightened bone text */
+  --text-invert: #ffffff;
+  --border-main: 1px solid rgba(255, 230, 200, 0.15);
+  --border-alt: 1px solid rgba(255, 230, 200, 0.12);
   
-  --btn-grad-blue: #818cf8; /* Soft Indigo */
-  --btn-grad-red: #f87171;  /* Soft Red */
-  --btn-grad-green: #34d399; /* Soft Emerald */
-  --btn-bg-edit: #e2e8f0; /* Keeping edit button readable with text-main */
+  /* Native Material Outline Overrides */
+  --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.4);
+  --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.7);
+  --mdc-outlined-text-field-focus-outline-color: var(--text-main);
+  
+  --btn-grad-blue: #1a365d; /* Deep sapphire */
+  --btn-grad-red: #7f1d1d;  /* Deep garnet */
+  --btn-grad-green: #14532d; /* Deep pine */
+  --btn-bg-edit: #453c38; /* Smoky gray wood */
 
-  --icon-stable: #34d399;
-  --icon-incap: #f87171;
+  --icon-stable: #16a34a;
+  --icon-incap: #dc2626;
 }
 
 /* Shared header + class/level styling */
@@ -61,6 +68,10 @@ body.dark-theme {
   margin: 0 auto;
   text-align: center;
   padding-top: 20px;
+}
+
+mat-form-field {
+  flex-shrink: 0 !important;
 }
 
 .row {
@@ -92,12 +103,6 @@ body.dark-theme {
   .top {
     gap: 8px;
     padding: 0 6px;
-  }
-  .charName {
-    width: 120px;
-  }
-  .class-select {
-    width: 120px;
   }
 
   .login-button,
@@ -226,7 +231,45 @@ mat-form-field.classData-input {
   background: var(--btn-grad-green);
 }
 
-mat-form-field mat-label,
-mat-form-field .mdc-floating-label {
-  font-weight: 600 !important;
+/* Fix Angular Material input labels and borders in dark mode */
+body.dark-theme mat-form-field mat-label,
+body.dark-theme mat-form-field .mdc-floating-label {
+  color: var(--text-main) !important;
+}
+
+body.dark-theme .mat-mdc-select-value-text,
+body.dark-theme input.mat-mdc-input-element {
+  color: var(--text-main) !important;
+}
+
+body.dark-theme .mat-mdc-select-arrow {
+  color: var(--text-main) !important;
+}
+
+/* Fix Button Toggles & Stroked Buttons in Dark Mode */
+body.dark-theme mat-button-toggle {
+  background-color: var(--bg-surface);
+}
+
+body.dark-theme mat-button-toggle .mat-button-toggle-label-content {
+  color: var(--text-main) !important;
+}
+
+body.dark-theme mat-button-toggle.mat-button-toggle-checked {
+  background-color: var(--btn-grad-blue) !important;
+}
+
+body.dark-theme mat-button-toggle.mat-button-toggle-checked .mat-button-toggle-label-content {
+  color: var(--text-invert) !important;
+}
+
+body.dark-theme .mat-mdc-outlined-button:not(:disabled) {
+  border-color: var(--text-main) !important;
+  color: var(--text-main) !important;
+}
+
+body.dark-theme .mat-mdc-outlined-button:disabled {
+  background-color: var(--btn-grad-blue) !important;
+  color: var(--text-invert) !important;
+  border-color: transparent !important;
 }

@@ -49,18 +49,18 @@
         <mat-icon>add</mat-icon> New Character
       </mat-option>
     </mat-select>
+    <button
+      matSuffix
+      mat-icon-button
+      color="warn"
+      class="delete-icon"
+      [disabled]="!internalSelectedCharacter || internalSelectedCharacter === 'new' || isCreatingNewCharacter()"
+      (click)="onDeleteClicked(); $event.stopPropagation()"
+      aria-label="Delete Character"
+    >
+      <mat-icon matTooltip="Delete Character">delete</mat-icon>
+    </button>
   </mat-form-field>
-
-  <button
-    mat-icon-button
-    color="warn"
-    class="delete-icon"
-    [disabled]="!internalSelectedCharacter || internalSelectedCharacter === 'new' || isCreatingNewCharacter()"
-    (click)="onDeleteClicked()"
-    aria-label="Delete Character"
-  >
-    <mat-icon matTooltip="Delete Character">delete</mat-icon>
-  </button>
 </div>
   
   <div class="longRest">
