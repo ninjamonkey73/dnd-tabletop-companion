@@ -1,4 +1,9 @@
 <div class="row top">
+  <div class="button-container theme-toggle-container">
+    <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle Theme" matTooltip="Toggle Theme">
+      <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+  </div>
   @if (!isAuthed) {
   <div class="button-container">
     <button

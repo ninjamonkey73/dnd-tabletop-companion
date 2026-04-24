@@ -1,11 +1,12 @@
 .hp-table {
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
+  border: var(--border-main);
   border-radius: 8px;
   width: 375px;
   margin: 0 auto 12px auto;
-  background: #fff;
+  background: var(--bg-surface);
+  color: var(--text-main);
   overflow: hidden;
 }
 
@@ -20,8 +21,8 @@
 
 .hp-header {
   font-weight: bold;
-  background: #f2f2f2;
-  border-bottom: 1px solid #ccc;
+  background: var(--bg-surface-alt);
+  border-bottom: var(--border-alt);
 }
 
 .hpRow > div,
@@ -63,8 +64,8 @@
 .heal-button {
   font-size: 1.2rem;
   border-radius: 10px;
-  border: 1px solid black;
-  color: white;
+  border: var(--border-main);
+  color: var(--text-invert);
   min-width: 68px;
   height: 36px;
   padding: 0 15px;
@@ -72,11 +73,11 @@
 }
 
 .hurt-button {
-  background: linear-gradient(to bottom, #8b0000, #ff6347);
+  background: var(--btn-grad-red);
 }
 
 .heal-button {
-  background: linear-gradient(to bottom, #006400, #32cd32);
+  background: var(--btn-grad-green);
 }
 
 .heal-button mat-icon,
@@ -87,8 +88,8 @@
 .edit {
   font-size: 1.5rem;
   border-radius: 10px;
-  border: 1px solid black;
-  color: black;
+  border: var(--border-main);
+  color: var(--text-main);
   min-width: 36px;
   height: 36px;
   width: 40px;
@@ -96,7 +97,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgb(199, 199, 250);
+  background: var(--btn-bg-edit);
   align-content: center;
 }
 
@@ -111,7 +112,7 @@
 .incapacitated-icon {
   width: 20px;
   height: 20px;
-  color: #ffffff;
+  color: var(--text-invert);
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -124,11 +125,11 @@
 }
 
 .stable-icon {
-  background-color: darkgreen;
+  background-color: var(--icon-stable);
 }
 
 .incapacitated-icon {
-  background-color: darkred;
+  background-color: var(--icon-incap);
 }
 
 .currentHP {
@@ -177,19 +178,19 @@
   line-height: 1.2;
   white-space: nowrap;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  color: #fff;
+  color: var(--text-invert);
 }
 
 .stable-chip {
-  background-color: darkgreen;
+  background-color: var(--icon-stable);
 }
 
 .incapacitated-chip {
-  background-color: darkred;
+  background-color: var(--icon-incap);
 }
 
 .death-message {
-  background-color: darkred;
+  background-color: var(--icon-incap);
   flex: 0 0 auto;
 }
 

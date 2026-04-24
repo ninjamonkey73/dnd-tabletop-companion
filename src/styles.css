@@ -12,6 +12,44 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+}
+
+:root {
+  --bg-app: transparent;
+  --bg-surface: #fff;
+  --bg-surface-alt: #f2f2f2;
+  --text-main: #000;
+  --text-invert: #fff;
+  --border-main: 1px solid black;
+  --border-alt: 1px solid #ccc;
+  
+  --btn-grad-blue: linear-gradient(to bottom, navy, lightblue);
+  --btn-grad-red: linear-gradient(to bottom, #8b0000, #ff6347);
+  --btn-grad-green: linear-gradient(to bottom, #006400, #32cd32);
+  --btn-bg-edit: rgb(199, 199, 250);
+
+  --icon-stable: darkgreen;
+  --icon-incap: darkred;
+}
+
+body.dark-theme {
+  --bg-app: #121212;
+  --bg-surface: #1e1e1e;
+  --bg-surface-alt: #2c2c2c;
+  --text-main: #e0e0e0;
+  --text-invert: #e0e0e0;
+  --border-main: 1px solid #555;
+  --border-alt: 1px solid #444;
+  
+  --btn-grad-blue: #3f51b5; 
+  --btn-grad-red: #b71c1c;
+  --btn-grad-green: #1b5e20;
+  --btn-bg-edit: #3f51b5;
+
+  --icon-stable: #2e7d32;
+  --icon-incap: #c62828;
 }
 
 /* Shared header + class/level styling */
@@ -86,9 +124,10 @@ body {
 
 
 .card-title {
-  text-align: center;
+  font-family: "EB Garamond", serif;
   font-size: 1.4rem;
   font-weight: 600;
+  color: var(--text-main);
   padding: 4px 0 0;
   margin: 0 0 8px;
   /* no background, no border line */
@@ -122,18 +161,18 @@ mat-form-field.classData-input {
   width: fit-content;
   max-width: 100%;
   align-self: center;
-  border: 1px solid black;
+  border: var(--border-main);
   border-radius: 8px;
-  background: #fff;
+  background: var(--bg-surface);
   padding: 0 10px 8px; /* no top padding so header hugs top */
   overflow: hidden;
   margin-bottom: 12px;
 }
 .stat-label {
   width: 100%;
-  color: #000;
-  background: #f2f2f2;
-  border-bottom: 1px solid #ccc;
+  color: var(--text-main);
+  background: var(--bg-surface-alt);
+  border-bottom: var(--border-alt);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   font-weight: 600;
@@ -142,11 +181,11 @@ mat-form-field.classData-input {
   padding: 6px 10px;
 }
 .stat-value {
-  color: #000;
+  color: var(--text-main);
   font-size: 1.4rem;
   font-weight: 700;
   text-align: center;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 6px;
   width: 100%;
 }
@@ -160,8 +199,8 @@ mat-form-field.classData-input {
 .add {
   font-size: 1.3rem;
   border-radius: 10px;
-  border: 1px solid black;
-  color: white;
+  border: var(--border-main);
+  color: var(--text-invert);
   min-width: 36px;
   height: 36px;
   width: 40px;
@@ -170,10 +209,10 @@ mat-form-field.classData-input {
   justify-content: center;
 }
 .sub {
-  background: linear-gradient(to bottom, #8b0000, #ff6347);
+  background: var(--btn-grad-red);
 }
 .add {
-  background: linear-gradient(to bottom, #006400, #32cd32);
+  background: var(--btn-grad-green);
 }
 
 mat-form-field mat-label,

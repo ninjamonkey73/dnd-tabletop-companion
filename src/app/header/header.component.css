@@ -19,11 +19,11 @@
   cursor: pointer;
 }
 .rest-button {
-  background: linear-gradient(to bottom, navy, lightblue);
+  background: var(--btn-grad-blue);
   font-size: 1.2rem;
   border-radius: 10px;
-  border: 1px solid black;
-  color: white;
+  border: var(--border-main);
+  color: var(--text-invert);
   min-width: 90px;
   padding: 4px;
   display: flex;
@@ -34,11 +34,11 @@
 }
 
 .login-button {
-  background: linear-gradient(to bottom, navy, lightblue);
+  background: var(--btn-grad-blue);
   font-size: 1.2rem;
   border-radius: 10px;
-  border: 1px solid black;
-  color: white;
+  border: var(--border-main);
+  color: var(--text-invert);
   min-width: 90px;
   padding: 6px 12px;
   display: flex;

@@ -77,11 +77,11 @@
 
 
 .add-resource {
-  background: linear-gradient(to bottom, navy, lightblue);
+  background: var(--btn-grad-blue);
   font-size: 1.2rem;
   border-radius: 10px;
-  border: 1px solid black;
-  color: white;
+  border: var(--border-main);
+  color: var(--text-invert);
   min-width: 90px;
   display: flex;
   align-items: center;

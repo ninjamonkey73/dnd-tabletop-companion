@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   align-items: stretch; /* stretch children to full width */
-  border: 1px solid black;
+  border: var(--border-main);
   border-radius: 8px;
-  background: #fff;
+  background: var(--bg-surface);
   width: 320px;
   margin: 0 auto 16px auto;
   overflow: hidden;
@@ -28,14 +28,14 @@
   justify-content: space-between; /* space the two labels */
   width: 100%;
   margin: 0;
-  background: #f0f0f0;
+  background: var(--bg-surface-alt);
   padding: 8px 12px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: var(--border-alt);
   border-top: 0;
   border-radius: 0;
   box-sizing: border-box;
   font-weight: bold;
-  color: black;
+  color: var(--text-main);
   font-size: 16px; /* match HP header */
   font-family: "Goudy Bookletter 1911", serif; /* match HP header */
   line-height: 1.4; /* optional for consistency */
@@ -63,17 +63,17 @@
 }
 
 .success {
-  color: green;
+  color: var(--icon-stable);
   border: none;
   background: none;
 }
 
 .failure {
-  color: darkred;
+  color: var(--icon-incap);
   border: none;
   background: none;
 }
 
 mat-icon.unchecked {
-  color: black !important;
+  color: var(--text-main) !important;
 }

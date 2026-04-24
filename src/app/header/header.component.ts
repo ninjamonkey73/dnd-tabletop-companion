@@ -3,6 +3,7 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  OnInit,
   SimpleChanges,
   input,
   inject,
@@ -35,7 +36,7 @@ import { AuthService } from '../auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnChanges {
+export class HeaderComponent implements OnChanges, OnInit {
   // Character identity & selection
   readonly selectedCharacter = input<string | null>(null);
   readonly savedCharacterNames = input<string[]>([]);
@@ -60,6 +61,25 @@ export class HeaderComponent implements OnChanges {
   internalSelectedCharacter: string | null = null;
   internalFullHeal = this.fullHeal(); // mirror input on init
   private auth = inject(AuthService);
+  isDarkTheme = false;
+
+  ngOnInit() {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      this.isDarkTheme = true;
+    }
+  }
+
+  toggleTheme() {
+    this.isDarkTheme = !this.isDarkTheme;
+    if (this.isDarkTheme) {
+      document.body.classList.add('dark-theme');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-theme');
+      localStorage.setItem('theme', 'light');
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedCharacter']) {
