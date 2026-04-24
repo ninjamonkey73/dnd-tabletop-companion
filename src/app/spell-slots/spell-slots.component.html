@@ -13,6 +13,7 @@
           class="sub"
           (click)="decSlot($index)"
           [disabled]="isCreatingNewCharacter()"
+          [attr.aria-label]="'Decrease Level ' + ($index + 1) + ' Spell Slots'"
         >
           <mat-icon>remove</mat-icon>
         </button>
@@ -21,6 +22,7 @@
           class="add"
           (click)="incSlot($index)"
           [disabled]="isCreatingNewCharacter()"
+          [attr.aria-label]="'Increase Level ' + ($index + 1) + ' Spell Slots'"
         >
           <mat-icon>add</mat-icon>
         </button>

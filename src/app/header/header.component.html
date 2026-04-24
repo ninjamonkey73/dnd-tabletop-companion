@@ -52,6 +52,7 @@
     class="delete-icon"
     [disabled]="!internalSelectedCharacter || internalSelectedCharacter === 'new' || isCreatingNewCharacter()"
     (click)="onDeleteClicked()"
+    aria-label="Delete Character"
   >
     <mat-icon matTooltip="Delete Character">delete</mat-icon>
   </button>
@@ -94,8 +95,8 @@
       max="20" class="centered-input" [(ngModel)]="character().level" />
   
   <div matSuffix class="level-buttons-suffix">
-    <button mat-icon-button (click)="changeLevel(1)"><mat-icon>expand_less</mat-icon></button>
-    <button mat-icon-button (click)="changeLevel(-1)"><mat-icon>expand_more</mat-icon></button>
+    <button mat-icon-button (click)="changeLevel(1)" aria-label="Increase Level"><mat-icon>expand_less</mat-icon></button>
+    <button mat-icon-button (click)="changeLevel(-1)" aria-label="Decrease Level"><mat-icon>expand_more</mat-icon></button>
   </div>
 </mat-form-field>
 

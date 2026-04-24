@@ -8,6 +8,7 @@
         class="sub"
         (click)="decRage()"
         [disabled]="isCreatingNewCharacter()"
+        aria-label="Decrease Rage"
       >
         <mat-icon>remove</mat-icon>
       </button>
@@ -16,6 +17,7 @@
         class="add"
         (click)="incRage()"
         [disabled]="isCreatingNewCharacter()"
+        aria-label="Increase Rage"
       >
         <mat-icon>add</mat-icon>
       </button>

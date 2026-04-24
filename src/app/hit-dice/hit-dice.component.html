@@ -8,6 +8,7 @@
         class="sub"
         (click)="decHitDie()"
         [disabled]="isCreatingNewCharacter() || character().hitDie <= 0"
+        aria-label="Decrease Hit Dice"
       >
         <mat-icon>remove</mat-icon>
       </button>
@@ -16,6 +17,7 @@
         class="add"
         (click)="incHitDie()"
         [disabled]="isCreatingNewCharacter() || character().hitDie >= character().level"
+        aria-label="Increase Hit Dice"
       >
         <mat-icon>add</mat-icon>
       </button>

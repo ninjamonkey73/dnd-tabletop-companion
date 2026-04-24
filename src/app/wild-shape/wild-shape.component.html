@@ -8,6 +8,7 @@
         class="sub"
         (click)="decWildShape()"
         [disabled]="isCreatingNewCharacter()"
+        aria-label="Decrease Wild Shape"
       >
         <mat-icon>remove</mat-icon>
       </button>
@@ -16,6 +17,7 @@
         class="add"
         (click)="incWildShape()"
         [disabled]="isCreatingNewCharacter()"
+        aria-label="Increase Wild Shape"
       >
         <mat-icon>add</mat-icon>
       </button>

@@ -8,6 +8,7 @@
         class="sub"
         (click)="decKi()"
         [disabled]="isCreatingNewCharacter()"
+        aria-label="Decrease Ki Points"
       >
         <mat-icon>remove</mat-icon>
       </button>
@@ -16,6 +17,7 @@
         class="add"
         (click)="incKi()"
         [disabled]="isCreatingNewCharacter()"
+        aria-label="Increase Ki Points"
       >
         <mat-icon>add</mat-icon>
       </button>
