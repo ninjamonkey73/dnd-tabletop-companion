@@ -61,9 +61,7 @@ body {
   .class-select {
     width: 120px;
   }
-  .classLevel {
-    width: 100px;
-  }
+
   .login-button,
   .rest-button {
     min-width: 72px;
@@ -86,11 +84,6 @@ body {
   margin-top: 12px;
 }
 
-.classLevel {
-  flex: 0 0 auto;
-  display: inline-flex;
-  width: 130px;
-}
 
 .card-title {
   text-align: center;

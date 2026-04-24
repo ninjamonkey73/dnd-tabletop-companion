@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-export interface SyncEvent {
+interface SyncEvent {
   type: 'push' | 'pull' | 'settings';
   status: 'ok' | 'error';
   message?: string;

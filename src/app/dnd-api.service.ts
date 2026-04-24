@@ -15,9 +15,6 @@ export interface ClassLevelData {
   class_specific?: { rage_count?: number };
   spellcasting?: Record<string, number>;
 }
-export interface SpellcastingSlots {
-  [slotLevel: string]: number;
-}
 
 @Injectable({ providedIn: 'root' })
 export class DndApiService {
