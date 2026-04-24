@@ -17,39 +17,39 @@ body {
 }
 
 :root {
-  --bg-app: transparent;
-  --bg-surface: #fff;
-  --bg-surface-alt: #f2f2f2;
-  --text-main: #000;
-  --text-invert: #fff;
-  --border-main: 1px solid black;
-  --border-alt: 1px solid #ccc;
+  --bg-app: #f7f5f0;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #ecebe9;
+  --text-main: #2c2c2c;
+  --text-invert: #ffffff;
+  --border-main: 1px solid rgba(0, 0, 0, 0.15);
+  --border-alt: 1px solid rgba(0, 0, 0, 0.10);
   
-  --btn-grad-blue: linear-gradient(to bottom, navy, lightblue);
-  --btn-grad-red: linear-gradient(to bottom, #8b0000, #ff6347);
-  --btn-grad-green: linear-gradient(to bottom, #006400, #32cd32);
-  --btn-bg-edit: rgb(199, 199, 250);
+  --btn-grad-blue: #2e5c8a;
+  --btn-grad-red: #d9381e;
+  --btn-grad-green: #278a44;
+  --btn-bg-edit: #e2e8f0;
 
-  --icon-stable: darkgreen;
-  --icon-incap: darkred;
+  --icon-stable: #278a44;
+  --icon-incap: #d9381e;
 }
 
 body.dark-theme {
-  --bg-app: #121212;
-  --bg-surface: #1e1e1e;
-  --bg-surface-alt: #2c2c2c;
-  --text-main: #e0e0e0;
-  --text-invert: #e0e0e0;
-  --border-main: 1px solid #555;
-  --border-alt: 1px solid #444;
+  --bg-app: #0f1115;
+  --bg-surface: #1a1d24;
+  --bg-surface-alt: #252833;
+  --text-main: #e2e8f0;
+  --text-invert: #0f1115; /* Dark ink for pastel buttons */
+  --border-main: 1px solid rgba(255, 255, 255, 0.08);
+  --border-alt: 1px solid rgba(255, 255, 255, 0.05);
   
-  --btn-grad-blue: #3f51b5; 
-  --btn-grad-red: #b71c1c;
-  --btn-grad-green: #1b5e20;
-  --btn-bg-edit: #3f51b5;
+  --btn-grad-blue: #818cf8; /* Soft Indigo */
+  --btn-grad-red: #f87171;  /* Soft Red */
+  --btn-grad-green: #34d399; /* Soft Emerald */
+  --btn-bg-edit: #e2e8f0; /* Keeping edit button readable with text-main */
 
-  --icon-stable: #2e7d32;
-  --icon-incap: #c62828;
+  --icon-stable: #34d399;
+  --icon-incap: #f87171;
 }
 
 /* Shared header + class/level styling */
