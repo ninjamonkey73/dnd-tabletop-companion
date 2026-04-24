@@ -1,0 +1,36 @@
+name: Manual Deploy to GH Pages
+
+on:
+  workflow_dispatch: # Allows you to trigger this manually from the Actions tab
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Main
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build and Prep Assets
+        # This executes your specific production build and 404 script
+        run: |
+          npm run build:prod
+          npm run add-404
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          # This replaces your: npx rimraf, git checkout gh-pages, npx cpy-cli, 
+          # git add, git commit, and git push commands.
+          folder: dist/dnd-tabletop-companion/browser
+          branch: gh-pages
+          commit-message: "Deploy (Manual Workflow)"
+          clean: true # This performs the 'npx rimraf' equivalent on the gh-pages branch
