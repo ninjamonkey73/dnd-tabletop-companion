@@ -23,6 +23,8 @@ jobs:
         # This executes your specific production build and 404 script
         run: |
           npm run build:prod
+          # This line will show us exactly where index.html is
+          find dist -name "index.html"
           npm run add-404
 
       - name: Deploy to GitHub Pages
