@@ -13,7 +13,7 @@
     "watch": "ng build --watch --configuration development",
     "deploy": "npm run build:prod && npm run add-404 && git checkout gh-pages && npx rimraf ./browser && npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" . && git add . && git commit -m 'Deploy' && git push origin gh-pages && git checkout main",
     "open": "ng serve --open",
-    "add-404": "npx cpy-cli dist/dnd-tabletop-companion/index.html dist/dnd-tabletop-companion --rename=404.html",
+    "add-404": "npx cpy-cli dist/dnd-tabletop-companion/browser/index.html dist/dnd-tabletop-companion/browser --rename=404.html",
     "style:check": "powershell -ExecutionPolicy Bypass -File [check-templates.ps1](http://_vscodecontentref_/12)",
     "find:unused-css": "powershell.exe -ExecutionPolicy Bypass -File ./scripts/find-unused-css.ps1"
   },

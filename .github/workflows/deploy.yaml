@@ -32,7 +32,7 @@ jobs:
         with:
           # This replaces your: npx rimraf, git checkout gh-pages, npx cpy-cli, 
           # git add, git commit, and git push commands.
-          folder: dist/dnd-tabletop-companion
+          folder: dist/dnd-tabletop-companion/browser
           branch: gh-pages
           commit-message: "Deploy (Manual Workflow)"
           clean: true # This performs the 'npx rimraf' equivalent on the gh-pages branch
