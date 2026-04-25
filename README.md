@@ -16,23 +16,8 @@ Once the server is running, open your browser and navigate to `http://localhost:
 
 To deploy:
 
-Run deploy runs the commands listed below, don't do both
-
-```bash
-npm run deploy
-```
-
-```bash
-npm run build:prod
-npm run add-404
-git checkout gh-pages
-npx rimraf ./browser
-npx cpy-cli \"dist/dnd-tabletop-companion/browser/**\" .
-git add .
-git commit -m 'Deploy'
-git push origin gh-pages
-git checkout main
-```
+At GitHub, on the Actions tab, click the "Manual Deploy to GH Pages" workflow. 
+Click "Run workflow" in Main, and the green "Run workflow" button.
 
 ## Code scaffolding
 
