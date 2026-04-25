@@ -19,12 +19,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Run Unit Tests
+        run: npm run test
+
       - name: Build and Prep Assets
         # This executes your specific production build and 404 script
         run: |
           npm run build:prod
-          # This line will show us exactly where index.html is
-          find dist -name "index.html"
           npm run add-404
 
       - name: Deploy to GitHub Pages
