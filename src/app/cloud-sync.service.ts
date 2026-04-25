@@ -9,6 +9,7 @@ import {
   setDoc,
   serverTimestamp,
   collection,
+  onSnapshot,
 } from 'firebase/firestore';
 import { db } from './firebase.init';
 import { Character, defaultCharacter } from './character.model';
@@ -29,6 +30,10 @@ export class CloudSyncService {
   private pushSettingsTimer: any;
   private pushSettingsRetry = 0;
 
+  private lastRemoteCharJson?: string;
+  private charUnsubscribe?: () => void;
+  private currentListeningChar?: string;
+
   constructor(
     private store: CharacterStore,
     private auth: AuthService,
@@ -39,7 +44,53 @@ export class CloudSyncService {
       const user = this.auth.user();
       const character = this.store.character();
       if (!user || !character.name) return;
+
+      const charJson = JSON.stringify(character);
+      // Prevent echoing remote changes back to Firestore
+      if (this.lastRemoteCharJson === charJson) return;
+
       this.schedulePushCharacter(user.uid, character);
+    });
+
+    // Listen for remote character updates
+    effect(() => {
+      const user = this.auth.user();
+      const charObj = this.store.character();
+      const name = charObj?.name;
+
+      if (!user || !name) {
+        if (this.charUnsubscribe) {
+          this.charUnsubscribe();
+          this.charUnsubscribe = undefined;
+          this.currentListeningChar = undefined;
+        }
+        return;
+      }
+
+      if (this.currentListeningChar !== name) {
+        if (this.charUnsubscribe) {
+          this.charUnsubscribe();
+        }
+        this.currentListeningChar = name;
+        
+        const ref = doc(db, 'users', user.uid, 'characters', name);
+        this.charUnsubscribe = onSnapshot(ref, { includeMetadataChanges: true }, (snap) => {
+          if (!snap.exists()) return;
+          if (snap.metadata.hasPendingWrites) return; // Ignore local unsaved changes
+
+          const data = snap.data();
+          delete data['updatedAt']; // remove serverTimestamp before compare
+          
+          const remoteChar = { ...defaultCharacter, ...data } as Character;
+          const remoteJson = JSON.stringify(remoteChar);
+          
+          if (this.lastRemoteCharJson !== remoteJson) {
+            this.lastRemoteCharJson = remoteJson;
+            // Update the store
+            setTimeout(() => this.store.setCharacter(remoteChar), 0);
+          }
+        });
+      }
     });
 
     // Push settings
