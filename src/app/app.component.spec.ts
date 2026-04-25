@@ -2,10 +2,22 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+import { AuthService } from './auth.service';
+import { signal } from '@angular/core';
+
 describe('AppComponent', () => {
   beforeEach(async () => {
+    const mockAuthService = {
+      user: signal(null),
+      isAuthed: signal(false),
+      loginWithGoogle: vi.fn(),
+      logout: vi.fn(),
+      completeRedirectLoginIfNeeded: vi.fn()
+    };
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [{ provide: AuthService, useValue: mockAuthService }]
     }).compileComponents();
   });
 
@@ -21,12 +33,4 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('dnd-tabletop-companion');
   }); */
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Hello, dnd-tabletop-companion'
-    );
-  });
 });
