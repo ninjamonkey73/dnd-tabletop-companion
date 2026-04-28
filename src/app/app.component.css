@@ -17,11 +17,6 @@ mat-button-toggle-group {
   margin-top: 8px;
 }
 
-.mat-button-toggle-checked {
-  background-color: var(--btn-bg-edit);
-    }
-
-
 :host ::ng-deep mat-button-toggle .mat-button-toggle-label-content {
   font-weight: 600;
 }

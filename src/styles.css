@@ -246,6 +246,11 @@ body.dark-theme .mat-mdc-select-arrow {
   color: var(--text-main) !important;
 }
 
+/* Light mode toggle checked state */
+mat-button-toggle.mat-button-toggle-checked {
+  background-color: var(--btn-bg-edit) !important;
+}
+
 /* Fix Button Toggles & Stroked Buttons in Dark Mode */
 body.dark-theme mat-button-toggle {
   background-color: var(--bg-surface);
