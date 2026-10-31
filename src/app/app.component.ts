@@ -29,6 +29,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RestService } from './rest.service';
 import { CharacterProgressionService } from './character-progression.service';
 import { NewCharacterComponent } from './new-character/new-character.component';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-root',
@@ -54,6 +55,7 @@ import { NewCharacterComponent } from './new-character/new-character.component';
     HeaderComponent,
     MatButtonToggleModule,
     NewCharacterComponent,
+    MatSlideToggle
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -156,7 +158,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.character.spellSlots.some((s) => s > 0)
   );
   readonly hasSneakAttackSig = computed(() => this.character.class === 'Rogue');
-  
+
   readonly availableStatSectionsSig = computed(() => {
     const arr: Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> = [];
     if (this.hasKiSig()) arr.push('ki');
@@ -401,7 +403,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     if (confirm(`Are you sure you want to delete the character "${name}"?`)) {
       try {
         await this.cloud.deleteCharacter(name);
-      } catch {}
+      } catch { }
       await this.loadSavedCharacterNames();
       this.selectedCharacter = null;
       // Reset store to blank character (keep resources localized)
@@ -436,7 +438,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   // --- Level / Class logic ---
   async updateCharLevel(): Promise<void> {
     const errorMsg = await this.progressionService.updateCharLevel(this.classIndexByName);
-    
+
     this.ensureSelectedStatSection(); // auto-select 'slots' if it's the only available section
     this.lastCharacterSelected = this.character.name;
     this.saveCharacterData();
@@ -544,10 +546,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     // Update only the targeted index
     const max =
       Array.isArray(this.character.spellSlots) &&
-      this.character.spellSlots[ev.index] !== undefined
+        this.character.spellSlots[ev.index] !== undefined
         ? this.character.spellSlots[ev.index]
         : Number.MAX_SAFE_INTEGER;
-        
+
     this.store.updateSpellSlot(ev.index, ev.value, max);
 
     this.pendingSave = true;

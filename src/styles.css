@@ -273,3 +273,22 @@ body.dark-theme .mat-mdc-outlined-button:disabled {
   color: var(--text-invert) !important;
   border-color: transparent !important;
 }
+
+/* Global Slide Toggle / Switch styling */
+mat-slide-toggle,
+.mat-mdc-slide-toggle {
+  --mat-slide-toggle-selected-track-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-hover-track-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-focus-track-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-pressed-track-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-state-layer-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-hover-state-layer-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-focus-state-layer-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-pressed-state-layer-color: var(--btn-grad-blue);
+  --mat-slide-toggle-selected-icon-color: var(--btn-grad-blue);
+}
+
+.mat-mdc-slide-toggle .mdc-switch--selected:enabled .mdc-switch__track::after {
+  background: var(--btn-grad-blue) !important;
+}
+

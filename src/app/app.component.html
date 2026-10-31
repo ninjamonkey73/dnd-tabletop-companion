@@ -43,10 +43,15 @@
         (change)="onSectionToggle($event.value)"
       >
         <mat-button-toggle value="money">Money</mat-button-toggle>
-        <mat-button-toggle value="resources">Trackable Resources</mat-button-toggle>
+        <mat-button-toggle value="resources"
+          >Trackable Resources</mat-button-toggle
+        >
       </mat-button-toggle-group>
 
-      <div class="row money-row full-width-panel" [attr.aria-disabled]="isCreatingNewCharacter">
+      <div
+        class="row money-row full-width-panel"
+        [attr.aria-disabled]="isCreatingNewCharacter"
+      >
         @if (showingMoney) {
           <app-money
             [character]="character"
@@ -62,11 +67,11 @@
           ></app-resources>
         }
       </div>
-    </div> <!-- End Panel 1 -->
+    </div>
+    <!-- End Panel 1 -->
 
     <!-- Panel 2: Class Stats & Death Saves -->
     <div class="dashboard-panel">
-
       <!-- Stat section toggle -->
       @if (availableStatSectionsSig().length > 1) {
         <div class="body-buttons">
@@ -128,6 +133,12 @@
             [character]="character"
             [isCreatingNewCharacter]="isCreatingNewCharacter"
           ></app-sneak-attack>
+          <div class="stat-box">
+            <div class="stat-label">Inspiration</div>
+            <mat-slide-toggle
+              [attr.aria-label]="'inspiration'"
+            ></mat-slide-toggle>
+          </div>
         }
       </div>
 
@@ -155,6 +166,7 @@
           ></app-hit-dice>
         }
       </div>
-    </div> <!-- End Panel 2 -->
+    </div>
+    <!-- End Panel 2 -->
   </div>
 </div>
