@@ -110,5 +110,22 @@ describe('RestService', () => {
       expect(resources.find((r) => r.id === 1)?.value).toBe(4);
       expect(resources.find((r) => r.id === 2)?.value).toBe(10);
     });
+
+    it('should decrement non-zero exhaustion on long rest', () => {
+      store.setCharacter({
+        ...defaultCharacter,
+        exhaustion: 2,
+      });
+
+      service.longRest();
+      expect(store.character().exhaustion).toBe(1);
+
+      service.longRest();
+      expect(store.character().exhaustion).toBe(0);
+
+      // Stays at 0 when already 0
+      service.longRest();
+      expect(store.character().exhaustion).toBe(0);
+    });
   });
 });

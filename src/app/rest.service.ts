@@ -66,6 +66,11 @@ export class RestService {
     patches.tempHP = 0;
     patches.stable = false;
 
+    // Decrement non-zero exhaustion
+    if (character.exhaustion > 0) {
+      patches.exhaustion = character.exhaustion - 1;
+    }
+
     // Reset resources marked with (LR:<value>)
     if (Array.isArray(character.resources)) {
       patches.resources = character.resources.map((resource) => {

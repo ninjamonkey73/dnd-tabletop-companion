@@ -26,11 +26,15 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-  /* 
-  it(`should have the 'dnd-tabletop-companion' title`, () => {
+
+  it('should adjust exhaustion correctly without going below 0', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('dnd-tabletop-companion');
-  }); */
-
+    app.adjustExhaustion(2);
+    expect(app.character.exhaustion).toBe(2);
+    app.adjustExhaustion(-1);
+    expect(app.character.exhaustion).toBe(1);
+    app.adjustExhaustion(-5);
+    expect(app.character.exhaustion).toBe(0);
+  });
 });

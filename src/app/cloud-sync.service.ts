@@ -258,6 +258,7 @@ export class CloudSyncService {
       gp: Math.max(0, Number(character.gp) || 0),
       pp: Math.max(0, Number(character.pp) || 0),
       class: typeof character.class === 'string' ? character.class : '',
+      exhaustion: Math.max(0, Number(character.exhaustion) || 0),
       resources: Array.isArray(character.resources)
         ? character.resources.map((r: any) => ({
             id: Number(r?.id) || 0,

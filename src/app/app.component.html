@@ -133,13 +133,46 @@
             [character]="character"
             [isCreatingNewCharacter]="isCreatingNewCharacter"
           ></app-sneak-attack>
-          <div class="stat-box">
-            <div class="stat-label">Inspiration</div>
-            <mat-slide-toggle
-              [attr.aria-label]="'inspiration'"
-            ></mat-slide-toggle>
-          </div>
         }
+      </div>
+      <div class="full-width-panel">
+        <div class="stat-box" [class.disabled]="isCreatingNewCharacter">
+          <div class="stat-label">Exhaustion</div>
+          <div
+            class="stat-value"
+            [attr.aria-label]="'exhaustion for ' + character.name"
+          >
+            {{ character.exhaustion }}
+          </div>
+          <div class="stat-buttons">
+            <button
+              mat-mini-button
+              class="sub"
+              (click)="adjustExhaustion(-1)"
+              [disabled]="isCreatingNewCharacter || character.exhaustion <= 0"
+              matTooltip="Subtract Exhaustion"
+              [attr.aria-label]="'decrease exhaustion for ' + character.name"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button
+              mat-mini-button
+              class="add"
+              (click)="adjustExhaustion(1)"
+              [disabled]="isCreatingNewCharacter"
+              matTooltip="Add Exhaustion"
+              [attr.aria-label]="'increase exhaustion for ' + character.name"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Inspiration</div>
+          <mat-slide-toggle
+            [attr.aria-label]="'inspiration'"
+          ></mat-slide-toggle>
+        </div>
       </div>
 
       <mat-button-toggle-group

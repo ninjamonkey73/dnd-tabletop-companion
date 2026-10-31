@@ -389,6 +389,8 @@ export class AppComponent implements AfterViewInit, OnInit {
       rageRemaining: 0,
       wildShapeRemaining: 0,
       resources: [], // clear resources for a new character
+      sneakAttack: 0,
+      exhaustion: 0,
     };
     this.store.setCharacter(fresh);
     this.selectedCharacter = fresh.name;
@@ -429,6 +431,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         rage: 0,
         rageRemaining: 0,
         wildShapeRemaining: 0,
+        exhaustion: 0,
       });
       this.selectedStatSection = null;
       this.deathSavesComponent?.syncDeathSavesFromCharacter(this.character);
@@ -488,6 +491,13 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.store.patchCharacter({
       maxHP: this.character.maxHP,
     });
+    this.saveCharacterData();
+  }
+
+  adjustExhaustion(delta: number): void {
+    const current = this.character.exhaustion || 0;
+    const updated = Math.max(0, current + delta);
+    this.store.patchCharacter({ exhaustion: updated });
     this.saveCharacterData();
   }
 
