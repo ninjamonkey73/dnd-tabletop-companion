@@ -7,14 +7,30 @@ export class RestService {
 
   shortRest(): void {
     const character = this.store.character();
+    const patches: any = {};
+
     if (character.class === 'Monk') {
-      this.store.patchCharacter({
-        kiPoints: character.level > 1 ? character.level : 0,
-      });
+      patches.kiPoints = character.level > 1 ? character.level : 0;
     } else if (character.class === 'Druid') {
-      this.store.patchCharacter({
-        wildShapeRemaining: character.level > 1 ? 2 : 0,
+      patches.wildShapeRemaining = character.level > 1 ? 2 : 0;
+    }
+
+    // Reset resources marked with (SR:<value>)
+    if (Array.isArray(character.resources)) {
+      patches.resources = character.resources.map((resource) => {
+        const match = resource.name?.match(/\(SR:\s*(\d+)\s*\)/i);
+        if (match) {
+          const resetValue = parseInt(match[1], 10);
+          if (!isNaN(resetValue)) {
+            return { ...resource, value: resetValue };
+          }
+        }
+        return resource;
       });
+    }
+
+    if (Object.keys(patches).length > 0) {
+      this.store.patchCharacter(patches);
     }
   }
 
@@ -49,6 +65,20 @@ export class RestService {
     patches.rageRemaining = character.rage;
     patches.tempHP = 0;
     patches.stable = false;
+
+    // Reset resources marked with (LR:<value>)
+    if (Array.isArray(character.resources)) {
+      patches.resources = character.resources.map((resource) => {
+        const match = resource.name?.match(/\(LR:\s*(\d+)\s*\)/i);
+        if (match) {
+          const resetValue = parseInt(match[1], 10);
+          if (!isNaN(resetValue)) {
+            return { ...resource, value: resetValue };
+          }
+        }
+        return resource;
+      });
+    }
 
     this.store.patchCharacter(patches);
   }
