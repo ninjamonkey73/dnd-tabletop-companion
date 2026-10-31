@@ -1,5 +1,5 @@
 <div class="newChar">
-  <mat-form-field appearance="fill" subscriptSizing="dynamic">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>New Character Name</mat-label>
     <input
       matInput
@@ -11,19 +11,21 @@
       (keydown.enter)="create.emit()"
     />
   </mat-form-field>
+
   <button
     class="save-button"
-    mat-raised-button
-    color="primary"
+    mat-flat-button
     (click)="create.emit()"
+    aria-label="Save Character"
   >
-    Save Character
+    Save
   </button>
+
   <button
     class="cancel-button"
-    mat-raised-button
-    color="primary"
+    mat-flat-button
     (click)="cancel.emit()"
+    aria-label="Cancel"
   >
     Cancel
   </button>

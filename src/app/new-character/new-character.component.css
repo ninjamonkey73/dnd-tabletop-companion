@@ -2,13 +2,33 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   flex-wrap: wrap;
-  padding: 16px;
-  background-color: var(--mat-sys-surface-container);
-  border-radius: 8px;
-  margin-bottom: 24px;
+  padding: 8px;
+  background-color: var(--bg-app);
 }
-.save-button, .cancel-button {
+
+.save-button,
+.cancel-button {
   margin-top: 0;
+  border-radius: 10px;
+  border: var(--border-main);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  background: var(--btn-grad-blue) !important;
+  color: var(--text-invert) !important;
+}
+
+.save-button:hover,
+.cancel-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.1);
+}
+
+.save-button:active,
+.cancel-button:active {
+  transform: translateY(1px);
 }
