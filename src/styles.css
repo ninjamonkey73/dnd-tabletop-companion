@@ -33,6 +33,7 @@ body {
 
   --icon-stable: #2d5a36;
   --icon-incap: #801c1c;
+  --mat-select-panel-background-color: var(--bg-surface);
 }
 
 body.dark-theme {
@@ -292,3 +293,8 @@ mat-slide-toggle,
   background: var(--btn-grad-blue) !important;
 }
 
+.mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
+    background-color: var(--bg-surface);
+}
+
+.mat-button-toggle { background-color: var(--bg-surface-alt) !important; }

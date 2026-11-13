@@ -130,7 +130,7 @@
   flex: 1;
   border-radius: 10px;
   border: var(--border-main);
-  background-color: var(--bg-surface);
+  background-color: var(--bg-surface-alt);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   padding: 6px 10px;
   display: flex;
@@ -218,4 +218,10 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  color: var(--text-main) !important;
+  background-color: var(--bg-surface) !important;
+}
+
+.mat-mdc-form-field {
+  background-color: var(--bg-surface);
 }
