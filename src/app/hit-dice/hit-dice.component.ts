@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { Character } from '../character.model';
 import { MatIcon } from '@angular/material/icon';
+import { getTotalLevel, getHitDicePool } from '../multiclass.utils';
 
 @Component({
   selector: 'app-hit-dice',
@@ -16,31 +17,39 @@ export class HitDiceComponent {
   readonly isCreatingNewCharacter = input<boolean>(false);
   readonly characterChange = output<Character>();
 
+  get totalLevel(): number {
+    const c = this.character();
+    return getTotalLevel(c.classes) || c.level || 0;
+  }
+
+  get hitDicePool(): string {
+    return getHitDicePool(this.character().classes);
+  }
+
   ngOnInit(): void {}
 
   onHitDieChange() {
     this.characterChange.emit(this.character());
-    
   }
 
   // Increment Hit Dice
-incHitDie() {
-  const current = this.character().hitDie;
-  const max = this.character().level;
+  incHitDie() {
+    const current = this.character().hitDie;
+    const max = this.totalLevel;
 
-  if (current < max) {
-    this.character().hitDie++;
-    this.onHitDieChange();
+    if (current < max) {
+      this.character().hitDie++;
+      this.onHitDieChange();
+    }
   }
-}
 
-// Decrement Hit Dice
-decHitDie() {
-  const current = this.character().hitDie;
+  // Decrement Hit Dice
+  decHitDie() {
+    const current = this.character().hitDie;
 
-  if (current > 0) {
-    this.character().hitDie--;
-    this.onHitDieChange();
+    if (current > 0) {
+      this.character().hitDie--;
+      this.onHitDieChange();
+    }
   }
-}
 }

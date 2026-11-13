@@ -2,39 +2,57 @@ import { Injectable, inject } from '@angular/core';
 import { CharacterStore } from './character.store';
 import { DndApiService } from './dnd-api.service';
 import { firstValueFrom } from 'rxjs';
+import {
+  getClassLevel,
+  getTotalLevel,
+  getEffectiveCasterLevel,
+  getMulticlassSpellSlots,
+} from './multiclass.utils';
 
 @Injectable({ providedIn: 'root' })
 export class CharacterProgressionService {
   private store = inject(CharacterStore);
   private api = inject(DndApiService);
 
-  async updateCharLevel(classIndexByName: Record<string, string>): Promise<string> {
+  async updateCharLevel(
+    classIndexByName: Record<string, string>
+  ): Promise<string> {
     const character = this.store.character();
     let errorMsg = '';
-    let level = character.level;
-    if (level < 1) {
-      level = 1;
+    let totalLevel =
+      getTotalLevel(character.classes) || character.level || 1;
+    if (totalLevel < 1) {
+      totalLevel = 1;
       errorMsg = 'Level cannot be less than 1.';
-    } else if (level > 20) {
-      level = 20;
+    } else if (totalLevel > 20) {
+      totalLevel = 20;
       errorMsg = 'Level cannot be greater than 20.';
     }
 
-    this.store.patchCharacter({ level });
+    this.store.patchCharacter({ level: totalLevel, hitDie: totalLevel });
 
-    if (character.class === 'Monk' && level > 1) {
-      this.store.patchCharacter({ kiPoints: level });
+    const monkLevel =
+      getClassLevel(character.classes, 'Monk') ||
+      (character.class === 'Monk' ? totalLevel : 0);
+    if (monkLevel > 1) {
+      this.store.patchCharacter({ kiPoints: monkLevel });
     }
 
-    if (character.class === 'Druid' && level > 1) {
+    const druidLevel =
+      getClassLevel(character.classes, 'Druid') ||
+      (character.class === 'Druid' ? totalLevel : 0);
+    if (druidLevel >= 2) {
       this.store.patchCharacter({ wildShapeRemaining: 2 });
     }
 
-    this.store.patchCharacter({ hitDie: level });
-
-    if (character.class === 'Barbarian') {
+    const barbLevel =
+      getClassLevel(character.classes, 'Barbarian') ||
+      (character.class === 'Barbarian' ? totalLevel : 0);
+    if (barbLevel > 0) {
       try {
-        const data = await firstValueFrom(this.api.getClassLevel('barbarian', level));
+        const data = await firstValueFrom(
+          this.api.getClassLevel('barbarian', barbLevel)
+        );
         const count = data.class_specific?.rage_count;
         if (typeof count === 'number') {
           this.store.patchCharacter({ rage: count, rageRemaining: count });
@@ -42,16 +60,50 @@ export class CharacterProgressionService {
       } catch (e) {}
     }
 
-    const clsName = (character.class || '').toLowerCase().trim();
-    if (!clsName) {
-      this.store.patchCharacter({ spellSlots: [], spellSlotsRemaining: [] });
-    } else {
+    // Spellcasting logic
+    const classes =
+      character.classes && character.classes.length > 0
+        ? character.classes
+        : character.class
+        ? [{ class: character.class, level: totalLevel }]
+        : [];
+
+    const castingClasses = classes.filter((c) => {
+      const name = (c.class || '').toLowerCase().trim();
+      return [
+        'bard',
+        'cleric',
+        'druid',
+        'sorcerer',
+        'wizard',
+        'paladin',
+        'ranger',
+        'artificer',
+      ].includes(name);
+    });
+
+    if (castingClasses.length >= 2) {
+      // Multiclass spellcasting rules (PHB)
+      const ecl = getEffectiveCasterLevel(classes);
+      const slots = getMulticlassSpellSlots(ecl);
+      this.store.patchCharacter({
+        spellSlots: slots,
+        spellSlotsRemaining: slots.slice(),
+      });
+    } else if (castingClasses.length === 1) {
+      const single = castingClasses[0];
+      const clsName = (single.class || '').toLowerCase().trim();
       const clsSlug = classIndexByName[clsName] || clsName;
       try {
-        const data = await firstValueFrom(this.api.getClassLevel(clsSlug, level));
+        const data = await firstValueFrom(
+          this.api.getClassLevel(clsSlug, single.level)
+        );
         const spellcasting = data.spellcasting;
         if (!spellcasting) {
-          this.store.patchCharacter({ spellSlots: [], spellSlotsRemaining: [] });
+          this.store.patchCharacter({
+            spellSlots: [],
+            spellSlotsRemaining: [],
+          });
         } else {
           const slots: number[] = [];
           for (let i = 1; i <= 9; i++) {
@@ -68,10 +120,54 @@ export class CharacterProgressionService {
           });
         }
       } catch (e) {
-        this.store.patchCharacter({ spellSlots: [], spellSlotsRemaining: [] });
+        this.store.patchCharacter({
+          spellSlots: [],
+          spellSlotsRemaining: [],
+        });
+      }
+    } else {
+      const clsName = (character.class || '').toLowerCase().trim();
+      if (!clsName) {
+        this.store.patchCharacter({
+          spellSlots: [],
+          spellSlotsRemaining: [],
+        });
+      } else {
+        const clsSlug = classIndexByName[clsName] || clsName;
+        try {
+          const data = await firstValueFrom(
+            this.api.getClassLevel(clsSlug, totalLevel)
+          );
+          const spellcasting = data.spellcasting;
+          if (!spellcasting) {
+            this.store.patchCharacter({
+              spellSlots: [],
+              spellSlotsRemaining: [],
+            });
+          } else {
+            const slots: number[] = [];
+            for (let i = 1; i <= 9; i++) {
+              const key = `spell_slots_level_${i}`;
+              slots.push(
+                Object.prototype.hasOwnProperty.call(spellcasting, key)
+                  ? spellcasting[key]
+                  : 0
+              );
+            }
+            this.store.patchCharacter({
+              spellSlots: slots,
+              spellSlotsRemaining: slots.slice(),
+            });
+          }
+        } catch (e) {
+          this.store.patchCharacter({
+            spellSlots: [],
+            spellSlotsRemaining: [],
+          });
+        }
       }
     }
-    
+
     return errorMsg;
   }
 }

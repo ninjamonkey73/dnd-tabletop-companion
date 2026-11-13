@@ -16,7 +16,7 @@
         mat-mini-button
         class="add"
         (click)="incHitDie()"
-        [disabled]="isCreatingNewCharacter() || character().hitDie >= character().level"
+        [disabled]="isCreatingNewCharacter() || character().hitDie >= totalLevel"
         aria-label="Increase Hit Dice"
       >
         <mat-icon>add</mat-icon>

@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
 import { Character, defaultCharacter } from './character.model';
+import { migrateLegacyCharacter } from './multiclass.utils';
 
 @Injectable({ providedIn: 'root' })
 export class CharacterStore {
@@ -23,12 +24,16 @@ export class CharacterStore {
   constructor() {}
 
   setCharacter(char: Character) {
+    const migrated = migrateLegacyCharacter(char);
     // Force new object reference to trigger signal update
-    this._character.set({ ...char });
+    this._character.set({ ...migrated });
   }
 
   patchCharacter(patch: Partial<Character>) {
-    this._character.update((c) => ({ ...c, ...patch }));
+    this._character.update((c) => {
+      const merged = { ...c, ...patch };
+      return migrateLegacyCharacter(merged);
+    });
   }
 
   setFullHeal(v: boolean) {

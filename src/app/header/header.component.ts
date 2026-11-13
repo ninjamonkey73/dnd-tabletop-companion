@@ -17,8 +17,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
-import { Character } from '../character.model';
+import { Character, ClassLevel } from '../character.model';
 import { AuthService } from '../auth.service';
+import { getTotalLevel, formatClassSummary } from '../multiclass.utils';
 
 @Component({
   selector: 'app-header',
@@ -57,11 +58,15 @@ export class HeaderComponent implements OnChanges, OnInit {
   @Output() fullHealChange = new EventEmitter<boolean>();
   @Output() classSelected = new EventEmitter<string>();
   @Output() levelChanged = new EventEmitter<number>();
+  @Output() classesChanged = new EventEmitter<ClassLevel[]>();
 
   internalSelectedCharacter: string | null = null;
   internalFullHeal = this.fullHeal(); // mirror input on init
   private auth = inject(AuthService);
   isDarkTheme = false;
+
+  // Collapsible repeater state
+  isExpanded = false;
 
   ngOnInit() {
     if (localStorage.getItem('theme') === 'dark') {
@@ -113,13 +118,141 @@ export class HeaderComponent implements OnChanges, OnInit {
     this.fullHealChange.emit(this.internalFullHeal);
   }
 
+  // --- Collapsible Repeater Helpers ---
+  toggleExpanded() {
+    this.isExpanded = !this.isExpanded;
+  }
+
+  get characterClasses(): ClassLevel[] {
+    const c = this.character();
+    if (!c) return [];
+    if (!Array.isArray(c.classes)) {
+      c.classes = [];
+    }
+    if (c.classes.length === 0 && (c.class || c.level)) {
+      c.classes = [
+        {
+          class: c.class || '',
+          level: Math.max(1, Math.min(20, Number(c.level) || 1)),
+        },
+      ];
+    } else if (c.classes.length === 0) {
+      c.classes = [{ class: '', level: 1 }];
+    }
+    return c.classes;
+  }
+
+  get classSummary(): string {
+    return formatClassSummary(this.character()?.classes);
+  }
+
+  get totalLevel(): number {
+    return getTotalLevel(this.character()?.classes);
+  }
+
+  isClassSelectedInOtherRow(className: string, rowIndex: number): boolean {
+    if (!className) return false;
+    const target = className.toLowerCase().trim();
+    return this.characterClasses.some(
+      (c, idx) =>
+        idx !== rowIndex && (c?.class || '').toLowerCase().trim() === target
+    );
+  }
+
+  getMaxLevelForRow(index: number): number {
+    const classes = this.characterClasses;
+    const otherSum = classes.reduce(
+      (sum, c, idx) => (idx === index ? sum : sum + (Number(c?.level) || 0)),
+      0
+    );
+    return Math.max(1, 20 - otherSum);
+  }
+
+  onRowClassChange(index: number, newClass: string) {
+    const classes = this.characterClasses;
+    if (!classes[index]) return;
+    classes[index].class = newClass;
+    this.syncAndEmit();
+  }
+
+  onRowLevelChange(index: number, newLevel: any) {
+    const classes = this.characterClasses;
+    if (!classes[index]) return;
+    const parsed = Number(newLevel);
+    const maxAllowed = this.getMaxLevelForRow(index);
+    const clamped = Math.max(
+      1,
+      Math.min(maxAllowed, isNaN(parsed) ? 1 : Math.floor(parsed))
+    );
+    classes[index].level = clamped;
+    this.syncAndEmit();
+  }
+
+  changeRowLevel(index: number, delta: number) {
+    const classes = this.characterClasses;
+    if (!classes[index]) return;
+    const current = Number(classes[index].level) || 1;
+    this.onRowLevelChange(index, current + delta);
+  }
+
+  addClass() {
+    if (this.totalLevel >= 20 || this.isCreatingNewCharacter()) return;
+    const classes = this.characterClasses;
+    const remaining = 20 - this.totalLevel;
+    if (remaining <= 0) return;
+
+    // Pick first available class from classes() that isn't already selected
+    const available =
+      this.classes().find(
+        (c) =>
+          !classes.some(
+            (existing) =>
+              (existing?.class || '').toLowerCase().trim() ===
+              c.toLowerCase().trim()
+          )
+      ) || '';
+
+    classes.push({ class: available, level: 1 });
+    this.syncAndEmit();
+  }
+
+  removeClass(index: number) {
+    const classes = this.characterClasses;
+    if (classes.length > 1) {
+      classes.splice(index, 1);
+    } else {
+      classes[0] = { class: '', level: 1 };
+    }
+    this.syncAndEmit();
+  }
+
+  syncAndEmit() {
+    const char = this.character();
+    const classes = this.characterClasses;
+    const primaryClass =
+      classes.find((c) => (c?.class || '').trim().length > 0)?.class || '';
+    const total = getTotalLevel(classes);
+
+    char.classes = classes;
+    char.class = primaryClass;
+    char.level = total;
+
+    this.classSelected.emit(primaryClass);
+    this.levelChanged.emit(total);
+    this.classesChanged.emit(classes);
+  }
+
+  // Legacy single-class callbacks kept for test compatibility
   onClassSelection(val: string) {
-    this.classSelected.emit(val);
+    this.onRowClassChange(0, val);
   }
 
   onLevelChange() {
-    // Emit current level (already bound into character.level)
-    this.levelChanged.emit(this.character().level);
+    this.syncAndEmit();
+  }
+
+  changeLevel(increment: number) {
+    this.changeRowLevel(0, increment);
   }
 
   // Auth helpers
@@ -135,11 +268,4 @@ export class HeaderComponent implements OnChanges, OnInit {
   async logout() {
     await this.auth.logout();
   }
-
-  changeLevel(increment: number) {
-    const newLevel = this.character().level + increment;
-    if (newLevel < 1 || newLevel > 20) return;
-    this.character().level = newLevel;
-    this.onLevelChange();
-}
 }

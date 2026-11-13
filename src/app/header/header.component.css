@@ -76,15 +76,17 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 4px;
 }
 .charName {
   width: 200px;
 }
 /* Header-specific tweaks that are not global (keep minimal here if using global styles.css) */
 .class-level-row {
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .no-wrap {
@@ -119,4 +121,101 @@
 
 .level-input input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* Collapsible Repeater Component styles */
+.collapsible-repeater-container {
+  min-width: 280px;
+  max-width: 480px;
+  flex: 1;
+  border-radius: 10px;
+  border: var(--border-main);
+  background-color: var(--bg-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease-in-out;
+}
+
+.summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.summary-bar:hover {
+  background-color: var(--bg-surface-alt);
+}
+
+.summary-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--btn-grad-blue);
+}
+
+.summary-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-main);
+}
+
+.expand-chevron {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.repeater-expanded-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: var(--border-alt);
+}
+
+.repeater-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repeater-row .class-select {
+  flex: 1;
+  min-width: 130px;
+}
+
+.repeater-row .level-input {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.remove-class-btn {
+  flex-shrink: 0;
+}
+
+.repeater-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 2px;
+}
+
+.add-class-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }

@@ -1,5 +1,6 @@
 import { Component, output, input } from '@angular/core';
 import { Character } from '../character.model';
+import { getClassLevel } from '../multiclass.utils';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +27,8 @@ export class KiPointsComponent {
 
   incKi() {
     const c = this.character();
-    const max = c.level ?? Infinity;
+    const monkLevel = getClassLevel(c.classes, 'Monk');
+    const max = monkLevel > 0 ? monkLevel : (c.level ?? Infinity);
     c.kiPoints = Math.min((c.kiPoints ?? 0) + 1, max);
     this.characterChange.emit(c);
   }

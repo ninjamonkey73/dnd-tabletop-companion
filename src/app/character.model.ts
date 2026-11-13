@@ -1,3 +1,8 @@
+export interface ClassLevel {
+  class: string;
+  level: number;
+}
+
 export interface Resource {
   id: number;
   name: string;
@@ -9,12 +14,15 @@ export interface Character {
   currentHP: number;
   maxHP: number;
   kiPoints: number;
-  class: string;
+  classes: ClassLevel[];
+  /** @deprecated Legacy scalar class, use `classes` instead */
+  class?: string;
+  /** @deprecated Legacy scalar level, use `classes` instead */
+  level?: number;
   cp: number;
   sp: number;
   gp: number;
   pp: number;
-  level: number;
   tempHP: number;
   deathSaveSuccess: boolean[];
   deathSaveFailure: boolean[];
@@ -35,12 +43,13 @@ export const defaultCharacter: Character = {
   currentHP: 0,
   maxHP: 0,
   kiPoints: 0,
+  classes: [],
   class: '',
+  level: 1,
   cp: 0,
   sp: 0,
   gp: 0,
   pp: 0,
-  level: 1,
   tempHP: 0,
   deathSaveSuccess: [false, false, false],
   deathSaveFailure: [false, false, false],

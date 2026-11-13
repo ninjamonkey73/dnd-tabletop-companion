@@ -14,6 +14,7 @@ import {
 import { db } from './firebase.init';
 import { Character, defaultCharacter } from './character.model';
 import { SyncStatusService } from './sync-status.service';
+import { migrateLegacyCharacter, getTotalLevel } from './multiclass.utils';
 
 interface SettingsDoc {
   lastSelectedCharacter?: string | null;
@@ -81,7 +82,7 @@ export class CloudSyncService {
           const data = snap.data();
           delete data['updatedAt']; // remove serverTimestamp before compare
           
-          const remoteChar = { ...defaultCharacter, ...data } as Character;
+          const remoteChar = migrateLegacyCharacter({ ...defaultCharacter, ...data });
           const remoteJson = JSON.stringify(remoteChar);
           
           if (this.lastRemoteCharJson !== remoteJson) {
@@ -168,7 +169,7 @@ export class CloudSyncService {
     const snap = await getDoc(ref);
     if (!snap.exists()) return null;
     const data = snap.data() as Partial<Character>;
-    return { ...defaultCharacter, ...data } as Character;
+    return migrateLegacyCharacter({ ...defaultCharacter, ...data });
   }
 
   async pullSettings(): Promise<SettingsDoc | null> {
@@ -237,30 +238,46 @@ export class CloudSyncService {
   }
 
   private async performPushCharacter(uid: string, character: Character) {
+    const migrated = migrateLegacyCharacter(character);
     const clean: Character = {
-      ...character,
+      ...migrated,
+      classes: Array.isArray(migrated.classes)
+        ? migrated.classes.map((c) => ({
+            class: typeof c.class === 'string' ? c.class.trim() : '',
+            level: Math.max(1, Math.min(20, Number(c.level) || 1)),
+          }))
+        : [],
       spellSlots:
-        Array.isArray(character.spellSlots) ||
-        character.spellSlots === undefined
-          ? character.spellSlots
+        Array.isArray(migrated.spellSlots) ||
+        migrated.spellSlots === undefined
+          ? migrated.spellSlots
           : [],
       spellSlotsRemaining:
-        Array.isArray(character.spellSlotsRemaining) ||
-        character.spellSlotsRemaining === undefined
-          ? character.spellSlotsRemaining
+        Array.isArray(migrated.spellSlotsRemaining) ||
+        migrated.spellSlotsRemaining === undefined
+          ? migrated.spellSlotsRemaining
           : [],
-      level: Math.max(1, Math.min(20, Number(character.level) || 1)),
-      currentHP: Math.max(0, Number(character.currentHP) || 0),
-      maxHP: Math.max(0, Number(character.maxHP) || 0),
-      tempHP: Math.max(0, Number(character.tempHP) || 0),
-      cp: Math.max(0, Number(character.cp) || 0),
-      sp: Math.max(0, Number(character.sp) || 0),
-      gp: Math.max(0, Number(character.gp) || 0),
-      pp: Math.max(0, Number(character.pp) || 0),
-      class: typeof character.class === 'string' ? character.class : '',
-      exhaustion: Math.max(0, Number(character.exhaustion) || 0),
-      resources: Array.isArray(character.resources)
-        ? character.resources.map((r: any) => ({
+      level: Math.max(
+        1,
+        Math.min(
+          20,
+          Number(migrated.level) || getTotalLevel(migrated.classes) || 1
+        )
+      ),
+      currentHP: Math.max(0, Number(migrated.currentHP) || 0),
+      maxHP: Math.max(0, Number(migrated.maxHP) || 0),
+      tempHP: Math.max(0, Number(migrated.tempHP) || 0),
+      cp: Math.max(0, Number(migrated.cp) || 0),
+      sp: Math.max(0, Number(migrated.sp) || 0),
+      gp: Math.max(0, Number(migrated.gp) || 0),
+      pp: Math.max(0, Number(migrated.pp) || 0),
+      class:
+        typeof migrated.class === 'string'
+          ? migrated.class
+          : migrated.classes[0]?.class || '',
+      exhaustion: Math.max(0, Number(migrated.exhaustion) || 0),
+      resources: Array.isArray(migrated.resources)
+        ? migrated.resources.map((r: any) => ({
             id: Number(r?.id) || 0,
             name: typeof r?.name === 'string' ? r.name : '',
             value: Math.max(0, Number(r?.value) || 0),

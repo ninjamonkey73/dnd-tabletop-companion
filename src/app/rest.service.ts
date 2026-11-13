@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { CharacterStore } from './character.store';
+import { getClassLevel, getTotalLevel } from './multiclass.utils';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
@@ -9,10 +10,18 @@ export class RestService {
     const character = this.store.character();
     const patches: any = {};
 
-    if (character.class === 'Monk') {
-      patches.kiPoints = character.level > 1 ? character.level : 0;
-    } else if (character.class === 'Druid') {
-      patches.wildShapeRemaining = character.level > 1 ? 2 : 0;
+    const monkLevel =
+      getClassLevel(character.classes, 'Monk') ||
+      (character.class === 'Monk' ? character.level || 0 : 0);
+    const druidLevel =
+      getClassLevel(character.classes, 'Druid') ||
+      (character.class === 'Druid' ? character.level || 0 : 0);
+
+    if (monkLevel > 1) {
+      patches.kiPoints = monkLevel;
+    }
+    if (druidLevel >= 2) {
+      patches.wildShapeRemaining = 2;
     }
 
     // Reset resources marked with (SR:<value>)
@@ -39,11 +48,23 @@ export class RestService {
     const fullHeal = this.store.fullHeal();
 
     const patches: any = {};
-    if (character.class === 'Monk') {
-      patches.kiPoints = character.level > 1 ? character.level : 0;
-    } else if (character.class === 'Druid') {
-      patches.wildShapeRemaining = character.level > 1 ? 2 : 0;
-    } else if (character.class === 'Barbarian') {
+    const monkLevel =
+      getClassLevel(character.classes, 'Monk') ||
+      (character.class === 'Monk' ? character.level || 0 : 0);
+    const druidLevel =
+      getClassLevel(character.classes, 'Druid') ||
+      (character.class === 'Druid' ? character.level || 0 : 0);
+    const barbarianLevel =
+      getClassLevel(character.classes, 'Barbarian') ||
+      (character.class === 'Barbarian' ? character.level || 0 : 0);
+
+    if (monkLevel > 1) {
+      patches.kiPoints = monkLevel;
+    }
+    if (druidLevel >= 2) {
+      patches.wildShapeRemaining = 2;
+    }
+    if (barbarianLevel > 0) {
       patches.rageRemaining = character.rage;
     }
 
@@ -51,11 +72,12 @@ export class RestService {
 
     // Hit die recovery logic
     const hitDie = character.hitDie;
-    const level = character.level;
+    const totalLevel =
+      getTotalLevel(character.classes) || character.level || 1;
     let newHitDie = hitDie;
-    if (hitDie < level) {
-      const gain = Math.floor((level < 2 ? 2 : level) / 2);
-      newHitDie = hitDie + gain > level ? level : hitDie + gain;
+    if (hitDie < totalLevel) {
+      const gain = Math.floor((totalLevel < 2 ? 2 : totalLevel) / 2);
+      newHitDie = hitDie + gain > totalLevel ? totalLevel : hitDie + gain;
     }
     patches.hitDie = newHitDie;
 

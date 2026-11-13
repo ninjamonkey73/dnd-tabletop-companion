@@ -7,7 +7,16 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Character } from './character.model';
+import { Character, ClassLevel } from './character.model';
+import {
+  hasKi,
+  hasRage,
+  hasWildShape,
+  hasSpellSlots,
+  hasSneakAttack,
+  getAvailableStatSections,
+  getTotalLevel,
+} from './multiclass.utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DeathSavesComponent } from './death-saves/death-saves.component';
 import { HitDiceComponent } from './hit-dice/hit-dice.component';
@@ -149,25 +158,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack' | null
   >(this.selectedStatSection);
 
-  readonly hasKiSig = computed(() => this.character.class === 'Monk');
-  readonly hasRageSig = computed(() => this.character.class === 'Barbarian');
-  readonly hasWildSig = computed(() => this.character.class === 'Druid');
-  readonly hasSlotsSig = computed(
-    () =>
-      Array.isArray(this.character.spellSlots) &&
-      this.character.spellSlots.some((s) => s > 0)
-  );
-  readonly hasSneakAttackSig = computed(() => this.character.class === 'Rogue');
+  readonly hasKiSig = computed(() => hasKi(this.character));
+  readonly hasRageSig = computed(() => hasRage(this.character));
+  readonly hasWildSig = computed(() => hasWildShape(this.character));
+  readonly hasSlotsSig = computed(() => hasSpellSlots(this.character));
+  readonly hasSneakAttackSig = computed(() => hasSneakAttack(this.character));
 
-  readonly availableStatSectionsSig = computed(() => {
-    const arr: Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> = [];
-    if (this.hasKiSig()) arr.push('ki');
-    if (this.hasRageSig()) arr.push('rage');
-    if (this.hasWildSig()) arr.push('wild');
-    if (this.hasSlotsSig()) arr.push('slots');
-    if (this.hasSneakAttackSig()) arr.push('sneakAttack');
-    return arr;
-  });
+  readonly availableStatSectionsSig = computed(() =>
+    getAvailableStatSections(this.character)
+  );
 
   ngOnInit(): void {
     this.loadSavedCharacterNames();
@@ -187,7 +186,13 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   onHeaderLevelChanged(level: number) {
-    this.store.patchCharacter({ level });
+    const classes = this.character.classes ? [...this.character.classes] : [];
+    if (classes.length > 0) {
+      classes[0] = { ...classes[0], level };
+    } else if (this.character.class) {
+      classes.push({ class: this.character.class, level });
+    }
+    this.store.patchCharacter({ level, classes });
     this.updateCharLevel();
   }
 
@@ -195,14 +200,29 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.onClassSelection(cls);
   }
 
+  onHeaderClassesChanged(classes: ClassLevel[]) {
+    this.store.patchCharacter({
+      classes,
+      class: classes[0]?.class || '',
+      level: getTotalLevel(classes),
+    });
+    this.updateCharLevel();
+  }
+
   // --- Class selection & loading ---
   onClassSelection(selectedClass: string): void {
+    const classes = this.character.classes ? [...this.character.classes] : [];
+    if (classes.length > 0) {
+      classes[0] = { ...classes[0], class: selectedClass };
+    } else if (selectedClass) {
+      classes.push({ class: selectedClass, level: this.character.level || 1 });
+    }
     if (!this.classHasBeenSet && selectedClass) {
       this.classHasBeenSet = true;
-      this.store.patchCharacter({ class: selectedClass });
+      this.store.patchCharacter({ class: selectedClass, classes });
       this.updateCharLevel(); // includes save + signal push
     } else {
-      this.store.patchCharacter({ class: selectedClass });
+      this.store.patchCharacter({ class: selectedClass, classes });
     }
     this.updateChar();
   }
@@ -214,7 +234,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       typeof c.name === 'string' &&
       typeof c.currentHP === 'number' &&
       typeof c.maxHP === 'number' &&
-      typeof c.level === 'number' &&
+      (Array.isArray(c.classes) || typeof c.level === 'number') &&
       Array.isArray(c.deathSaveSuccess) &&
       Array.isArray(c.deathSaveFailure)
     );
@@ -372,6 +392,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       currentHP: 0,
       maxHP: 0,
       kiPoints: 0,
+      classes: [],
       class: '',
       cp: 0,
       sp: 0,
@@ -415,6 +436,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         currentHP: 0,
         maxHP: 0,
         kiPoints: 0,
+        classes: [],
         class: '',
         cp: 0,
         sp: 0,
@@ -576,32 +598,23 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   // --- Stat Sections availability & selection ---
   hasKi(): boolean {
-    return this.character.class === 'Monk';
+    return hasKi(this.character);
   }
   hasRage(): boolean {
-    return this.character.class === 'Barbarian';
+    return hasRage(this.character);
   }
   hasWild(): boolean {
-    return this.character.class === 'Druid';
+    return hasWildShape(this.character);
   }
   hasSlots(): boolean {
-    return (
-      Array.isArray(this.character.spellSlots) &&
-      this.character.spellSlots.some((s) => s > 0)
-    );
+    return hasSpellSlots(this.character);
   }
   hasSneakAttack(): boolean {
-    return this.character.class === 'Rogue';
+    return hasSneakAttack(this.character);
   }
 
   availableStatSections(): Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> {
-    const arr: Array<'ki' | 'rage' | 'wild' | 'slots' | 'sneakAttack'> = [];
-    if (this.hasKi()) arr.push('ki');
-    if (this.hasRage()) arr.push('rage');
-    if (this.hasWild()) arr.push('wild');
-    if (this.hasSlots()) arr.push('slots');
-    if (this.hasSneakAttack()) arr.push('sneakAttack');
-    return arr;
+    return getAvailableStatSections(this.character);
   }
   ensureSelectedStatSection(): void {
     const available = this.availableStatSectionsSig();
