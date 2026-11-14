@@ -62,10 +62,10 @@ body {
   --mat-select-panel-background-color: var(--bg-surface);
 
   /* Button Toggle Tokens */
-  --mat-standard-button-toggle-background-color: var(--bg-surface-alt);
-  --mat-standard-button-toggle-text-color: var(--text-main);
-  --mat-standard-button-toggle-selected-state-background-color: var(--bg-surface);
-  --mat-standard-button-toggle-selected-state-text-color: var(--text-main);
+  --mat-button-toggle-background-color: var(--bg-surface-alt);
+  --mat-button-toggle-text-color: var(--text-main);
+  --mat-button-toggle-selected-state-background-color: var(--bg-surface);
+  --mat-button-toggle-selected-state-text-color: var(--text-main);
 }
 
 body.dark-theme {
