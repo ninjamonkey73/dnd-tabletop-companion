@@ -19,8 +19,11 @@ export class CharacterProgressionService {
   ): Promise<string> {
     const character = this.store.character();
     let errorMsg = '';
-    let totalLevel =
-      getTotalLevel(character.classes) || character.level || 1;
+    let rawLevel =
+      Array.isArray(character.classes) && character.classes.length > 0
+        ? character.classes.reduce((sum, c) => sum + (Number(c?.level) || 0), 0)
+        : character.level || 1;
+    let totalLevel = rawLevel;
     if (totalLevel < 1) {
       totalLevel = 1;
       errorMsg = 'Level cannot be less than 1.';

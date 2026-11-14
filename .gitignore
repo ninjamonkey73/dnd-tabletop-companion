@@ -50,3 +50,8 @@ node_modules/.cache/gh-pages/https!github.com!ninjamonkey73!dnd-tabletop-compani
 
 .cursor\rules\nx-rules.mdc
 .github\instructions\nx.instructions.md
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

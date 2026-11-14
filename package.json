@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
     "serve:prod": "powershell -ExecutionPolicy Bypass -File ./scripts/serve-prod.ps1",
@@ -14,7 +14,8 @@
     "open": "ng serve --open",
     "add-404": "npx cpy-cli dist/dnd-tabletop-companion/browser/index.html dist/dnd-tabletop-companion/browser --rename=404.html",
     "style:check": "powershell -ExecutionPolicy Bypass -File [check-templates.ps1](http://_vscodecontentref_/12)",
-    "find:unused-css": "powershell.exe -ExecutionPolicy Bypass -File ./scripts/find-unused-css.ps1"
+    "find:unused-css": "powershell.exe -ExecutionPolicy Bypass -File ./scripts/find-unused-css.ps1",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -36,9 +37,11 @@
     "@angular/build": "^22.2.7",
     "@angular/cli": "^22.2.7",
     "@angular/compiler-cli": "^22.2.6",
+    "@playwright/test": "1.65.1",
     "@vitest/coverage-v8": "^4.1.5",
     "cpy": "^13.2.1",
     "jsdom": "^29.0.2",
+    "playwright-ng-schematics": "^22.1.4",
     "rimraf": "^6.0.1",
     "stylelint": "^17.16.0",
     "stylelint-config-standard": "^40.0.0",
