@@ -1,4 +1,4 @@
-import { Component, output, input } from '@angular/core';
+import { Component, output, input, ChangeDetectionStrategy } from '@angular/core';
 import { Character } from '../character.model';
 import { getClassLevel } from '../multiclass.utils';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
   ],
   templateUrl: './ki-points.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./ki-points.component.css'],
 })
 export class KiPointsComponent {

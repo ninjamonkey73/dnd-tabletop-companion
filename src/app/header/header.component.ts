@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   input,
   inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -35,6 +36,7 @@ import { getTotalLevel, formatClassSummary } from '../multiclass.utils';
     MatInputModule,
   ],
   templateUrl: './header.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnChanges, OnInit {

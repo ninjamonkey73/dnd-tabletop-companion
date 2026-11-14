@@ -4,6 +4,7 @@ import {
   output,
   OnChanges,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +29,7 @@ import { MatCardContent } from '@angular/material/card';
     MatCardContent,
   ],
   templateUrl: './money.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./money.component.css'],
 })
 export class MoneyComponent implements OnChanges {

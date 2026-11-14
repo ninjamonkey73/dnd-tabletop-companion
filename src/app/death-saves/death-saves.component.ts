@@ -6,6 +6,7 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { Character } from '../character.model';
@@ -14,6 +15,7 @@ import { Character } from '../character.model';
   selector: 'app-death-saves',
   templateUrl: './death-saves.component.html',
   styleUrl: './death-saves.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon],
 })
 export class DeathSavesComponent implements OnInit, OnChanges {

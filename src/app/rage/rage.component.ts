@@ -4,6 +4,7 @@ import {
   output,
   OnChanges,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   imports: [FormsModule, MatCardModule, MatFormFieldModule, MatIcon],
   templateUrl: './rage.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./rage.component.css'],
 })
 export class RageComponent implements OnChanges {

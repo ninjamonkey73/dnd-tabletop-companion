@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, OnInit, DestroyRef, inject, computed, signal } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, DestroyRef, inject, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -67,6 +67,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
     MatSlideToggle
   ],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements AfterViewInit, OnInit {

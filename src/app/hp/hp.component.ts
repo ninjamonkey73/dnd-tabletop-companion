@@ -5,6 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
   input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
   ],
   templateUrl: './hp.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./hp.component.css'],
 })
 export class HpComponent implements OnChanges {

@@ -7,6 +7,7 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Character, Resource } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +34,7 @@ import { MatCardContent } from '@angular/material/card';
     MatCardContent,
   ],
   templateUrl: './resources.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./resources.component.css'],
 })
 export class ResourcesComponent implements OnChanges {

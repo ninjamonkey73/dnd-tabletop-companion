@@ -1,4 +1,4 @@
-import { Component, output, input } from '@angular/core';
+import { Component, output, input, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,7 @@ import { getTotalLevel, getHitDicePool } from '../multiclass.utils';
   selector: 'app-hit-dice',
   templateUrl: './hit-dice.component.html',
   styleUrls: ['./hit-dice.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, MatFormFieldModule, MatCardModule, MatIcon],
 })
 export class HitDiceComponent {

@@ -4,6 +4,7 @@ import {
   output,
   OnChanges,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Character } from '../character.model';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
   ],
   templateUrl: './wild-shape.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./wild-shape.component.css'],
 })
 export class WildShapeComponent implements OnChanges {
