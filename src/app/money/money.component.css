@@ -9,6 +9,7 @@
   position: relative;
   margin-top: 12px;
 }
+
 .money-input {
   flex: none;
   min-width: 90px;
@@ -16,22 +17,22 @@
   width: 100px;
   z-index: 2;
 }
+
 .money-display-stack {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   gap: 8px;
   width: 100%;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .money-input input[type="number"]::-webkit-outer-spin-button,
 .money-input input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 .level-input input[type="number"] {
-  -moz-appearance: textfield;
+  appearance: textfield;
 }

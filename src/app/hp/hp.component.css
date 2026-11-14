@@ -4,7 +4,7 @@
   border: var(--border-main);
   border-radius: 12px;
   width: 325px;
-  margin: 0 auto 12px auto;
+  margin: 0 auto 12px;
   background: var(--bg-surface);
   color: var(--text-main);
   overflow: hidden;
@@ -79,14 +79,14 @@
   height: 36px;
   padding: 0 15px;
   gap: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .hurt-button:hover, .heal-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
   filter: brightness(1.1);
 }
 
@@ -115,15 +115,15 @@
   min-width: 36px;
   height: 36px;
   width: 40px;
-  padding: 0 0 0 0;
+  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  place-content: center center;
   background: var(--btn-bg-edit);
-  align-content: center;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
+
 .edit:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
@@ -146,8 +146,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%),
+    0 2px 4px -1px rgb(0 0 0 / 6%);
   font-size: 16px;
   font-weight: 700;
   user-select: none;
@@ -177,11 +177,10 @@
 
 .hp-controls {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .hp-button-stack {
@@ -207,7 +206,7 @@
   letter-spacing: 0.5px;
   line-height: 1.2;
   white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
   color: var(--text-invert);
 }
 
@@ -225,7 +224,7 @@
 }
 
 /* Optional: shrink on very narrow screens */
-@media (max-width: 400px) {
+@media (width <= 400px) {
   .death-message {
     max-width: 240px;
     padding: 6px 10px;
@@ -239,10 +238,10 @@
 
 input.hp-input[type="number"]::-webkit-outer-spin-button,
 input.hp-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 input.hp-input[type="number"] {
-  -moz-appearance: textfield;
+  appearance: textfield;
 }

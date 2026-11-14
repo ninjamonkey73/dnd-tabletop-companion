@@ -5,6 +5,7 @@
   align-self: flex-start;
   margin-top: 0;
 }
+
 .long-rest-toggle {
   display: flex;
   flex-direction: column;
@@ -12,12 +13,14 @@
   gap: 2px;
   margin-top: 0;
 }
+
 .delete-icon {
   border: none;
   background: none;
   padding: 0;
   cursor: pointer;
 }
+
 .rest-button {
   background: var(--btn-grad-blue);
   font-size: 1.2rem;
@@ -34,11 +37,13 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
+
 .rest-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
   filter: brightness(1.1);
 }
+
 .rest-button:active {
   transform: translateY(1px);
 }
@@ -59,11 +64,13 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
+
 .login-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
   filter: brightness(1.1);
 }
+
 .login-button:active {
   transform: translateY(1px);
 }
@@ -78,9 +85,11 @@
   gap: 8px;
   margin-top: 4px;
 }
+
 .charName {
   width: 200px;
 }
+
 /* Header-specific tweaks that are not global (keep minimal here if using global styles.css) */
 .class-level-row {
   gap: 16px;
@@ -98,6 +107,7 @@
   /* ensure the mat control doesn't force inline label placement */
   display: block;
 }
+
 .long-rest-toggle .toggle-label {
   font-size: 1rem;
   font-weight: bold;
@@ -115,12 +125,12 @@
 
 .level-input input[type="number"]::-webkit-outer-spin-button,
 .level-input input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 .level-input input[type="number"] {
-  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Collapsible Repeater Component styles */
@@ -131,7 +141,7 @@
   border-radius: 10px;
   border: var(--border-main);
   background-color: var(--bg-surface-alt);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
   padding: 6px 10px;
   display: flex;
   flex-direction: column;

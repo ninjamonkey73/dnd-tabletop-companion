@@ -6,7 +6,7 @@
   border-radius: 12px;
   background: var(--bg-surface);
   width: 325px;
-  margin: 0 auto 16px auto;
+  margin: 0 auto 16px;
   overflow: hidden;
   box-shadow: none;
   padding: 0 0 12px; /* remove top padding so gray touches top */

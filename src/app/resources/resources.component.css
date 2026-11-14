@@ -9,12 +9,14 @@
   justify-content: center; /* Center the grid */
   align-items: start;
 }
+
 .resources > * {
   min-width: 72px;
   box-sizing: border-box;
   width: 100%;
   max-width: 220px;
 }
+
 .resource-row {
   display: flex;
   flex-direction: column;
@@ -31,6 +33,7 @@
   box-sizing: border-box;
   margin: 0;
 }
+
 .resource-actions {
   display: flex;
   gap: 8px;
@@ -42,28 +45,30 @@
 .resource-stat .stat-label {
   font-weight: 600;
 }
+
 .resource-stat .stat-value {
   font-size: 1.2rem;
   font-weight: 700;
   padding: 8px;
 }
 
-@media (max-width: 450px) {
+@media (width <= 450px) {
   .resources {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 300px) {
+@media (width <= 300px) {
   .resources {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 200px) {
+@media (width <= 200px) {
   .resources {
     grid-template-columns: repeat(1, 1fr);
   }
+
   .resource-row {
     padding: 8px 6px;
   }
@@ -92,14 +97,17 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
+
 .add-resource:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
   filter: brightness(1.1);
 }
+
 .add-resource:active {
   transform: translateY(1px);
 }
+
 .add-resource mat-icon {
   margin-right: 0;
 }

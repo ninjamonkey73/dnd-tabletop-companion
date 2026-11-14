@@ -1,5 +1,6 @@
 .spellSlots {
   display: grid;
+
   /* Always show five columns for levels 1–5 per row */
   grid-template-columns: repeat(5, minmax(110px, 1fr));
   gap: 8px;
@@ -7,8 +8,7 @@
   max-width: 720px; /* enough width to comfortably fit 5 boxes */
   margin-left: auto;
   margin-right: auto;
-  justify-items: stretch; /* let children fill each grid cell */
-  align-items: center;
+  place-items: center stretch; /* let children fill each grid cell */
 }
 
 /* Fill grid cells so columns are honored */
@@ -18,7 +18,7 @@
   max-width: none;
 }
 
-@media (max-width: 700px) {
+@media (width <= 700px) {
   .spellSlots {
     /* On narrow screens, reduce columns but keep horizontal layout */
     grid-template-columns: repeat(3, minmax(100px, 1fr));

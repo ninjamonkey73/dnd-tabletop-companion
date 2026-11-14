@@ -1,0 +1,17 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "no-duplicate-selectors": true,
+    "block-no-empty": true,
+    "no-empty-source": null,
+    "declaration-block-no-duplicate-properties": true,
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["ng-deep"]
+      }
+    ],
+    "custom-property-pattern": null,
+    "selector-class-pattern": null
+  }
+}
