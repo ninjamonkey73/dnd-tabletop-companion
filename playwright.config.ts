@@ -30,6 +30,14 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
+  /* Start Angular dev server automatically if not already running */
+  webServer: {
+    command: 'npm run start',
+    url: process.env['PLAYWRIGHT_TEST_BASE_URL'] ?? 'http://localhost:4200',
+    reuseExistingServer: !process.env['CI'],
+    timeout: 120_000,
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {
