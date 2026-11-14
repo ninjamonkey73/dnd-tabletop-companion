@@ -2,11 +2,6 @@ mat-form-field {
   flex: 1;
 }
 
-/* Make body buttons shorter (applies to mat-stroked-button) */
-:host ::ng-deep .body-buttons .mat-mdc-outlined-button {
-  padding: 0 10px;
-}
-
 .save-button,
 .cancel-button {
   margin-left: 20px;

@@ -75,14 +75,12 @@
     <div class="dashboard-panel">
       <!-- Stat section toggle -->
       @if (availableStatSectionsSig().length > 1) {
-        <div class="body-buttons">
+        <mat-button-toggle-group
+          [value]="selectedStatSection"
+          (change)="setSelectedStatSection($event.value)"
+        >
           @for (sec of availableStatSectionsSig(); track sec) {
-            <button
-              mat-stroked-button
-              color="primary"
-              [disabled]="selectedStatSection === sec"
-              (click)="setSelectedStatSection(sec)"
-            >
+            <mat-button-toggle [value]="sec">
               {{
                 sec === "ki"
                   ? "Ki Points"
@@ -94,9 +92,9 @@
                         ? "Sneak Attack"
                         : "Spell Slots"
               }}
-            </button>
+            </mat-button-toggle>
           }
-        </div>
+        </mat-button-toggle-group>
       }
 
       <div class="full-width-panel">
