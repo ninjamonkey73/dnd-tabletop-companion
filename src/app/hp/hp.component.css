@@ -8,6 +8,7 @@
   background: var(--bg-surface);
   color: var(--text-main);
   overflow: hidden;
+  margin-top: 12px;
 }
 
 .hp-header,
@@ -20,10 +21,10 @@
 }
 
 .hp-header {
-  font-weight: bold;
+  font-weight: 600;
   background: var(--bg-surface-alt);
   border-bottom: none;
-  padding: 8px 12px;
+  padding: 0 8px 8px 6px;
 }
 
 .hpRow > div,
@@ -34,6 +35,26 @@
 
 .hp-header > div {
   font-size: 16px;
+}
+
+.hp-table-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--bg-surface-alt);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.hp-table-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-main);
+  width: 100%;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  border-bottom: var(--border-alt);
 }
 
 .hpRow > div {

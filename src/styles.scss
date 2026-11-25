@@ -131,52 +131,6 @@ mat-form-field {
   justify-content: center;
 }
 
-.top {
-  gap: 12px;
-  width: 100%;
-  max-width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.char-select-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Responsive header tweaks */
-@media (width <= 480px) {
-  .top {
-    gap: 8px;
-    padding: 0 6px;
-  }
-
-  .login-button,
-  .rest-button {
-    min-width: 72px;
-    font-size: 1rem;
-    padding: 4px 8px;
-  }
-
-  .rest-buttons {
-    flex-direction: row;
-    gap: 6px;
-  }
-
-  .row {
-    justify-content: space-between;
-  }
-}
-
-.class-select {
-  flex: 0 0 auto;
-  display: inline-flex;
-  width: 140px;
-  margin-top: 12px;
-}
-
 .card-title {
   font-family: "EB Garamond", serif;
   font-size: 1.4rem;
@@ -186,10 +140,6 @@ mat-form-field {
   margin: 0 0 8px;
   background: transparent;
   border: none;
-}
-
-mat-form-field.classData-input {
-  width: 90px;
 }
 
 /* Shared stat box styles (extracted from coin-box) */
@@ -319,4 +269,8 @@ mat-slide-toggle,
 
 .mat-mdc-slide-toggle .mdc-switch--selected:enabled .mdc-switch__track::after {
   background: var(--btn-grad-blue) !important;
+}
+
+.mat-mdc-form-field {
+  background-color: var(--bg-surface);
 }

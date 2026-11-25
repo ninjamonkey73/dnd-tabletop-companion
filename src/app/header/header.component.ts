@@ -21,6 +21,24 @@ import { MatInputModule } from '@angular/material/input';
 import { Character, ClassLevel } from '../character.model';
 import { AuthService } from '../auth.service';
 import { getTotalLevel, formatClassSummary } from '../multiclass.utils';
+import { DndApiService } from '../dnd-api.service';
+import { MasterSubclassData } from '../dnd-master-data.model';
+
+export const SUBCLASS_LEVEL_MAP: Record<string, number> = {
+  artificer: 3,
+  barbarian: 3,
+  bard: 3,
+  cleric: 1,
+  druid: 2,
+  fighter: 3,
+  monk: 3,
+  paladin: 3,
+  ranger: 3,
+  rogue: 3,
+  sorcerer: 1,
+  warlock: 1,
+  wizard: 2,
+};
 
 @Component({
   selector: 'app-header',
@@ -65,10 +83,14 @@ export class HeaderComponent implements OnChanges, OnInit {
   internalSelectedCharacter: string | null = null;
   internalFullHeal = this.fullHeal(); // mirror input on init
   private auth = inject(AuthService);
+  private api = inject(DndApiService);
   isDarkTheme = false;
 
   // Collapsible repeater state
   isExpanded = false;
+
+  // Subclasses cache per class key
+  private subclassesCache: Record<string, MasterSubclassData[]> = {};
 
   ngOnInit() {
     if (localStorage.getItem('theme') === 'dark') {
@@ -136,10 +158,12 @@ export class HeaderComponent implements OnChanges, OnInit {
         {
           class: c.class || '',
           level: Math.max(1, Math.min(20, Number(c.level) || 1)),
+          subclass: '',
+          subdomain: '',
         },
       ];
     } else if (c.classes.length === 0) {
-      c.classes = [{ class: '', level: 1 }];
+      c.classes = [{ class: '', level: 1, subclass: '', subdomain: '' }];
     }
     return c.classes;
   }
@@ -170,10 +194,68 @@ export class HeaderComponent implements OnChanges, OnInit {
     return Math.max(1, 20 - otherSum);
   }
 
+  getSubclassLevel(className: string): number {
+    const key = (className || '').toLowerCase().trim();
+    return SUBCLASS_LEVEL_MAP[key] ?? 3;
+  }
+
+  canSelectSubclass(index: number): boolean {
+    const entry = this.characterClasses[index];
+    if (!entry || !entry.class) return false;
+    const reqLevel = this.getSubclassLevel(entry.class);
+    return (Number(entry.level) || 0) >= reqLevel;
+  }
+
+  getSubclassesFor(className: string): MasterSubclassData[] {
+    const key = (className || '').toLowerCase().trim();
+    if (!key) return [];
+    if (!this.subclassesCache[key]) {
+      this.api.getSubclasses(key).subscribe((subs) => {
+        this.subclassesCache[key] = subs;
+      });
+    }
+    return this.subclassesCache[key] || [];
+  }
+
+  getSelectedSubclassData(index: number): MasterSubclassData | undefined {
+    const entry = this.characterClasses[index];
+    if (!entry || !entry.class || !entry.subclass) return undefined;
+    const subs = this.getSubclassesFor(entry.class);
+    const subKey = entry.subclass.toLowerCase().trim();
+    return subs.find((s) => s.index.toLowerCase() === subKey || s.name.toLowerCase() === subKey);
+  }
+
+  getSubdomainsFor(index: number): string[] {
+    const sub = this.getSelectedSubclassData(index);
+    return sub?.subdomains ?? [];
+  }
+
+  getSubdomainLabel(index: number): string {
+    const sub = this.getSelectedSubclassData(index);
+    return sub?.subdomain_label || 'Subdomain';
+  }
+
   onRowClassChange(index: number, newClass: string) {
     const classes = this.characterClasses;
     if (!classes[index]) return;
     classes[index].class = newClass;
+    classes[index].subclass = '';
+    classes[index].subdomain = '';
+    this.syncAndEmit();
+  }
+
+  onRowSubclassChange(index: number, newSubclass: string) {
+    const classes = this.characterClasses;
+    if (!classes[index]) return;
+    classes[index].subclass = newSubclass;
+    classes[index].subdomain = '';
+    this.syncAndEmit();
+  }
+
+  onRowSubdomainChange(index: number, newSubdomain: string) {
+    const classes = this.characterClasses;
+    if (!classes[index]) return;
+    classes[index].subdomain = newSubdomain;
     this.syncAndEmit();
   }
 
@@ -187,6 +269,11 @@ export class HeaderComponent implements OnChanges, OnInit {
       Math.min(maxAllowed, isNaN(parsed) ? 1 : Math.floor(parsed))
     );
     classes[index].level = clamped;
+    const reqSubLevel = this.getSubclassLevel(classes[index].class);
+    if (clamped < reqSubLevel) {
+      classes[index].subclass = '';
+      classes[index].subdomain = '';
+    }
     this.syncAndEmit();
   }
 
@@ -214,7 +301,7 @@ export class HeaderComponent implements OnChanges, OnInit {
           )
       ) || '';
 
-    classes.push({ class: available, level: 1 });
+    classes.push({ class: available, level: 1, subclass: '', subdomain: '' });
     this.syncAndEmit();
   }
 
@@ -223,7 +310,7 @@ export class HeaderComponent implements OnChanges, OnInit {
     if (classes.length > 1) {
       classes.splice(index, 1);
     } else {
-      classes[0] = { class: '', level: 1 };
+      classes[0] = { class: '', level: 1, subclass: '', subdomain: '' };
     }
     this.syncAndEmit();
   }

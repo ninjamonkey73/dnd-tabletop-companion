@@ -72,12 +72,87 @@ describe('HeaderComponent', () => {
     expect(component.getMaxLevelForRow(1)).toBe(17);
   });
 
+  describe('Subclasses and Subdomains', () => {
+    it('should determine canSelectSubclass correctly based on class and level', () => {
+      // Row 0 currently Fighter 3 (>= 3 -> true)
+      expect(component.canSelectSubclass(0)).toBe(true);
+
+      // Change Fighter to level 2 (< 3 -> false)
+      component.characterClasses[0].level = 2;
+      expect(component.canSelectSubclass(0)).toBe(false);
+
+      // Change to Cleric 1 (>= 1 -> true)
+      component.characterClasses[0].class = 'Cleric';
+      component.characterClasses[0].level = 1;
+      expect(component.canSelectSubclass(0)).toBe(true);
+
+      // Change to Druid 1 (< 2 -> false), Druid 2 (>= 2 -> true)
+      component.characterClasses[0].class = 'Druid';
+      component.characterClasses[0].level = 1;
+      expect(component.canSelectSubclass(0)).toBe(false);
+      component.characterClasses[0].level = 2;
+      expect(component.canSelectSubclass(0)).toBe(true);
+    });
+
+    it('should update subclass and reset subdomain on onRowSubclassChange', () => {
+      const emitSpy = vi.spyOn(component.classesChanged, 'emit');
+      component.characterClasses.length = 0;
+      component.characterClasses.push({
+        class: 'Druid',
+        level: 3,
+        subclass: 'circle-of-the-land',
+        subdomain: 'coast',
+      });
+
+      component.onRowSubclassChange(0, 'circle-of-the-moon');
+      expect(component.characterClasses[0].subclass).toBe('circle-of-the-moon');
+      expect(component.characterClasses[0].subdomain).toBe('');
+      expect(emitSpy).toHaveBeenCalled();
+    });
+
+    it('should update subdomain on onRowSubdomainChange', () => {
+      const emitSpy = vi.spyOn(component.classesChanged, 'emit');
+      component.characterClasses.length = 0;
+      component.characterClasses.push({
+        class: 'Druid',
+        level: 3,
+        subclass: 'circle-of-the-land',
+      });
+
+      component.onRowSubdomainChange(0, 'arctic');
+      expect(component.characterClasses[0].subdomain).toBe('arctic');
+      expect(emitSpy).toHaveBeenCalled();
+    });
+
+    it('should reset subclass and subdomain when onRowClassChange is called', () => {
+      const emitSpy = vi.spyOn(component.classesChanged, 'emit');
+      component.characterClasses.length = 0;
+      component.characterClasses.push({
+        class: 'Druid',
+        level: 3,
+        subclass: 'circle-of-the-land',
+        subdomain: 'coast',
+      });
+
+      component.onRowClassChange(0, 'Wizard');
+      expect(component.characterClasses[0].class).toBe('Wizard');
+      expect(component.characterClasses[0].subclass).toBe('');
+      expect(component.characterClasses[0].subdomain).toBe('');
+      expect(emitSpy).toHaveBeenCalled();
+    });
+  });
+
   it('should add a class picking the first unselected class', () => {
     const emitSpy = vi.spyOn(component.classesChanged, 'emit');
     component.addClass();
     expect(component.characterClasses.length).toBe(2);
     // Barbarian is the first unselected from ['Barbarian', 'Cleric', 'Fighter', 'Wizard']
-    expect(component.characterClasses[1]).toEqual({ class: 'Barbarian', level: 1 });
+    expect(component.characterClasses[1]).toEqual({
+      class: 'Barbarian',
+      level: 1,
+      subclass: '',
+      subdomain: '',
+    });
     expect(emitSpy).toHaveBeenCalled();
   });
 
@@ -124,7 +199,12 @@ describe('HeaderComponent', () => {
     expect(component.characterClasses.length).toBe(1);
     component.removeClass(0);
     expect(component.characterClasses.length).toBe(1);
-    expect(component.characterClasses[0]).toEqual({ class: '', level: 1 });
+    expect(component.characterClasses[0]).toEqual({
+      class: '',
+      level: 1,
+      subclass: '',
+      subdomain: '',
+    });
   });
 
   it('should emit short and long rest events', () => {

@@ -11,11 +11,13 @@ describe('CharacterProgressionService', () => {
   let store: CharacterStore;
   let mockApi: {
     getClassLevel: ReturnType<typeof vi.fn>;
+    getThirdCasterLevel: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     mockApi = {
       getClassLevel: vi.fn(),
+      getThirdCasterLevel: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -61,6 +63,63 @@ describe('CharacterProgressionService', () => {
 
     await service.updateCharLevel({});
     expect(store.character().wildShapeRemaining).toBe(2);
+  });
+
+  it('should set Druid wildShapeRemaining to 999 when druid level is 20', async () => {
+    store.setCharacter({
+      ...defaultCharacter,
+      classes: [{ class: 'Druid', level: 20 }],
+    });
+    mockApi.getClassLevel.mockReturnValue(of({ spellcasting: {} }));
+
+    await service.updateCharLevel({});
+    expect(store.character().wildShapeRemaining).toBe(999);
+  });
+
+  it('should set Barbarian rage and rageRemaining to 999 when barbarian level is 20', async () => {
+    store.setCharacter({
+      ...defaultCharacter,
+      classes: [{ class: 'Barbarian', level: 20 }],
+    });
+
+    await service.updateCharLevel({});
+    expect(store.character().rage).toBe(999);
+    expect(store.character().rageRemaining).toBe(999);
+  });
+
+  it('should compute pactSlots for Warlock via getPactMagicSlots', async () => {
+    store.setCharacter({
+      ...defaultCharacter,
+      classes: [{ class: 'Warlock', level: 5 }],
+    });
+
+    await service.updateCharLevel({});
+    expect(store.character().pactSlots).toEqual({
+      level: 3,
+      max: 2,
+      current: 2,
+    });
+  });
+
+  it('should fetch third-caster spell slots for single-class Fighter (Eldritch Knight) lvl >= 3', async () => {
+    store.setCharacter({
+      ...defaultCharacter,
+      classes: [{ class: 'Fighter', level: 3, subclass: 'eldritch-knight' }],
+    });
+    mockApi.getThirdCasterLevel.mockReturnValue(
+      of({
+        level: 3,
+        prof_bonus: 2,
+        spellcasting: {
+          spell_slots_level_1: 2,
+        },
+      })
+    );
+
+    await service.updateCharLevel({});
+    expect(mockApi.getThirdCasterLevel).toHaveBeenCalledWith(3);
+    expect(store.character().spellSlots).toEqual([2, 0, 0, 0, 0, 0, 0, 0, 0]);
+    expect(store.character().spellSlotsRemaining).toEqual([2, 0, 0, 0, 0, 0, 0, 0, 0]);
   });
 
   it('should query Barbarian rage count from API', async () => {

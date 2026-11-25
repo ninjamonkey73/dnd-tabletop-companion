@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { Character, defaultCharacter } from './character.model';
 import { migrateLegacyCharacter } from './multiclass.utils';
 
@@ -19,8 +19,6 @@ export class CharacterStore {
     return Math.round((c.currentHP / c.maxHP) * 100);
   });
 
-  // Debounced persistence
-  private saveTimeout: any;
   constructor() {}
 
   setCharacter(char: Character) {
@@ -75,6 +73,20 @@ export class CharacterStore {
       while (next.length <= index) next.push(0);
       next[index] = val < 0 ? 0 : val > max ? max : Math.floor(val);
       return { ...c, spellSlotsRemaining: next };
+    });
+  }
+
+  updatePactSlot(val: number) {
+    this._character.update((c) => {
+      const currentPact = c.pactSlots ?? { level: 0, max: 0, current: 0 };
+      const clamped = Math.max(0, Math.min(currentPact.max, Math.floor(val)));
+      return {
+        ...c,
+        pactSlots: {
+          ...currentPact,
+          current: clamped,
+        },
+      };
     });
   }
 }

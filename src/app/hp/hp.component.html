@@ -1,68 +1,80 @@
 <div class="hp-section" [class.disabled]="isCreatingNewCharacter()">
-  <div class="card-title">Hit Points</div>
-
-  @if ((deathSaveMessage() || character().currentHP === 0) &&
-  isCharacterLoaded()) {
-  <div class="status-key">
-    @if (deathSaveMessage()) {
-    <div class="death-message" aria-live="polite">{{ deathSaveMessage() }}</div>
-    } @else if (character().currentHP === 0 && character().stable) {
-    <span class="status-chip stable-chip">You are stable</span>
-    } @else if (character().currentHP === 0 && !character().stable) {
-    <span class="status-chip incapacitated-chip">You are incapacitated</span>
-    }
-  </div>
+  @if (
+    (deathSaveMessage() || character().currentHP === 0) && isCharacterLoaded()
+  ) {
+    <div class="status-key">
+      @if (deathSaveMessage()) {
+        <div class="death-message" aria-live="polite">
+          {{ deathSaveMessage() }}
+        </div>
+      } @else if (character().currentHP === 0 && character().stable) {
+        <span class="status-chip stable-chip">You are stable</span>
+      } @else if (character().currentHP === 0 && !character().stable) {
+        <span class="status-chip incapacitated-chip"
+          >You are incapacitated</span
+        >
+      }
+    </div>
   }
 
   <div class="hp-table">
-    <div class="hp-header">
-      <div>Current</div>
-      <div class="maxHP-header">
-        <span>Max</span>
-        <button
-          class="edit"
-          mat-fab
-          extended
-          (click)="isEditingMaxHP ? finishEditMaxHP() : startEditMaxHP()"
-          [disabled]="isCreatingNewCharacter()"
-          matTooltip="Edit Max HP"
-          [attr.aria-label]="'edit max HP for ' + character().name"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
+    <div class="hp-table-header">
+      <div class="hp-table-title">Hit Points</div>
+      <div class="hp-header">
+        <div>Current</div>
+        <div class="maxHP-header">
+          <span>Max</span>
+          <button
+            class="edit"
+            mat-fab
+            extended
+            (click)="isEditingMaxHP ? finishEditMaxHP() : startEditMaxHP()"
+            [disabled]="isCreatingNewCharacter()"
+            matTooltip="Edit Max HP"
+            [attr.aria-label]="'edit max HP for ' + character().name"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div>Temp</div>
+        <div>% of Max</div>
       </div>
-      <div>Temp</div>
-      <div>% of Max</div>
     </div>
 
     <div class="hpRow">
       <div class="currentHP">
         {{ character().currentHP }}
         @if (deathSaveMessage()) {
-        <span class="incapacitated-icon"><span>D</span></span>
-        } @else if (isCharacterLoaded() && character().currentHP === 0 &&
-        character().stable) {
-        <span class="stable-icon"><span>S</span></span>
-        } @else if (isCharacterLoaded() && character().currentHP === 0 &&
-        !character().stable) {
-        <span class="incapacitated-icon"><span>I</span></span>
+          <span class="incapacitated-icon"><span>D</span></span>
+        } @else if (
+          isCharacterLoaded() &&
+          character().currentHP === 0 &&
+          character().stable
+        ) {
+          <span class="stable-icon"><span>S</span></span>
+        } @else if (
+          isCharacterLoaded() &&
+          character().currentHP === 0 &&
+          !character().stable
+        ) {
+          <span class="incapacitated-icon"><span>I</span></span>
         }
       </div>
 
       <div>
         @if (isEditingMaxHP) {
-        <input
-          matInput
-          type="number"
-          [(ngModel)]="character().maxHP"
-          class="hp-input"
-          placeholder="Enter Max HP"
-          (keydown.enter)="onEnterMaxHP()"
-          [disabled]="isCreatingNewCharacter()"
-          [attr.aria-label]="'max HP for ' + character().name"
-        />
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="character().maxHP"
+            class="hp-input"
+            placeholder="Enter Max HP"
+            (keydown.enter)="onEnterMaxHP()"
+            [disabled]="isCreatingNewCharacter()"
+            [attr.aria-label]="'max HP for ' + character().name"
+          />
         } @else {
-        {{ character().maxHP }}
+          {{ character().maxHP }}
         }
       </div>
 
@@ -86,7 +98,12 @@
   </div>
 
   <div class="hp-controls" [class.disabled]="isCreatingNewCharacter()">
-    <mat-form-field appearance="outline" class="HPInput" floatLabel="always" subscriptSizing="dynamic">
+    <mat-form-field
+      appearance="outline"
+      class="HPInput"
+      floatLabel="always"
+      subscriptSizing="dynamic"
+    >
       <mat-label>+/- HP</mat-label>
       <input
         matInput

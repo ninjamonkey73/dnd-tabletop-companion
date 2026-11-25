@@ -21,6 +21,18 @@
   cursor: pointer;
 }
 
+/* The wrapper holding BOTH buttons */
+.rest-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Each individual button */
 .rest-button {
   background: var(--btn-grad-blue);
   font-size: 1.2rem;
@@ -79,13 +91,6 @@
   margin-right: 0;
 }
 
-.rest-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-}
-
 .charName {
   width: 200px;
 }
@@ -136,7 +141,7 @@
 /* Collapsible Repeater Component styles */
 .collapsible-repeater-container {
   min-width: 280px;
-  max-width: 480px;
+  max-width: 720px;
   flex: 1;
   border-radius: 10px;
   border: var(--border-main);
@@ -209,6 +214,12 @@
   min-width: 130px;
 }
 
+.class-select {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 140px;
+}
+
 .repeater-row .level-input {
   width: 80px;
   flex-shrink: 0;
@@ -232,6 +243,41 @@
   background-color: var(--bg-surface) !important;
 }
 
-.mat-mdc-form-field {
-  background-color: var(--bg-surface);
+.top {
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.char-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive header tweaks */
+@media (width <= 480px) {
+  .top {
+    gap: 8px;
+    padding: 0 6px;
+  }
+
+  .login-button,
+  .rest-button {
+    min-width: 72px;
+    font-size: 1rem;
+    padding: 4px 8px;
+  }
+
+  .rest-buttons {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .row {
+    justify-content: space-between;
+  }
 }

@@ -21,6 +21,27 @@
   border: none;
 }
 
+.death-save-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--bg-surface-alt);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 6px 10px 8px;
+}
+
+.death-save-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  width: 100%;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  border-bottom: var(--border-alt);
+}
+
 .death-save-labels {
   display: flex;
   flex-direction: row;
@@ -29,16 +50,14 @@
   width: 100%;
   margin: 0;
   background: var(--bg-surface-alt);
-  padding: 8px 12px;
   border-bottom: none;
   border-top: 0;
   border-radius: 0;
   box-sizing: border-box;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 0.9rem;
   color: var(--text-main);
-  font-size: 16px; /* match HP header */
   font-family: "Goudy Bookletter 1911", serif; /* match HP header */
-  line-height: 1.4; /* optional for consistency */
 }
 
 .death-save-labels span {

@@ -589,6 +589,12 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.saveCharacterData();
   }
 
+  onPactSlotRemainingChanged(ev: { current: number }): void {
+    this.store.updatePactSlot(ev.current);
+    this.pendingSave = true;
+    this.saveCharacterData();
+  }
+
   onWildShapeChange(): void {
     // Persist wildShapeRemaining from WildShapeComponent
     this.store.patchCharacter({

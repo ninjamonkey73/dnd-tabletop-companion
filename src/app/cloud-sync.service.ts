@@ -73,7 +73,7 @@ export class CloudSyncService {
           this.charUnsubscribe();
         }
         this.currentListeningChar = name;
-        
+
         const ref = doc(db, 'users', user.uid, 'characters', name);
         this.charUnsubscribe = onSnapshot(ref, { includeMetadataChanges: true }, (snap) => {
           if (!snap.exists()) return;
@@ -81,10 +81,10 @@ export class CloudSyncService {
 
           const data = snap.data();
           delete data['updatedAt']; // remove serverTimestamp before compare
-          
+
           const remoteChar = migrateLegacyCharacter({ ...defaultCharacter, ...data });
           const remoteJson = JSON.stringify(remoteChar);
-          
+
           if (this.lastRemoteCharJson !== remoteJson) {
             this.lastRemoteCharJson = remoteJson;
             // Update the store
@@ -243,18 +243,20 @@ export class CloudSyncService {
       ...migrated,
       classes: Array.isArray(migrated.classes)
         ? migrated.classes.map((c) => ({
-            class: typeof c.class === 'string' ? c.class.trim() : '',
-            level: Math.max(1, Math.min(20, Number(c.level) || 1)),
-          }))
+          class: typeof c.class === 'string' ? c.class.trim() : '',
+          level: Math.max(1, Math.min(20, Number(c.level) || 1)),
+          subclass: typeof c.subclass === 'string' ? c.subclass.trim() : '',
+          subdomain: typeof c.subdomain === 'string' ? c.subdomain.trim() : '',
+        }))
         : [],
       spellSlots:
         Array.isArray(migrated.spellSlots) ||
-        migrated.spellSlots === undefined
+          migrated.spellSlots === undefined
           ? migrated.spellSlots
           : [],
       spellSlotsRemaining:
         Array.isArray(migrated.spellSlotsRemaining) ||
-        migrated.spellSlotsRemaining === undefined
+          migrated.spellSlotsRemaining === undefined
           ? migrated.spellSlotsRemaining
           : [],
       level: Math.max(
@@ -278,11 +280,16 @@ export class CloudSyncService {
       exhaustion: Math.max(0, Number(migrated.exhaustion) || 0),
       resources: Array.isArray(migrated.resources)
         ? migrated.resources.map((r: any) => ({
-            id: Number(r?.id) || 0,
-            name: typeof r?.name === 'string' ? r.name : '',
-            value: Math.max(0, Number(r?.value) || 0),
-          }))
+          id: Number(r?.id) || 0,
+          name: typeof r?.name === 'string' ? r.name : '',
+          value: Math.max(0, Number(r?.value) || 0),
+        }))
         : [],
+      pactSlots: {
+        level: Math.max(0, Number(migrated.pactSlots?.level) || 0),
+        max: Math.max(0, Number(migrated.pactSlots?.max) || 0),
+        current: Math.max(0, Number(migrated.pactSlots?.current) || 0),
+      },
     };
 
     try {

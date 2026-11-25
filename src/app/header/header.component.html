@@ -1,68 +1,82 @@
 <div class="row top">
   <div class="button-container theme-toggle-container">
-    <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle Theme" matTooltip="Toggle Theme">
-      <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    <button
+      mat-icon-button
+      (click)="toggleTheme()"
+      aria-label="Toggle Theme"
+      matTooltip="Toggle Theme"
+    >
+      <mat-icon>{{ isDarkTheme ? "light_mode" : "dark_mode" }}</mat-icon>
     </button>
   </div>
   @if (!isAuthed) {
-  <div class="button-container">
-    <button
-      mat-fab
-      extended
-      class="login-button"
-      (click)="login()"
-      matTooltip="Login (Google)"
-    >
-      <mat-icon>login</mat-icon>
-      Login
-    </button>
-  </div>
-  } @if (isAuthed) {
-  <div class="button-container">
-    <button
-      mat-fab
-      extended
-      class="login-button"
-      (click)="logout()"
-      matTooltip="Logout"
-    >
-      <mat-icon>logout</mat-icon>
-      <span class="no-wrap">Log Out</span>
-    </button>
-  </div>
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="login-button"
+        (click)="login()"
+        matTooltip="Login (Google)"
+      >
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+    </div>
+  }
+  @if (isAuthed) {
+    <div class="button-container">
+      <button
+        mat-fab
+        extended
+        class="login-button"
+        (click)="logout()"
+        matTooltip="Logout"
+      >
+        <mat-icon>logout</mat-icon>
+        <span class="no-wrap">Log Out</span>
+      </button>
+    </div>
   }
 
-<div class="char-select-container">
-  <mat-form-field appearance="outline" class="charName" subscriptSizing="dynamic">
-    <mat-label>Character Name</mat-label>
-    <mat-select
-      [(ngModel)]="internalSelectedCharacter"
-      (selectionChange)="onCharacterSelection($event.value)"
-      [disabled]="isCreatingNewCharacter()"
+  <div class="char-select-container">
+    <mat-form-field
+      appearance="outline"
+      class="charName"
+      subscriptSizing="dynamic"
     >
-      @for (name of savedCharacterNames(); track name) {
-      <mat-option [value]="name">
-        {{ name }}
-      </mat-option>
-      }
-      <mat-option value="new" class="create-new-option">
-        <mat-icon>add</mat-icon> New Character
-      </mat-option>
-    </mat-select>
-    <button
-      matSuffix
-      mat-icon-button
-      color="warn"
-      class="delete-icon"
-      [disabled]="!internalSelectedCharacter || internalSelectedCharacter === 'new' || isCreatingNewCharacter()"
-      (click)="onDeleteClicked(); $event.stopPropagation()"
-      aria-label="Delete Character"
-    >
-      <mat-icon matTooltip="Delete Character">delete</mat-icon>
-    </button>
-  </mat-form-field>
-</div>
-  
+      <mat-label>Character Name</mat-label>
+      <mat-select
+        [(ngModel)]="internalSelectedCharacter"
+        (selectionChange)="onCharacterSelection($event.value)"
+        [disabled]="isCreatingNewCharacter()"
+      >
+        @for (name of savedCharacterNames(); track name) {
+          <mat-option [value]="name">
+            {{ name }}
+          </mat-option>
+        }
+        <mat-option value="new" class="create-new-option">
+          <mat-icon>add</mat-icon> New Character
+        </mat-option>
+      </mat-select>
+      <button
+        matSuffix
+        mat-icon-button
+        color="warn"
+        class="delete-icon"
+        [disabled]="
+          !internalSelectedCharacter ||
+          internalSelectedCharacter === 'new' ||
+          isCreatingNewCharacter()
+        "
+        (click)="onDeleteClicked(); $event.stopPropagation()"
+        aria-label="Delete Character"
+      >
+        <mat-icon matTooltip="Delete Character">delete</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
   <div class="longRest">
     <div class="long-rest-toggle">
       <mat-slide-toggle
@@ -73,7 +87,6 @@
       <div class="toggle-label">LR Heals</div>
     </div>
   </div>
-
 </div>
 
 <div class="row class-level-row">
@@ -100,7 +113,7 @@
         (click)="toggleExpanded(); $event.stopPropagation()"
         aria-label="Expand or collapse class list"
       >
-        <mat-icon>{{ isExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        <mat-icon>{{ isExpanded ? "expand_less" : "expand_more" }}</mat-icon>
       </button>
     </div>
 
@@ -131,6 +144,55 @@
               </mat-select>
             </mat-form-field>
 
+            @if (canSelectSubclass($index)) {
+              <mat-form-field
+                class="subclass-select"
+                appearance="outline"
+                subscriptSizing="dynamic"
+              >
+                <mat-label>Subclass</mat-label>
+                <mat-select
+                  [(ngModel)]="classEntry.subclass"
+                  (selectionChange)="onRowSubclassChange($index, $event.value)"
+                  [disabled]="isCreatingNewCharacter()"
+                >
+                  <mat-option value="">None</mat-option>
+                  @for (
+                    sub of getSubclassesFor(classEntry.class);
+                    track sub.index
+                  ) {
+                    <mat-option [value]="sub.name">
+                      {{ sub.name }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+
+            @if (
+              canSelectSubclass($index) && getSubdomainsFor($index).length > 0
+            ) {
+              <mat-form-field
+                class="subdomain-select"
+                appearance="outline"
+                subscriptSizing="dynamic"
+              >
+                <mat-label>{{ getSubdomainLabel($index) }}</mat-label>
+                <mat-select
+                  [(ngModel)]="classEntry.subdomain"
+                  (selectionChange)="onRowSubdomainChange($index, $event.value)"
+                  [disabled]="isCreatingNewCharacter()"
+                >
+                  <mat-option value="">None</mat-option>
+                  @for (domain of getSubdomainsFor($index); track domain) {
+                    <mat-option [value]="domain">
+                      {{ domain }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+
             <mat-form-field
               appearance="outline"
               class="level-input"
@@ -152,7 +214,10 @@
                   type="button"
                   mat-icon-button
                   (click)="changeRowLevel($index, 1)"
-                  [disabled]="isCreatingNewCharacter() || classEntry.level >= getMaxLevelForRow($index)"
+                  [disabled]="
+                    isCreatingNewCharacter() ||
+                    classEntry.level >= getMaxLevelForRow($index)
+                  "
                   aria-label="Increase Level"
                 >
                   <mat-icon>expand_less</mat-icon>
@@ -198,31 +263,31 @@
       </div>
     }
   </div>
+</div>
 
-  <div class="rest-buttons">
-    <div class="button-container">
-      <button
-        mat-fab
-        extended
-        class="rest-button"
-        (click)="emitLongRest()"
-        matTooltip="Long Rest"
-      >
-        <mat-icon class="longRest">bedtime</mat-icon>
-        LR
-      </button>
-    </div>
-    <div class="button-container">
-      <button
-        mat-fab
-        extended
-        class="rest-button"
-        (click)="emitShortRest()"
-        matTooltip="Short Rest"
-      >
-        <mat-icon>snooze</mat-icon>
-        SR
-      </button>
-    </div>
+<div class="rest-buttons">
+  <div class="button-container">
+    <button
+      mat-fab
+      extended
+      class="rest-button"
+      (click)="emitLongRest()"
+      matTooltip="Long Rest"
+    >
+      <mat-icon class="longRest">bedtime</mat-icon>
+      LR
+    </button>
+  </div>
+  <div class="button-container">
+    <button
+      mat-fab
+      extended
+      class="rest-button"
+      (click)="emitShortRest()"
+      matTooltip="Short Rest"
+    >
+      <mat-icon>snooze</mat-icon>
+      SR
+    </button>
   </div>
 </div>

@@ -29,5 +29,31 @@
       </div>
     </div>
     } }
+    @if (pactSlots.max > 0) {
+    <div class="stat-box pact-stat-box" [class.disabled]="isCreatingNewCharacter()">
+      <div class="stat-label">Pact (Lvl {{ pactSlots.level }})</div>
+      <div class="stat-value">{{ pactSlots.current }}</div>
+      <div class="stat-buttons">
+        <button
+          mat-mini-button
+          class="sub"
+          (click)="decPactSlot()"
+          [disabled]="isCreatingNewCharacter()"
+          [attr.aria-label]="'Decrease Pact Magic Level ' + pactSlots.level + ' Slots'"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button
+          mat-mini-button
+          class="add"
+          (click)="incPactSlot()"
+          [disabled]="isCreatingNewCharacter()"
+          [attr.aria-label]="'Increase Pact Magic Level ' + pactSlots.level + ' Slots'"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    }
   </div>
 </div>

@@ -118,6 +118,7 @@
             [isCreatingNewCharacter]="isCreatingNewCharacter"
             (characterChange)="onChildCharacterChange($event)"
             (remainingChanged)="onSpellSlotRemainingChanged($event)"
+            (pactSlotChanged)="onPactSlotRemainingChanged($event)"
           ></app-spell-slots>
         }
         @if (selectedStatSection === "rage") {

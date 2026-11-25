@@ -50,7 +50,7 @@ describe('CharacterStore', () => {
       classes: [],
     });
     const c = store.character();
-    expect(c.classes).toEqual([{ class: 'Rogue', level: 4 }]);
+    expect(c.classes).toEqual([{ class: 'Rogue', level: 4, subclass: '', subdomain: '' }]);
   });
 
   it('should patch character and migrate', () => {
@@ -60,7 +60,7 @@ describe('CharacterStore', () => {
       classes: [],
     });
     const c = store.character();
-    expect(c.classes).toEqual([{ class: 'Paladin', level: 3 }]);
+    expect(c.classes).toEqual([{ class: 'Paladin', level: 3, subclass: '', subdomain: '' }]);
   });
 
   describe('applyDamage', () => {

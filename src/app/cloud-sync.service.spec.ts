@@ -100,7 +100,7 @@ describe('CloudSyncService', () => {
       const char = await service.getCharacter('Aragorn');
       expect(char).toBeDefined();
       expect(char?.name).toBe('Aragorn');
-      expect(char?.classes).toEqual([{ class: 'Ranger', level: 5 }]);
+      expect(char?.classes).toEqual([{ class: 'Ranger', level: 5, subclass: '', subdomain: '' }]);
     });
 
     it('should return null when character document does not exist', async () => {
@@ -159,7 +159,8 @@ describe('CloudSyncService', () => {
       store.setCharacter({
         ...defaultCharacter,
         name: 'Frodo',
-        classes: [{ class: 'Rogue', level: 3 }],
+        classes: [{ class: 'Rogue', level: 3, subclass: 'thief' }],
+        pactSlots: { level: 2, max: 2, current: 1 },
         currentHP: 20,
         maxHP: 20,
       });
@@ -171,7 +172,8 @@ describe('CloudSyncService', () => {
         expect.objectContaining({ path: 'users/user-123/characters/Frodo' }),
         expect.objectContaining({
           name: 'Frodo',
-          classes: [{ class: 'Rogue', level: 3 }],
+          classes: [{ class: 'Rogue', level: 3, subclass: 'thief', subdomain: '' }],
+          pactSlots: { level: 2, max: 2, current: 1 },
           updatedAt: 'MOCK_SERVER_TIMESTAMP',
         }),
         { merge: true }

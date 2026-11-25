@@ -69,4 +69,38 @@ describe('SpellSlotsComponent', () => {
     component.onRemainingCommit(0);
     expect(component.remaining[0]).toBe(0);
   });
+
+  it('should increment and decrement pact slots within limits and emit pactSlotChanged', () => {
+    fixture.componentRef.setInput('character', {
+      ...defaultCharacter,
+      pactSlots: {
+        level: 3,
+        max: 2,
+        current: 1,
+      },
+    });
+    fixture.detectChanges();
+
+    const pactSpy = vi.spyOn(component.pactSlotChanged, 'emit');
+
+    component.incPactSlot();
+    expect(component.pactSlots?.current).toBe(2);
+    expect(pactSpy).toHaveBeenCalledWith({ current: 2 });
+
+    // Cannot exceed max
+    component.incPactSlot();
+    expect(component.pactSlots?.current).toBe(2);
+
+    component.decPactSlot();
+    expect(component.pactSlots?.current).toBe(1);
+    expect(pactSpy).toHaveBeenCalledWith({ current: 1 });
+
+    component.decPactSlot();
+    expect(component.pactSlots?.current).toBe(0);
+    expect(pactSpy).toHaveBeenCalledWith({ current: 0 });
+
+    // Cannot go below 0
+    component.decPactSlot();
+    expect(component.pactSlots?.current).toBe(0);
+  });
 });

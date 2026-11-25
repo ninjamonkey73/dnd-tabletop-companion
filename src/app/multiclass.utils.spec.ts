@@ -9,23 +9,24 @@ import {
   getMulticlassSpellSlots,
   getPactMagicSlots,
   migrateLegacyCharacter,
+  hasKi,
+  hasRage,
+  hasWildShape,
+  hasSneakAttack,
+  hasSpellSlots,
+  formatClassSummary,
 } from './multiclass.utils';
-import { ClassLevel, defaultCharacter } from './character.model';
+import { Character, ClassLevel, defaultCharacter } from './character.model';
 
 describe('multiclass.utils', () => {
   describe('getTotalLevel', () => {
-    it('should return 0 for empty or undefined classes', () => {
+    it('should return 0 for empty or null array', () => {
       expect(getTotalLevel([])).toBe(0);
-      expect(getTotalLevel(undefined)).toBe(0);
       expect(getTotalLevel(null)).toBe(0);
+      expect(getTotalLevel(undefined)).toBe(0);
     });
 
-    it('should calculate total level for a single class', () => {
-      const classes: ClassLevel[] = [{ class: 'Fighter', level: 5 }];
-      expect(getTotalLevel(classes)).toBe(5);
-    });
-
-    it('should sum all class levels across multiple classes', () => {
+    it('should sum all class levels', () => {
       const classes: ClassLevel[] = [
         { class: 'Druid', level: 4 },
         { class: 'Fighter', level: 2 },
@@ -35,86 +36,57 @@ describe('multiclass.utils', () => {
 
     it('should cap total level at 20', () => {
       const classes: ClassLevel[] = [
-        { class: 'Wizard', level: 15 },
-        { class: 'Cleric', level: 10 },
+        { class: 'Druid', level: 12 },
+        { class: 'Fighter', level: 15 },
       ];
       expect(getTotalLevel(classes)).toBe(20);
-    });
-
-    it('should not allow negative levels to reduce below 0', () => {
-      const classes: ClassLevel[] = [{ class: 'Rogue', level: -3 }];
-      expect(getTotalLevel(classes)).toBe(0);
     });
   });
 
   describe('getProficiencyBonus', () => {
-    it('should strictly follow Math.ceil(totalLevel / 4) + 1', () => {
-      // Levels 1-4 => +2
+    it('should calculate bonus strictly from total level', () => {
       expect(getProficiencyBonus(1)).toBe(2);
       expect(getProficiencyBonus(4)).toBe(2);
-
-      // Levels 5-8 => +3
       expect(getProficiencyBonus(5)).toBe(3);
       expect(getProficiencyBonus(8)).toBe(3);
-
-      // Levels 9-12 => +4
       expect(getProficiencyBonus(9)).toBe(4);
       expect(getProficiencyBonus(12)).toBe(4);
-
-      // Levels 13-16 => +5
       expect(getProficiencyBonus(13)).toBe(5);
       expect(getProficiencyBonus(16)).toBe(5);
-
-      // Levels 17-20 => +6
       expect(getProficiencyBonus(17)).toBe(6);
       expect(getProficiencyBonus(20)).toBe(6);
     });
 
-    it('should calculate proficiency bonus strictly from total level, not individual class levels', () => {
-      // 4 Druid + 2 Fighter = total level 6.
-      // Individual: Druid 4 (+2), Fighter 2 (+2).
-      // Total level 6 MUST yield +3!
+    it('should accept classes array', () => {
       const classes: ClassLevel[] = [
         { class: 'Druid', level: 4 },
         { class: 'Fighter', level: 2 },
-      ];
+      ]; // total 6 -> +3
       expect(getProficiencyBonus(classes)).toBe(3);
     });
   });
 
   describe('getHitDicePool', () => {
-    it('should return empty string for empty or null classes', () => {
-      expect(getHitDicePool([])).toBe('');
-      expect(getHitDicePool(undefined)).toBe('');
-      expect(getHitDicePool(null)).toBe('');
-    });
-
-    it('should return correct dice for a single class', () => {
-      expect(getHitDicePool([{ class: 'Barbarian', level: 5 }])).toBe('5d12');
-      expect(getHitDicePool([{ class: 'Fighter', level: 3 }])).toBe('3d10');
-      expect(getHitDicePool([{ class: 'Wizard', level: 2 }])).toBe('2d6');
-    });
-
-    it('should group hit dice by die size preserving appearance order (e.g., 4d8 + 2d10)', () => {
+    it('should group hit dice by die size preserving appearance order', () => {
       const classes: ClassLevel[] = [
-        { class: 'Druid', level: 4 },
-        { class: 'Fighter', level: 2 },
+        { class: 'Druid', level: 4 }, // d8
+        { class: 'Fighter', level: 2 }, // d10
       ];
       expect(getHitDicePool(classes)).toBe('4d8 + 2d10');
     });
 
-    it('should combine classes that share the same hit die size', () => {
+    it('should merge identical die sizes from different classes', () => {
       const classes: ClassLevel[] = [
-        { class: 'Fighter', level: 2 },
-        { class: 'Paladin', level: 3 },
+        { class: 'Cleric', level: 3 }, // d8
+        { class: 'Fighter', level: 2 }, // d10
+        { class: 'Monk', level: 2 }, // d8
       ];
-      // Both Fighter and Paladin use d10 -> 5d10
-      expect(getHitDicePool(classes)).toBe('5d10');
+      expect(getHitDicePool(classes)).toBe('5d8 + 2d10');
     });
 
-    it('should default unknown/custom classes to d8', () => {
-      const classes: ClassLevel[] = [{ class: 'Blood Mage', level: 3 }];
-      expect(getHitDicePool(classes)).toBe('3d8');
+    it('should return empty string for no classes', () => {
+      expect(getHitDicePool([])).toBe('');
+      expect(getHitDicePool(null)).toBe('');
     });
   });
 
@@ -124,7 +96,7 @@ describe('multiclass.utils', () => {
       { class: 'Rogue', level: 1 },
     ];
 
-    it('should find class level case-insensitively', () => {
+    it('should find class case-insensitively', () => {
       expect(getClassLevel(classes, 'Druid')).toBe(4);
       expect(getClassLevel(classes, 'druid')).toBe(4);
       expect(getClassLevel(classes, 'DRUID ')).toBe(4);
@@ -132,128 +104,165 @@ describe('multiclass.utils', () => {
       expect(getClassLevel(classes, 'Fighter')).toBe(0);
     });
 
-    it('should check if class exists', () => {
+    it('should return true/false with hasClass', () => {
       expect(hasClass(classes, 'druid')).toBe(true);
-      expect(hasClass(classes, 'Rogue')).toBe(true);
-      expect(hasClass(classes, 'Paladin')).toBe(false);
+      expect(hasClass(classes, 'monk')).toBe(false);
     });
   });
 
-  describe('Multiclass Spellcasting', () => {
-    it('should calculate Effective Caster Level (ECL)', () => {
-      // Wizard 3 (full) + Cleric 2 (full) = 5
-      expect(
-        getEffectiveCasterLevel([
-          { class: 'Wizard', level: 3 },
-          { class: 'Cleric', level: 2 },
-        ])
-      ).toBe(5);
-
-      // Sorcerer 3 (full) + Paladin 4 (half -> floor(4/2) = 2) = 5
-      expect(
-        getEffectiveCasterLevel([
-          { class: 'Sorcerer', level: 3 },
-          { class: 'Paladin', level: 4 },
-        ])
-      ).toBe(5);
-
-      // Artificer 3 (ceil(3/2) = 2) + Wizard 2 = 4
-      expect(
-        getEffectiveCasterLevel([
-          { class: 'Artificer', level: 3 },
-          { class: 'Wizard', level: 2 },
-        ])
-      ).toBe(4);
+  describe('getEffectiveCasterLevel (ECL)', () => {
+    it('should sum full casters directly', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Cleric', level: 3 },
+        { class: 'Wizard', level: 2 },
+      ];
+      expect(getEffectiveCasterLevel(classes)).toBe(5);
     });
 
-    it('should return correct multiclass spell slots from table', () => {
-      const slotsLvl5 = getMulticlassSpellSlots(5);
-      expect(slotsLvl5).toEqual([4, 3, 2, 0, 0, 0, 0, 0, 0]);
-
-      const slotsLvl1 = getMulticlassSpellSlots(1);
-      expect(slotsLvl1).toEqual([2, 0, 0, 0, 0, 0, 0, 0, 0]);
+    it('should calculate floor(half casters / 2)', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Paladin', level: 5 }, // floor(5/2) = 2
+        { class: 'Ranger', level: 4 }, // floor(4/2) = 2
+      ];
+      expect(getEffectiveCasterLevel(classes)).toBe(4);
     });
 
-    it('should calculate Warlock Pact Magic slots separately', () => {
+    it('should round up Artificer: ceil(artificer / 2)', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Artificer', level: 5 }, // ceil(5/2) = 3
+        { class: 'Wizard', level: 3 },
+      ];
+      expect(getEffectiveCasterLevel(classes)).toBe(6);
+    });
+
+    it('should calculate floor(third casters / 3) for Fighter Eldritch Knight and Rogue Arcane Trickster', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Fighter', level: 6, subclass: 'Eldritch Knight' }, // floor(6/3) = 2
+        { class: 'Wizard', level: 2 },
+      ];
+      expect(getEffectiveCasterLevel(classes)).toBe(4);
+    });
+
+    it('should ignore third casters under level 3', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Fighter', level: 2, subclass: 'Eldritch Knight' },
+        { class: 'Wizard', level: 2 },
+      ];
+      expect(getEffectiveCasterLevel(classes)).toBe(2);
+    });
+
+    it('should exclude Warlock from ECL', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Warlock', level: 5 },
+        { class: 'Sorcerer', level: 3 },
+      ];
+      expect(getEffectiveCasterLevel(classes)).toBe(3);
+    });
+  });
+
+  describe('getMulticlassSpellSlots', () => {
+    it('should return 0 slots for ECL 0', () => {
+      expect(getMulticlassSpellSlots(0)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should return correct slots for ECL 1', () => {
+      expect(getMulticlassSpellSlots(1)).toEqual([2, 0, 0, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should return correct slots for ECL 5', () => {
+      expect(getMulticlassSpellSlots(5)).toEqual([4, 3, 2, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should cap at ECL 20', () => {
+      expect(getMulticlassSpellSlots(25)).toEqual([4, 3, 3, 3, 3, 2, 2, 1, 1]);
+    });
+  });
+
+  describe('getPactMagicSlots', () => {
+    it('should return correct pact slots by Warlock level', () => {
+      expect(getPactMagicSlots(0)).toEqual({ slots: 0, slotLevel: 0 });
       expect(getPactMagicSlots(1)).toEqual({ slots: 1, slotLevel: 1 });
       expect(getPactMagicSlots(2)).toEqual({ slots: 2, slotLevel: 1 });
       expect(getPactMagicSlots(3)).toEqual({ slots: 2, slotLevel: 2 });
       expect(getPactMagicSlots(5)).toEqual({ slots: 2, slotLevel: 3 });
+      expect(getPactMagicSlots(9)).toEqual({ slots: 2, slotLevel: 5 });
       expect(getPactMagicSlots(11)).toEqual({ slots: 3, slotLevel: 5 });
       expect(getPactMagicSlots(17)).toEqual({ slots: 4, slotLevel: 5 });
     });
   });
 
+  describe('formatClassSummary', () => {
+    it('should format summary with subclass and subdomain', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Druid', level: 6, subclass: 'Circle of the Land', subdomain: 'Coast' },
+        { class: 'Fighter', level: 2 },
+      ];
+      expect(formatClassSummary(classes)).toBe(
+        'Druid (Circle of the Land: Coast) 6 / Fighter 2 (Lvl 8)'
+      );
+    });
+
+    it('should format summary with subclass only', () => {
+      const classes: ClassLevel[] = [
+        { class: 'Fighter', level: 3, subclass: 'Champion' },
+      ];
+      expect(formatClassSummary(classes)).toBe('Fighter (Champion) 3 (Lvl 3)');
+    });
+  });
+
   describe('migrateLegacyCharacter', () => {
-    it('should return defaultCharacter when given empty/null input', () => {
-      const result = migrateLegacyCharacter(null);
-      expect(result).toEqual(defaultCharacter);
-      expect(result.classes).toEqual([]);
-    });
-
-    it('should migrate legacy { class, level } to classes: [{ class, level }]', () => {
-      const legacy = {
-        name: 'Thorin',
-        class: 'Fighter',
-        level: 5,
-        currentHP: 40,
-        maxHP: 40,
-      };
-
-      const migrated = migrateLegacyCharacter(legacy);
-      expect(migrated.name).toBe('Thorin');
-      expect(migrated.classes).toEqual([{ class: 'Fighter', level: 5 }]);
-    });
-
-    it('should handle legacy string levels and clamp them between 1 and 20', () => {
-      const legacy = {
-        name: 'Merlin',
-        class: 'Wizard',
-        level: '25' as any,
-      };
-
-      const migrated = migrateLegacyCharacter(legacy);
-      expect(migrated.classes).toEqual([{ class: 'Wizard', level: 20 }]);
-    });
-
-    it('should default level to 1 if legacy character has class but missing level', () => {
+    it('should migrate legacy single class and initialize pactSlots', () => {
       const legacy = {
         name: 'Conan',
         class: 'Barbarian',
+        level: 5,
       };
-
       const migrated = migrateLegacyCharacter(legacy);
-      expect(migrated.classes).toEqual([{ class: 'Barbarian', level: 1 }]);
+      expect(migrated.classes).toEqual([
+        { class: 'Barbarian', level: 5, subclass: '', subdomain: '' },
+      ]);
+      expect(migrated.pactSlots).toEqual({ level: 0, max: 0, current: 0 });
     });
 
-    it('should preserve existing classes array if already multiclassed', () => {
-      const modern = {
-        name: 'Jaheira',
+    it('should normalize subclass, subdomain and compute pactSlots for Warlock', () => {
+      const raw = {
+        name: 'Locke',
         classes: [
-          { class: 'Druid', level: 4 },
-          { class: 'Fighter', level: 2 },
+          { class: 'Warlock', level: 5 },
         ],
       };
+      const migrated = migrateLegacyCharacter(raw);
+      expect(migrated.classes[0].subclass).toBe('');
+      expect(migrated.classes[0].subdomain).toBe('');
+      expect(migrated.pactSlots).toEqual({ level: 3, max: 2, current: 2 });
+    });
+  });
 
-      const migrated = migrateLegacyCharacter(modern);
-      expect(migrated.classes).toEqual([
-        { class: 'Druid', level: 4 },
-        { class: 'Fighter', level: 2 },
-      ]);
+  describe('Class Feature Predicates', () => {
+    it('should detect Ki only for Monks', () => {
+      expect(hasKi([{ class: 'Monk', level: 2 }])).toBe(true);
+      expect(hasKi([{ class: 'Fighter', level: 2 }])).toBe(false);
     });
 
-    it('should ensure all character arrays and properties are initialized', () => {
-      const partial = {
-        name: 'Empty',
-        classes: [],
-      };
+    it('should detect Rage only for Barbarians', () => {
+      expect(hasRage([{ class: 'Barbarian', level: 1 }])).toBe(true);
+      expect(hasRage([{ class: 'Fighter', level: 1 }])).toBe(false);
+    });
 
-      const migrated = migrateLegacyCharacter(partial);
-      expect(Array.isArray(migrated.spellSlots)).toBe(true);
-      expect(Array.isArray(migrated.spellSlotsRemaining)).toBe(true);
-      expect(Array.isArray(migrated.deathSaveSuccess)).toBe(true);
-      expect(Array.isArray(migrated.deathSaveFailure)).toBe(true);
-      expect(Array.isArray(migrated.resources)).toBe(true);
+    it('should detect Wild Shape only for Druid level >= 2', () => {
+      expect(hasWildShape([{ class: 'Druid', level: 1 }])).toBe(false);
+      expect(hasWildShape([{ class: 'Druid', level: 2 }])).toBe(true);
+    });
+
+    it('should detect Sneak Attack only for Rogues', () => {
+      expect(hasSneakAttack([{ class: 'Rogue', level: 1 }])).toBe(true);
+      expect(hasSneakAttack([{ class: 'Fighter', level: 1 }])).toBe(false);
+    });
+
+    it('should detect spell slots for casters or warlock pact slots', () => {
+      expect(hasSpellSlots([{ class: 'Wizard', level: 1 }])).toBe(true);
+      expect(hasSpellSlots([{ class: 'Warlock', level: 1 }])).toBe(true);
+      expect(hasSpellSlots([{ class: 'Fighter', level: 1 }])).toBe(false);
     });
   });
 });

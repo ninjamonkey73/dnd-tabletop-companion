@@ -6,7 +6,7 @@ import {
   SimpleChanges,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Character } from '../character.model';
+import { Character, PactMagicSlots } from '../character.model';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,9 +32,11 @@ export class SpellSlotsComponent implements OnChanges {
   readonly isCreatingNewCharacter = input(false);
   readonly characterChange = output<Character>();
   readonly remainingChanged = output<{ index: number; value: number }>();
+  readonly pactSlotChanged = output<{ current: number }>();
 
   slots: number[] = [];
   remaining: number[] = [];
+  pactSlots: PactMagicSlots = { level: 0, max: 0, current: 0 };
   private commitTimers: Array<any> = [];
 
   private arraysEqual(
@@ -57,6 +59,7 @@ export class SpellSlotsComponent implements OnChanges {
       const nextRemaining = Array.isArray(c.spellSlotsRemaining)
         ? c.spellSlotsRemaining
         : [];
+      const nextPact = c.pactSlots ?? { level: 0, max: 0, current: 0 };
 
       // Only update local arrays if incoming values actually differ,
       // so quick successive edits don't get overwritten.
@@ -66,6 +69,7 @@ export class SpellSlotsComponent implements OnChanges {
       if (!this.arraysEqual(this.remaining, nextRemaining)) {
         this.remaining = [...nextRemaining];
       }
+      this.pactSlots = { ...nextPact };
     }
   }
 
@@ -123,5 +127,29 @@ export class SpellSlotsComponent implements OnChanges {
   decSlot(index: number) {
     const val = Math.max((this.remaining[index] ?? 0) - 1, 0);
     this.onRemainingImmediateCommit(index, val);
+  }
+
+  incPactSlot() {
+    if (this.pactSlots.max <= 0) return;
+    const next = Math.min(this.pactSlots.max, this.pactSlots.current + 1);
+    this.pactSlots.current = next;
+    const c = this.character();
+    if (c.pactSlots) {
+      c.pactSlots.current = next;
+    }
+    this.characterChange.emit(c);
+    this.pactSlotChanged.emit({ current: next });
+  }
+
+  decPactSlot() {
+    if (this.pactSlots.max <= 0) return;
+    const next = Math.max(0, this.pactSlots.current - 1);
+    this.pactSlots.current = next;
+    const c = this.character();
+    if (c.pactSlots) {
+      c.pactSlots.current = next;
+    }
+    this.characterChange.emit(c);
+    this.pactSlotChanged.emit({ current: next });
   }
 }

@@ -72,6 +72,32 @@ describe('RestService', () => {
       expect(character.kiPoints).toBe(5);
       expect(character.resources.find((r) => r.id === 1)?.value).toBe(1);
     });
+
+    it('should restore pactSlots on short rest without touching standard spell slots', () => {
+      store.setCharacter({
+        ...defaultCharacter,
+        spellSlots: [4, 3, 0, 0, 0, 0, 0, 0, 0],
+        spellSlotsRemaining: [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        pactSlots: { level: 3, max: 2, current: 0 },
+      });
+
+      service.shortRest();
+
+      const character = store.character();
+      expect(character.pactSlots?.current).toBe(2);
+      expect(character.spellSlotsRemaining).toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should restore Druid 20 wild shape to 999 on short rest', () => {
+      store.setCharacter({
+        ...defaultCharacter,
+        classes: [{ class: 'Druid', level: 20 }],
+        wildShapeRemaining: 0,
+      });
+
+      service.shortRest();
+      expect(store.character().wildShapeRemaining).toBe(999);
+    });
   });
 
   describe('longRest resources reset', () => {
@@ -126,6 +152,32 @@ describe('RestService', () => {
       // Stays at 0 when already 0
       service.longRest();
       expect(store.character().exhaustion).toBe(0);
+    });
+
+    it('should restore both standard spell slots and pact slots on long rest', () => {
+      store.setCharacter({
+        ...defaultCharacter,
+        spellSlots: [4, 3, 0, 0, 0, 0, 0, 0, 0],
+        spellSlotsRemaining: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        pactSlots: { level: 3, max: 2, current: 0 },
+      });
+
+      service.longRest();
+
+      const character = store.character();
+      expect(character.spellSlotsRemaining).toEqual([4, 3, 0, 0, 0, 0, 0, 0, 0]);
+      expect(character.pactSlots?.current).toBe(2);
+    });
+
+    it('should restore Druid 20 wild shape to 999 on long rest', () => {
+      store.setCharacter({
+        ...defaultCharacter,
+        classes: [{ class: 'Druid', level: 20 }],
+        wildShapeRemaining: 0,
+      });
+
+      service.longRest();
+      expect(store.character().wildShapeRemaining).toBe(999);
     });
   });
 });

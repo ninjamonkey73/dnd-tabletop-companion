@@ -21,7 +21,15 @@ export class RestService {
       patches.kiPoints = monkLevel;
     }
     if (druidLevel >= 2) {
-      patches.wildShapeRemaining = 2;
+      patches.wildShapeRemaining = druidLevel === 20 ? 999 : 2;
+    }
+
+    // Restore Pact Magic slots on Short Rest
+    if (character.pactSlots && character.pactSlots.max > 0) {
+      patches.pactSlots = {
+        ...character.pactSlots,
+        current: character.pactSlots.max,
+      };
     }
 
     // Reset resources marked with (SR:<value>)
@@ -62,13 +70,22 @@ export class RestService {
       patches.kiPoints = monkLevel;
     }
     if (druidLevel >= 2) {
-      patches.wildShapeRemaining = 2;
+      patches.wildShapeRemaining = druidLevel === 20 ? 999 : 2;
     }
     if (barbarianLevel > 0) {
       patches.rageRemaining = character.rage;
     }
 
+    // Restore standard spell slots on Long Rest
     patches.spellSlotsRemaining = character.spellSlots.map((s) => s);
+
+    // Restore Pact Magic slots on Long Rest
+    if (character.pactSlots && character.pactSlots.max > 0) {
+      patches.pactSlots = {
+        ...character.pactSlots,
+        current: character.pactSlots.max,
+      };
+    }
 
     // Hit die recovery logic
     const hitDie = character.hitDie;
@@ -84,19 +101,18 @@ export class RestService {
     if (fullHeal) {
       patches.currentHP = character.maxHP;
     }
-    patches.rageRemaining = character.rage;
-    patches.tempHP = 0;
-    patches.stable = false;
 
-    // Decrement non-zero exhaustion
+    // Decrement exhaustion on long rest (to a minimum of 0)
     if (character.exhaustion > 0) {
       patches.exhaustion = character.exhaustion - 1;
     }
 
-    // Reset resources marked with (LR:<value>)
+    // Reset resources marked with (LR:<value>) or (SR:<value>)
     if (Array.isArray(character.resources)) {
       patches.resources = character.resources.map((resource) => {
-        const match = resource.name?.match(/\(LR:\s*(\d+)\s*\)/i);
+        const lrMatch = resource.name?.match(/\(LR:\s*(\d+)\s*\)/i);
+        const srMatch = resource.name?.match(/\(SR:\s*(\d+)\s*\)/i);
+        const match = lrMatch || srMatch;
         if (match) {
           const resetValue = parseInt(match[1], 10);
           if (!isNaN(resetValue)) {

@@ -7,6 +7,8 @@ import {
   getTotalLevel,
   getEffectiveCasterLevel,
   getMulticlassSpellSlots,
+  getPactMagicSlots,
+  THIRD_CASTERS,
 } from './multiclass.utils';
 
 @Injectable({ providedIn: 'root' })
@@ -45,7 +47,15 @@ export class CharacterProgressionService {
       getClassLevel(character.classes, 'Druid') ||
       (character.class === 'Druid' ? totalLevel : 0);
     if (druidLevel >= 2) {
-      this.store.patchCharacter({ wildShapeRemaining: 2 });
+      try {
+        const data = await firstValueFrom(
+          this.api.getClassLevel('druid', druidLevel)
+        );
+        const uses = data.class_specific?.wild_shape_uses ?? (druidLevel === 20 ? 999 : 2);
+        this.store.patchCharacter({ wildShapeRemaining: uses });
+      } catch (e) {
+        this.store.patchCharacter({ wildShapeRemaining: druidLevel === 20 ? 999 : 2 });
+      }
     }
 
     const barbLevel =
@@ -56,14 +66,37 @@ export class CharacterProgressionService {
         const data = await firstValueFrom(
           this.api.getClassLevel('barbarian', barbLevel)
         );
-        const count = data.class_specific?.rage_count;
+        const count = data.class_specific?.rage_count ?? (barbLevel === 20 ? 999 : 2);
         if (typeof count === 'number') {
           this.store.patchCharacter({ rage: count, rageRemaining: count });
         }
-      } catch (e) {}
+      } catch (e) {
+        if (barbLevel === 20) {
+          this.store.patchCharacter({ rage: 999, rageRemaining: 999 });
+        }
+      }
     }
 
-    // Spellcasting logic
+    // Warlock Pact Magic logic
+    const warlockLevel =
+      getClassLevel(character.classes, 'Warlock') ||
+      (character.class === 'Warlock' ? totalLevel : 0);
+    if (warlockLevel > 0) {
+      const pactInfo = getPactMagicSlots(warlockLevel);
+      this.store.patchCharacter({
+        pactSlots: {
+          level: pactInfo.slotLevel,
+          max: pactInfo.slots,
+          current: pactInfo.slots,
+        },
+      });
+    } else {
+      this.store.patchCharacter({
+        pactSlots: { level: 0, max: 0, current: 0 },
+      });
+    }
+
+    // Spellcasting logic (standard spell slots, excluding Warlock)
     const classes =
       character.classes && character.classes.length > 0
         ? character.classes
@@ -73,7 +106,10 @@ export class CharacterProgressionService {
 
     const castingClasses = classes.filter((c) => {
       const name = (c.class || '').toLowerCase().trim();
-      return [
+      const sub = (c.subclass || '').toLowerCase().trim();
+      const lvl = Math.max(0, Number(c.level) || 0);
+
+      const isFullOrHalfOrArtificer = [
         'bard',
         'cleric',
         'druid',
@@ -83,6 +119,13 @@ export class CharacterProgressionService {
         'ranger',
         'artificer',
       ].includes(name);
+
+      const isThirdCaster =
+        (name === 'fighter' || name === 'rogue') &&
+        lvl >= 3 &&
+        THIRD_CASTERS.includes(sub);
+
+      return isFullOrHalfOrArtificer || isThirdCaster;
     });
 
     if (castingClasses.length >= 2) {
@@ -96,50 +139,49 @@ export class CharacterProgressionService {
     } else if (castingClasses.length === 1) {
       const single = castingClasses[0];
       const clsName = (single.class || '').toLowerCase().trim();
-      const clsSlug = classIndexByName[clsName] || clsName;
-      try {
-        const data = await firstValueFrom(
-          this.api.getClassLevel(clsSlug, single.level)
-        );
-        const spellcasting = data.spellcasting;
-        if (!spellcasting) {
+      const subName = (single.subclass || '').toLowerCase().trim();
+      const isThirdCaster =
+        (clsName === 'fighter' || clsName === 'rogue') &&
+        single.level >= 3 &&
+        THIRD_CASTERS.includes(subName);
+
+      if (isThirdCaster) {
+        try {
+          const thirdData = await firstValueFrom(
+            this.api.getThirdCasterLevel(single.level)
+          );
+          const spellcasting = thirdData?.spellcasting;
+          if (!spellcasting) {
+            this.store.patchCharacter({
+              spellSlots: [],
+              spellSlotsRemaining: [],
+            });
+          } else {
+            const slots: number[] = [];
+            for (let i = 1; i <= 9; i++) {
+              const key = `spell_slots_level_${i}`;
+              slots.push(
+                Object.prototype.hasOwnProperty.call(spellcasting, key)
+                  ? (spellcasting as any)[key]
+                  : 0
+              );
+            }
+            this.store.patchCharacter({
+              spellSlots: slots,
+              spellSlotsRemaining: slots.slice(),
+            });
+          }
+        } catch (e) {
           this.store.patchCharacter({
             spellSlots: [],
             spellSlotsRemaining: [],
           });
-        } else {
-          const slots: number[] = [];
-          for (let i = 1; i <= 9; i++) {
-            const key = `spell_slots_level_${i}`;
-            slots.push(
-              Object.prototype.hasOwnProperty.call(spellcasting, key)
-                ? spellcasting[key]
-                : 0
-            );
-          }
-          this.store.patchCharacter({
-            spellSlots: slots,
-            spellSlotsRemaining: slots.slice(),
-          });
         }
-      } catch (e) {
-        this.store.patchCharacter({
-          spellSlots: [],
-          spellSlotsRemaining: [],
-        });
-      }
-    } else {
-      const clsName = (character.class || '').toLowerCase().trim();
-      if (!clsName) {
-        this.store.patchCharacter({
-          spellSlots: [],
-          spellSlotsRemaining: [],
-        });
       } else {
         const clsSlug = classIndexByName[clsName] || clsName;
         try {
           const data = await firstValueFrom(
-            this.api.getClassLevel(clsSlug, totalLevel)
+            this.api.getClassLevel(clsSlug, single.level)
           );
           const spellcasting = data.spellcasting;
           if (!spellcasting) {
@@ -169,6 +211,11 @@ export class CharacterProgressionService {
           });
         }
       }
+    } else {
+      this.store.patchCharacter({
+        spellSlots: [],
+        spellSlotsRemaining: [],
+      });
     }
 
     return errorMsg;

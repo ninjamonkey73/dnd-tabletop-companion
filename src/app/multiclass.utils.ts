@@ -1,4 +1,4 @@
-import { Character, ClassLevel, defaultCharacter } from './character.model';
+import { Character, ClassLevel, PactMagicSlots, defaultCharacter } from './character.model';
 
 export const CLASS_HIT_DIE: Record<string, number> = {
   barbarian: 12,
@@ -19,7 +19,7 @@ export const CLASS_HIT_DIE: Record<string, number> = {
 export const FULL_CASTERS = ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'];
 export const HALF_CASTERS = ['paladin', 'ranger'];
 export const ARTIFICER = 'artificer';
-export const THIRD_CASTERS = ['eldritch knight', 'arcane trickster'];
+export const THIRD_CASTERS = ['eldritch knight', 'eldritch-knight', 'arcane trickster', 'arcane-trickster'];
 export const PACT_CASTERS = ['warlock'];
 
 export const MULTICLASS_SPELL_SLOTS: Record<number, number[]> = {
@@ -140,12 +140,20 @@ export function getEffectiveCasterLevel(
   for (const c of classes) {
     const name = (c?.class || '').toLowerCase().trim();
     const lvl = Math.max(0, Number(c?.level) || 0);
+    const sub = (c?.subclass || '').toLowerCase().trim();
+
     if (FULL_CASTERS.includes(name)) {
       full += lvl;
     } else if (HALF_CASTERS.includes(name)) {
       half += lvl;
     } else if (name === ARTIFICER) {
       artificer += lvl;
+    } else if (
+      (name === 'fighter' || name === 'rogue') &&
+      lvl >= 3 &&
+      THIRD_CASTERS.includes(sub)
+    ) {
+      third += lvl;
     } else if (THIRD_CASTERS.includes(name)) {
       third += lvl;
     }
@@ -165,28 +173,22 @@ export function getMulticlassSpellSlots(ecl: number): number[] {
   if (cappedEcl === 0) {
     return [0, 0, 0, 0, 0, 0, 0, 0, 0];
   }
-  return (
-    MULTICLASS_SPELL_SLOTS[cappedEcl] || [0, 0, 0, 0, 0, 0, 0, 0, 0]
-  ).slice();
+  return MULTICLASS_SPELL_SLOTS[cappedEcl] || [0, 0, 0, 0, 0, 0, 0, 0, 0];
 }
 
 /**
- * Returns Warlock Pact Magic slots and slot level based on Warlock level.
+ * Returns Warlock Pact Magic slots for a given Warlock level.
  */
 export function getPactMagicSlots(warlockLevel: number): {
   slots: number;
   slotLevel: number;
 } {
   const lvl = Math.max(0, Math.min(20, Math.floor(warlockLevel)));
-  if (lvl <= 0) return { slots: 0, slotLevel: 0 };
+  if (lvl === 0) return { slots: 0, slotLevel: 0 };
   if (lvl === 1) return { slots: 1, slotLevel: 1 };
-  if (lvl <= 2) return { slots: 2, slotLevel: 1 };
-  if (lvl <= 4) return { slots: 2, slotLevel: 2 };
-  if (lvl <= 6) return { slots: 2, slotLevel: 3 };
-  if (lvl <= 8) return { slots: 2, slotLevel: 4 };
-  if (lvl <= 10) return { slots: 2, slotLevel: 5 };
-  if (lvl <= 16) return { slots: 3, slotLevel: 5 };
-  return { slots: 4, slotLevel: 5 };
+  const slotLevel = Math.min(5, Math.ceil(lvl / 2));
+  const slots = lvl >= 17 ? 4 : lvl >= 11 ? 3 : 2;
+  return { slots, slotLevel };
 }
 
 /**
@@ -275,7 +277,12 @@ export function hasSpellSlots(
   characterOrClasses:
     | Character
     | ClassLevel[]
-    | { classes?: ClassLevel[]; spellSlots?: number[]; class?: string }
+    | {
+        classes?: ClassLevel[];
+        spellSlots?: number[];
+        pactSlots?: PactMagicSlots;
+        class?: string;
+      }
     | undefined
     | null
 ): boolean {
@@ -284,6 +291,12 @@ export function hasSpellSlots(
     if (
       Array.isArray(characterOrClasses.spellSlots) &&
       characterOrClasses.spellSlots.some((s) => s > 0)
+    ) {
+      return true;
+    }
+    if (
+      characterOrClasses.pactSlots &&
+      characterOrClasses.pactSlots.max > 0
     ) {
       return true;
     }
@@ -311,7 +324,7 @@ export function getAvailableStatSections(
 }
 
 /**
- * User-facing summary string (e.g., "Druid 4 / Fighter 2 (Lvl 6)")
+ * User-facing summary string (e.g., "Druid (Land: Coast) 6 / Fighter 2 (Lvl 8)")
  */
 export function formatClassSummary(
   classes: ClassLevel[] | undefined | null
@@ -324,7 +337,22 @@ export function formatClassSummary(
   if (valid.length === 0) {
     return `Select Class (Lvl ${total})`;
   }
-  const parts = valid.map((c) => `${c.class.trim()} ${c.level}`).join(' / ');
+  const parts = valid.map((c) => {
+    const className = c.class.trim();
+    const subclass = (c.subclass || '').trim();
+    const subdomain = (c.subdomain || '').trim();
+
+    let details = '';
+    if (subclass && subdomain) {
+      details = ` (${subclass}: ${subdomain})`;
+    } else if (subclass) {
+      details = ` (${subclass})`;
+    } else if (subdomain) {
+      details = ` (${subdomain})`;
+    }
+
+    return `${className}${details} ${c.level}`;
+  }).join(' / ');
   return `${parts} (Lvl ${total})`;
 }
 
@@ -344,22 +372,54 @@ export function migrateLegacyCharacter(raw: any): Character {
     classes = raw.classes.map((c: any) => ({
       class: typeof c?.class === 'string' ? c.class.trim() : '',
       level: Math.max(1, Math.min(20, Number(c?.level) || 1)),
+      subclass: typeof c?.subclass === 'string' ? c.subclass.trim() : '',
+      subdomain: typeof c?.subdomain === 'string' ? c.subdomain.trim() : '',
     }));
   } else if (raw.class !== undefined || raw.level !== undefined) {
     // Legacy single-class detected
     const legacyClass = typeof raw.class === 'string' ? raw.class.trim() : '';
     const legacyLevel = Math.max(1, Math.min(20, Number(raw.level) || 1));
     if (legacyClass || raw.level !== undefined) {
-      classes = [{ class: legacyClass, level: legacyLevel }];
+      classes = [
+        {
+          class: legacyClass,
+          level: legacyLevel,
+          subclass: typeof raw.subclass === 'string' ? raw.subclass.trim() : '',
+          subdomain: typeof raw.subdomain === 'string' ? raw.subdomain.trim() : '',
+        },
+      ];
     }
   } else if (Array.isArray(raw.classes)) {
     classes = [];
+  }
+
+  const warlockLvl = getClassLevel(classes, 'Warlock');
+  let pactSlots: PactMagicSlots = { level: 0, max: 0, current: 0 };
+  if (warlockLvl > 0) {
+    const pactInfo = getPactMagicSlots(warlockLvl);
+    const existingPact = raw.pactSlots;
+    const current =
+      existingPact && typeof existingPact.current === 'number'
+        ? Math.max(0, Math.min(pactInfo.slots, existingPact.current))
+        : pactInfo.slots;
+    pactSlots = {
+      level: pactInfo.slotLevel,
+      max: pactInfo.slots,
+      current,
+    };
+  } else if (raw.pactSlots && typeof raw.pactSlots === 'object') {
+    pactSlots = {
+      level: Number(raw.pactSlots.level) || 0,
+      max: Number(raw.pactSlots.max) || 0,
+      current: Number(raw.pactSlots.current) || 0,
+    };
   }
 
   const result: Character = {
     ...defaultCharacter,
     ...raw,
     classes,
+    pactSlots,
   };
 
   // Ensure arrays and required structures
